@@ -4,19 +4,24 @@ import { usePathname } from "next/navigation";
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { UserMenu } from "@/components/user-menu";
+import { useUsuarioActual } from "@/components/user-context";
 import { cn } from "@/lib/cn";
+import { esAdmin } from "@/lib/roles";
 import { useBreadcrumbContext } from "@/components/breadcrumb-context";
 import { NAV_ITEMS, isNavActive, tituloDe } from "@/lib/nav";
 
 export function TopBar() {
   const pathname = usePathname();
   const { state: breadcrumb } = useBreadcrumbContext();
+  const user = useUsuarioActual();
+  const items = NAV_ITEMS.filter((item) => !item.adminOnly || esAdmin(user?.role));
 
   return (
     <header className="sticky top-0 z-30 flex items-center gap-3 h-14 px-4 lg:px-6 border-b border-border bg-surface/90 backdrop-blur supports-[backdrop-filter]:bg-surface/75">
       {/* Nav móvil */}
       <nav className="flex md:hidden items-center gap-1 overflow-x-auto">
-        {NAV_ITEMS.map(({ href, label, icon: IconCmp }) => {
+        {items.map(({ href, label, icon: IconCmp }) => {
           const active = isNavActive(pathname, href);
           return (
             <Link
@@ -67,6 +72,7 @@ export function TopBar() {
       <div className="flex-1" />
 
       <ThemeToggle />
+      <UserMenu name={user?.name} email={user?.email} image={user?.image} role={user?.role} />
     </header>
   );
 }

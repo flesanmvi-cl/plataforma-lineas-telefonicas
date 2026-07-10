@@ -6,12 +6,15 @@ export interface NavItem {
   href: string;
   label: string;
   icon: LucideIcon;
+  /** Oculta el ítem del menú y bloquea la ruta para roles no-admin (ver
+   * app/(dashboard)/configuracion/layout.tsx para el patrón de gate). */
+  adminOnly?: boolean;
 }
 
 export const NAV_ITEMS: NavItem[] = [
   { href: "/", label: "Inicio", icon: LayoutGrid },
   { href: "/ui-kit", label: "Guía de Estilo", icon: Palette },
-  { href: "/configuracion", label: "Configuración", icon: Settings },
+  { href: "/configuracion", label: "Configuración", icon: Settings, adminOnly: true },
 ];
 
 export function isNavActive(pathname: string, href: string): boolean {

@@ -1,28 +1,58 @@
 import type { Metadata, Viewport } from "next";
-import { Barlow, Barlow_Condensed, Barlow_Semi_Condensed } from "next/font/google";
+import localFont from "next/font/local";
+import Script from "next/script";
 import { Toaster } from "sonner";
 import { ThemeProvider } from "@/components/theme-provider";
 import "./globals.css";
 
-const barlow = Barlow({
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
-  style: ["normal", "italic"],
+// Fuentes auto-hospedadas (no next/font/google): en redes corporativas con
+// inspección TLS, la descarga en caliente de Google Fonts falla y Next cae
+// a una fuente de respaldo sin avisar. Los .ttf viven en app/fonts/ (fuente:
+// google/fonts, licencia OFL) y se sirven siempre igual sin depender de red.
+const barlow = localFont({
+  src: [
+    { path: "./fonts/barlow/Barlow-Light.ttf", weight: "300", style: "normal" },
+    { path: "./fonts/barlow/Barlow-LightItalic.ttf", weight: "300", style: "italic" },
+    { path: "./fonts/barlow/Barlow-Regular.ttf", weight: "400", style: "normal" },
+    { path: "./fonts/barlow/Barlow-Italic.ttf", weight: "400", style: "italic" },
+    { path: "./fonts/barlow/Barlow-Medium.ttf", weight: "500", style: "normal" },
+    { path: "./fonts/barlow/Barlow-MediumItalic.ttf", weight: "500", style: "italic" },
+    { path: "./fonts/barlow/Barlow-SemiBold.ttf", weight: "600", style: "normal" },
+    { path: "./fonts/barlow/Barlow-SemiBoldItalic.ttf", weight: "600", style: "italic" },
+    { path: "./fonts/barlow/Barlow-Bold.ttf", weight: "700", style: "normal" },
+    { path: "./fonts/barlow/Barlow-BoldItalic.ttf", weight: "700", style: "italic" },
+  ],
   variable: "--font-barlow",
   display: "swap",
 });
 
-const barlowCondensed = Barlow_Condensed({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800", "900"],
-  style: ["normal", "italic"],
+const barlowCondensed = localFont({
+  src: [
+    { path: "./fonts/barlow-condensed/BarlowCondensed-Regular.ttf", weight: "400", style: "normal" },
+    { path: "./fonts/barlow-condensed/BarlowCondensed-Italic.ttf", weight: "400", style: "italic" },
+    { path: "./fonts/barlow-condensed/BarlowCondensed-Medium.ttf", weight: "500", style: "normal" },
+    { path: "./fonts/barlow-condensed/BarlowCondensed-MediumItalic.ttf", weight: "500", style: "italic" },
+    { path: "./fonts/barlow-condensed/BarlowCondensed-SemiBold.ttf", weight: "600", style: "normal" },
+    { path: "./fonts/barlow-condensed/BarlowCondensed-SemiBoldItalic.ttf", weight: "600", style: "italic" },
+    { path: "./fonts/barlow-condensed/BarlowCondensed-Bold.ttf", weight: "700", style: "normal" },
+    { path: "./fonts/barlow-condensed/BarlowCondensed-BoldItalic.ttf", weight: "700", style: "italic" },
+    { path: "./fonts/barlow-condensed/BarlowCondensed-ExtraBold.ttf", weight: "800", style: "normal" },
+    { path: "./fonts/barlow-condensed/BarlowCondensed-ExtraBoldItalic.ttf", weight: "800", style: "italic" },
+    { path: "./fonts/barlow-condensed/BarlowCondensed-Black.ttf", weight: "900", style: "normal" },
+    { path: "./fonts/barlow-condensed/BarlowCondensed-BlackItalic.ttf", weight: "900", style: "italic" },
+  ],
   variable: "--font-barlow-condensed",
   display: "swap",
 });
 
-const barlowSemi = Barlow_Semi_Condensed({
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
+const barlowSemi = localFont({
+  src: [
+    { path: "./fonts/barlow-semi-condensed/BarlowSemiCondensed-Light.ttf", weight: "300", style: "normal" },
+    { path: "./fonts/barlow-semi-condensed/BarlowSemiCondensed-Regular.ttf", weight: "400", style: "normal" },
+    { path: "./fonts/barlow-semi-condensed/BarlowSemiCondensed-Medium.ttf", weight: "500", style: "normal" },
+    { path: "./fonts/barlow-semi-condensed/BarlowSemiCondensed-SemiBold.ttf", weight: "600", style: "normal" },
+    { path: "./fonts/barlow-semi-condensed/BarlowSemiCondensed-Bold.ttf", weight: "700", style: "normal" },
+  ],
   variable: "--font-barlow-semi",
   display: "swap",
 });
@@ -60,6 +90,13 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
               },
             }}
           />
+          {/* Widget de feedback CIA (servicios-compartidos/servicios/widget-cia). El script se
+              sirve desde el feedback-api central; badge.js está detrás de la IP interna hasta
+              que TI publique recursos-cia.grupoflesan.com (revisar antes de servir por HTTPS). */}
+          <Script src="http://192.168.10.22:8083/badge.js" strategy="afterInteractive" />
+          {/* TODO: reemplazar por el slug real de esta plataforma (coordinar con el equipo CIA
+              para registrar el token en CIA_SERVICE_TOKENS del feedback-api central). */}
+          <cia-feedback data-plataforma="nombre-plataforma" />
         </ThemeProvider>
       </body>
     </html>

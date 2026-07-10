@@ -9,9 +9,13 @@ archivo y los puntos de referencia abajo.
 - Next.js 15 App Router + React 19 + TypeScript
 - **Tailwind v4**: no hay `tailwind.config.js`. Los tokens de marca viven en `app/globals.css`
   dentro del bloque `@theme` (CSS nativo de Tailwind v4), no en JS.
-- Fonts vía `next/font/google` en `app/layout.tsx` (Barlow, Barlow Condensed, Barlow Semi
-  Condensed) — variables CSS `--font-barlow*` consumidas por `--font-display/body/label` en
-  `globals.css`.
+- Fonts vía `next/font/local` en `app/layout.tsx` (Barlow, Barlow Condensed, Barlow Semi
+  Condensed), con los `.ttf` auto-hospedados en `app/fonts/` — variables CSS `--font-barlow*`
+  consumidas por `--font-display/body/label` en `globals.css`. Deliberadamente NO se usa
+  `next/font/google`: en redes corporativas con inspección TLS, Next no logra descargar la fuente
+  en caliente y cae a una fuente de respaldo sin avisar (visualmente distinto a lo esperado). Si
+  agregas un nuevo peso/estilo, descárgalo desde el repo `google/fonts` en GitHub (licencia OFL) y
+  súmalo al arreglo `src` correspondiente.
 - Dark mode con `next-themes`, atributo `class` (`.dark`). Nunca usar `prefers-color-scheme`
   directo en componentes; los tokens semánticos (`--color-bg`, `--color-text`, etc.) ya resuelven
   ambos temas.

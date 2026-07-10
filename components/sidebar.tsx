@@ -6,12 +6,16 @@ import { usePathname } from "next/navigation";
 import { Globe, ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/cn";
 import { NAV_ITEMS, isNavActive } from "@/lib/nav";
+import { esAdmin } from "@/lib/roles";
+import { useUsuarioActual } from "@/components/user-context";
 
 const COLLAPSE_KEY = "sidebar-collapsed";
 
 export function Sidebar() {
   const pathname = usePathname();
   const [collapsed, setCollapsed] = useState(false);
+  const user = useUsuarioActual();
+  const items = NAV_ITEMS.filter((item) => !item.adminOnly || esAdmin(user?.role));
 
   // Persistido en localStorage para que sobreviva un refresh, no solo la
   // navegacion dentro de la SPA.
@@ -59,7 +63,7 @@ export function Sidebar() {
 
       {/* Navegación */}
       <nav className="flex-1 px-3 py-4 flex flex-col gap-1">
-        {NAV_ITEMS.map(({ href, label, icon: IconCmp }) => {
+        {items.map(({ href, label, icon: IconCmp }) => {
           const active = isNavActive(pathname, href);
           return (
             <Link
