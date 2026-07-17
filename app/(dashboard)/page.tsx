@@ -77,7 +77,7 @@ function CardContent({
     <>
       <div className="flex items-start justify-between gap-2">
         <div className="w-10 h-10 flex items-center justify-center bg-flesan-red/10 text-flesan-red">
-          <Icon size={20} />
+          <Icon className="w-5 h-5" />
         </div>
         <span className="label-meta text-faint text-[10px]">{tag}</span>
       </div>

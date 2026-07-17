@@ -34,7 +34,7 @@ export function TopBar() {
                   : "border-transparent text-muted",
               )}
             >
-              <IconCmp size={14} />
+              <IconCmp className="w-3.5 h-3.5" />
               {label}
             </Link>
           );
@@ -47,7 +47,7 @@ export function TopBar() {
             const esUltimo = i === breadcrumb.items.length - 1;
             return (
               <span key={i} className="flex items-center gap-1.5 min-w-0">
-                {i > 0 && <ChevronRight size={11} className="text-faint shrink-0" />}
+                {i > 0 && <ChevronRight className="w-[0.6875rem] h-[0.6875rem] text-faint shrink-0" />}
                 {esUltimo ? (
                   <span className="text-text truncate max-w-[280px]">{label}</span>
                 ) : (

@@ -105,7 +105,7 @@ export function UsuariosClient() {
         <div className="md:w-96 md:border-r border-border flex flex-col">
           <div className="p-3 border-b border-border">
             <div className="relative">
-              <Search size={14} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-faint" />
+              <Search className="w-3.5 h-3.5 absolute left-2.5 top-1/2 -translate-y-1/2 text-faint" />
               <input
                 className="field-input !pl-8 !py-2 text-sm"
                 placeholder="Buscar por nombre o correo…"
@@ -197,7 +197,7 @@ export function UsuariosClient() {
                   className="btn-flesan btn-flesan-ghost btn-flesan-sm !h-7 !px-2 !text-[10px] flex items-center gap-1 disabled:opacity-50"
                   title="Quitar rol administrado"
                 >
-                  <Trash2 size={12} />
+                  <Trash2 className="w-3 h-3" />
                   Quitar
                 </button>
               </div>

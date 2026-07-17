@@ -27,7 +27,7 @@ export function ThemeToggle() {
         aria-pressed={resolvedTheme === "light"}
         className={`${base} ${resolvedTheme === "light" ? active : idle}`}
       >
-        <Sun size={16} />
+        <Sun className="w-4 h-4" />
       </button>
       <button
         type="button"
@@ -37,7 +37,7 @@ export function ThemeToggle() {
         aria-pressed={resolvedTheme === "dark"}
         className={`${base} ${resolvedTheme === "dark" ? active : idle} -ml-px`}
       >
-        <Moon size={16} />
+        <Moon className="w-4 h-4" />
       </button>
     </div>
   );

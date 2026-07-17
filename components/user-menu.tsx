@@ -72,7 +72,7 @@ export function UserMenu({ name, email, image, role }: UserMenuProps) {
               role="menuitem"
               className="w-full flex items-center gap-3 px-4 py-2.5 font-label text-xs tracking-[0.08em] uppercase text-muted hover:text-flesan-red hover:bg-bg cursor-pointer"
             >
-              <LogOut size={15} className="shrink-0" />
+              <LogOut className="w-[0.9375rem] h-[0.9375rem] shrink-0" />
               Cerrar sesión
             </button>
           </form>

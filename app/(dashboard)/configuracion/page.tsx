@@ -36,7 +36,7 @@ export default function ConfiguracionPage() {
         {SECCIONES.map(({ href, title, description, icon: Icon }) => (
           <Link key={href} href={href} className="card card-hover flex flex-col gap-4 p-6 h-full cursor-pointer block">
             <div className="w-10 h-10 flex items-center justify-center bg-flesan-red/10 text-flesan-red">
-              <Icon size={20} />
+              <Icon className="w-5 h-5" />
             </div>
             <div>
               <h2 className="font-label font-600 text-base text-text mb-1 tracking-wide">{title}</h2>

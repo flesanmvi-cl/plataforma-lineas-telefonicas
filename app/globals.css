@@ -66,6 +66,24 @@ body {
   padding: 0;
 }
 
+/*
+ * A mayor escala de Windows (125%/150%/etc.) con la misma resolución física, el navegador
+ * reporta un viewport CSS más angosto — el layout (medido en su mayoría en rem, como el resto
+ * de Tailwind) tiene menos espacio y se ve apretado. Diseñado para ~1900px de ancho útil (100%
+ * de escala en un monitor 1920x1200): escalar el tamaño de fuente raíz en proporción al ancho
+ * real del viewport hace que todo lo medido en rem (paddings, gaps, anchos, tipografía) mantenga
+ * la MISMA proporción visual que a 100%, sea cual sea la escala de Windows.
+ * Acotado a viewports ≥768px (Tailwind `md`) para no tocar el comportamiento en celulares — ahí
+ * sigue rigiendo el tamaño de fuente normal (16px).
+ * Los íconos de lucide-react se dimensionan con clases Tailwind (w-/h- en rem), no con el prop
+ * `size` en px, para que también escalen junto con el resto del layout.
+ */
+@media (min-width: 768px) {
+  html {
+    font-size: clamp(11px, calc(100vw / 118.75), 16px);
+  }
+}
+
 body {
   font-family: var(--font-body);
   color: var(--color-text);

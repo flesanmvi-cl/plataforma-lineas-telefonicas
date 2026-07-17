@@ -57,7 +57,11 @@ export function Sidebar() {
           title={collapsed ? "Expandir menú" : "Colapsar menú"}
           className="flex items-center justify-center w-6 h-6 shrink-0 border border-border-strong text-muted hover:text-text hover:border-text cursor-pointer"
         >
-          {collapsed ? <ChevronRight size={13} /> : <ChevronLeft size={13} />}
+          {collapsed ? (
+            <ChevronRight className="w-[0.8125rem] h-[0.8125rem]" />
+          ) : (
+            <ChevronLeft className="w-[0.8125rem] h-[0.8125rem]" />
+          )}
         </button>
       </div>
 
@@ -78,7 +82,7 @@ export function Sidebar() {
                   : "border-transparent text-muted hover:text-text hover:bg-bg",
               )}
             >
-              <IconCmp size={16} className={cn("shrink-0", active ? "text-flesan-red" : "")} />
+              <IconCmp className={`w-4 h-4 ${cn("shrink-0", active ? "text-flesan-red" : "")}`} />
               {!collapsed && label}
             </Link>
           );
@@ -98,7 +102,7 @@ export function Sidebar() {
             collapsed && "justify-center px-0",
           )}
         >
-          <Globe size={16} className="shrink-0" />
+          <Globe className="w-4 h-4 shrink-0" />
           {!collapsed && "Sitio Corporativo"}
         </a>
         {!collapsed && (
