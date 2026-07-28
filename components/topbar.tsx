@@ -4,6 +4,7 @@ import { usePathname } from "next/navigation";
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { NavStyleToggle } from "@/components/nav-style-toggle";
 import { UserMenu } from "@/components/user-menu";
 import { useUsuarioActual } from "@/components/user-context";
 import { cn } from "@/lib/cn";
@@ -71,6 +72,7 @@ export function TopBar() {
 
       <div className="flex-1" />
 
+      <NavStyleToggle />
       <ThemeToggle />
       <UserMenu name={user?.name} email={user?.email} image={user?.image} role={user?.role} />
     </header>

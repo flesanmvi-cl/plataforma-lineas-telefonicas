@@ -25,14 +25,16 @@ mientras no definas `DATABASE_URL` en el `.env`. Actívalo solo si la plataforma
 
 ```bash
 npm install
-cp .env.example .env   # completa AUTH_GOOGLE_ID/SECRET, AUTH_SECRET, etc.
+cp .env.example .env.local   # completa AUTH_GOOGLE_ID/SECRET, AUTH_SECRET, etc.
 npm run dev
 ```
 
-Abre `http://localhost:3000`. Sin `.env` completo el login con Google no funcionará, pero el resto
+Abre `http://localhost:3000` (o el puerto que hayas puesto en `PORT=` dentro de `.env.local` — `npm run
+dev`/`npm run start` lo leen solos, no hace falta pasar `-p`). Sin `.env.local` completo el login con
+Google no funcionará, pero el resto
 de la UI (ui-kit, componentes) se puede revisar igual navegando directo a esas rutas antes de que
 el middleware las proteja... salvo que ya esté corriendo `middleware.ts`, que protege *todo* el
-sitio — completa el `.env` antes de levantar el server.
+sitio — completa el `.env.local` antes de levantar el server.
 
 ## Estructura
 
@@ -144,8 +146,10 @@ Pasos para activarlo:
 
 ## Variables de entorno
 
-Ver `.env.example` para la lista completa (auth con Google Workspace, widget de feedback CIA, y
-placeholders comentados para DB/email si la plataforma los necesita). El login (`auth.ts` /
+Ver `.env.example` para la lista completa (puerto, auth con Google Workspace, widget de feedback
+CIA, y placeholders comentados para DB/SMTP/tracking si la plataforma los necesita). `PORT` es la
+única fuente del puerto: lo leen `npm run dev`/`npm run start` (vía `dotenv -c`, ver
+`package.json`) y `docker-compose.yml`, sin tocar nada más. El login (`auth.ts` /
 `auth.config.ts` / `middleware.ts`) sigue la plantilla compartida
 `servicios-compartidos/login-estandar/nextjs` — mismo Client ID de Google en todas las plataformas,
 `AUTH_SECRET` propio de cada una.

@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { toast } from "sonner";
 
 const COLORES = [
   { nombre: "flesan-red", valor: "#E30613", clase: "bg-flesan-red" },
@@ -20,19 +19,9 @@ export default function UiKitPage() {
   const [chipActivo, setChipActivo] = useState("Construcción");
 
   return (
-    <div className="animate-fade-in px-4 py-8 lg:px-8 lg:py-10 max-w-3xl mx-auto">
-      <div className="mb-2">
-        <p className="label-eyebrow brand-bullet mb-3">Sistema de Diseño</p>
-        <h1 className="display-title text-4xl text-text mb-3">Guía de Estilo</h1>
-        <p className="body-lede">
-          Referencia viva de los tokens y componentes de Grupo Flesan ya disponibles en este
-          proyecto. Para la guía completa de marca (logos, voz y tono, copy), consulta la skill{" "}
-          <code className="font-label text-sm">grupo-flesan-skill</code>.
-        </p>
-      </div>
-
+    <div className="animate-fade-in px-4 py-8 lg:px-8 lg:py-10 max-w-5xl mx-auto">
       {/* Colores */}
-      <section className={SECCION_CLASES}>
+      <section className={`${SECCION_CLASES} pt-0`}>
         <h2 className="label-meta text-faint">Colores</h2>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           {COLORES.map(({ nombre, valor, clase }) => (
@@ -54,23 +43,6 @@ export default function UiKitPage() {
         <p className="label-meta text-text">Label — Barlow Semi Condensed</p>
         <p className="body-lede">Body lede — Barlow, para subtítulos y descripciones.</p>
         <p className="font-body text-sm text-muted">Body regular, tamaño base para párrafos.</p>
-      </section>
-
-      {/* Botones */}
-      <section className={SECCION_CLASES}>
-        <h2 className="label-meta text-faint">Botones</h2>
-        <div className="flex flex-wrap items-center gap-3">
-          <button className="btn-flesan btn-flesan-primary" onClick={() => toast.success("Acción confirmada")}>
-            Primario
-          </button>
-          <button className="btn-flesan btn-flesan-ghost">Ghost</button>
-          <button className="btn-flesan btn-flesan-dark">Dark</button>
-          <button className="btn-flesan btn-flesan-primary btn-flesan-lg">Grande</button>
-          <button className="btn-flesan btn-flesan-primary btn-flesan-sm">Chico</button>
-          <button className="btn-flesan btn-flesan-primary" disabled>
-            Deshabilitado
-          </button>
-        </div>
       </section>
 
       {/* Cards */}

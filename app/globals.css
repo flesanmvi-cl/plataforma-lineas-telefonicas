@@ -41,6 +41,16 @@
   /* Easing + duration */
   --ease-flesan-out: cubic-bezier(0, 0, 0.2, 1);
   --ease-flesan-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Dataviz — paleta cualitativa para series de gráficos (ver /ui-kit →
+     Gráficos). --color-chart-1 es siempre el rojo de marca (serie
+     principal); el resto son de apoyo para multi-serie, nunca para CTAs. */
+  --color-chart-1: #e30613;
+  --color-chart-2: #231f20;
+  --color-chart-3: #58595b;
+  --color-chart-4: #f59e0b;
+  --color-chart-5: #16a34a;
+  --color-chart-grid: #e2e2e2;
 }
 
 /* Modo oscuro — premium dark surfaces */
@@ -53,6 +63,10 @@
   --color-text: #f4f4f4;
   --color-muted: #a8a9a9;
   --color-faint: #6b6b6b;
+
+  /* chart-2 es --flesan-black en claro (invisible sobre fondo oscuro) */
+  --color-chart-2: #f4f4f4;
+  --color-chart-grid: #2c2c2c;
 }
 
 /* ============================================================
@@ -262,6 +276,44 @@ body {
   padding: 0 1rem;
   font-size: 0.75rem;
   letter-spacing: 0.08em;
+}
+
+/* Outline de estado — para confirmar/descartar (borrar, rechazar, aprobar),
+   nunca para CTAs de marca (esas siguen siendo -primary, rojo Flesan). */
+.btn-flesan-outline-danger {
+  background: transparent;
+  border-color: var(--color-status-down);
+  color: var(--color-status-down);
+}
+.btn-flesan-outline-danger:hover:not(:disabled) {
+  background: var(--color-status-down);
+  color: #fff;
+}
+.btn-flesan-outline-success {
+  background: transparent;
+  border-color: var(--color-status-ok);
+  color: var(--color-status-ok);
+}
+.btn-flesan-outline-success:hover:not(:disabled) {
+  background: var(--color-status-ok);
+  color: #fff;
+}
+
+/* Solo ícono — cuadrado, sin padding horizontal (icono centrado por flex). */
+.btn-flesan-icon {
+  width: 2.75rem;
+  height: 2.75rem;
+  padding: 0;
+}
+.btn-flesan-icon.btn-flesan-sm {
+  width: 2.25rem;
+  height: 2.25rem;
+}
+
+/* Pill — mismo btn-flesan, esquinas redondeadas en vez de rectas. Uso
+   puntual (ej. filtros tipo tag), no reemplaza el estilo angular por defecto. */
+.btn-flesan-pill {
+  border-radius: 9999px;
 }
 
 /* ============================================================

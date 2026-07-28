@@ -26,7 +26,11 @@ archivo y los puntos de referencia abajo.
 1. Mira `app/(dashboard)/ui-kit/page.tsx` (o corre `npm run dev` y visita `/ui-kit`) — ahí están
    todas las clases utilitarias ya disponibles: `.btn-flesan` (+ `-primary/-ghost/-dark/-lg/-sm`),
    `.card` / `.card-hover`, `.chip-flesan` (+ `.is-active`), `.badge`, `.field-input`, `.skeleton`,
-   `.display-title`, `.label-eyebrow`, `.label-meta`, `.body-lede`, `.brand-bullet`.
+   `.display-title`, `.label-eyebrow`, `.label-meta`, `.body-lede`, `.brand-bullet`. `/ui-kit` tiene
+   además tabs (KPIs/Gráficos/Tablas/Botones) con una vitrina de componentes reales, cada uno con
+   un código de catálogo (ej. `GL-201`) — ver `docs/UI-KIT-CATALOG.md` para el índice completo
+   código → archivo. Si el usuario pide "usar el gráfico/KPI/tabla/botón <código>", el componente
+   ya existe en `components/charts|kpis|tables/`; ábrelo y reutilízalo en vez de escribirlo de cero.
 2. Si necesitas un color o tamaño que no está en `app/globals.css` (`@theme`), agrégalo ahí como
    variable CSS — no hardcodees hex sueltos en componentes ni reintroduzcas un
    `tailwind.config.js`.

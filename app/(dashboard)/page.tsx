@@ -44,15 +44,15 @@ export default function HomePage() {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {SECCIONES.map(({ href, title, description, icon: Icon, tag, available }) => (
-          <div key={href} className="relative">
+          <div key={href} className="relative h-full">
             {available ? (
-              <Link href={href} className="card card-hover flex flex-col gap-4 p-6 cursor-pointer block">
+              <Link href={href} className="card card-hover flex flex-col gap-4 p-6 cursor-pointer block h-full">
                 <CardContent title={title} description={description} icon={Icon} tag={tag} />
               </Link>
             ) : (
-              <div className="card flex flex-col gap-4 p-6 opacity-50 cursor-not-allowed">
+              <div className="card flex flex-col gap-4 p-6 opacity-50 cursor-not-allowed h-full">
                 <CardContent title={title} description={description} icon={Icon} tag={tag} />
-                <span className="badge self-start">Próximamente</span>
+                <span className="badge self-start mt-auto">Próximamente</span>
               </div>
             )}
           </div>
