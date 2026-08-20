@@ -55,7 +55,7 @@ export function UserMenu({ name, email, image, role }: UserMenuProps) {
       {open && (
         <div
           role="menu"
-          className="absolute right-0 top-10 z-40 w-60 border border-border bg-surface shadow-lg"
+          className="absolute right-0 top-10 z-40 w-60 rounded-flesan overflow-hidden border border-border bg-surface shadow-lg"
         >
           <div className="px-4 py-3 border-b border-border">
             <p className="text-sm font-medium text-text truncate">{name || email}</p>

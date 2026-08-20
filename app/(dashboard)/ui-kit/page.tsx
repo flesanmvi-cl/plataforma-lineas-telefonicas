@@ -15,6 +15,78 @@ const COLORES = [
 
 const SECCION_CLASES = "flex flex-col gap-4 py-8 border-b border-border";
 
+/* Escala tipográfica — el nombre es el rol en la interfaz, no la clase.
+   Los tamaños en px son a raíz 16px (viewport de referencia 1280px CSS);
+   la raíz escala hasta 20px en 1920px, así que todo crece en proporción. */
+const TIPOGRAFIA = [
+  {
+    nombre: "Título de página (H1)",
+    muestra: "Confianza que construye",
+    clase: "display-title text-4xl sm:text-5xl",
+    tamano: "2.25rem / 36px — 3rem / 48px en ≥640px",
+  },
+  {
+    nombre: "Título de sección (H2)",
+    muestra: "Indicadores del mes",
+    clase: "display-title text-3xl",
+    tamano: "1.875rem / 30px",
+  },
+  {
+    nombre: "Subtítulo (H3)",
+    muestra: "Avance por faena",
+    clase: "display-title text-2xl",
+    tamano: "1.5rem / 24px",
+  },
+  {
+    nombre: "Título de card (H4)",
+    muestra: "Obras activas",
+    clase: "font-label text-base font-semibold",
+    tamano: "1rem / 16px",
+  },
+  {
+    nombre: "Antetítulo (eyebrow)",
+    muestra: "Sistema de diseño",
+    clase: "label-eyebrow",
+    tamano: "0.75rem / 12px",
+  },
+  {
+    nombre: "Etiqueta / meta",
+    muestra: "Actualizado hoy",
+    clase: "label-meta text-text",
+    tamano: "0.75rem / 12px",
+  },
+  {
+    nombre: "Bajada (lede)",
+    muestra: "Descripción de apoyo bajo el título de la página.",
+    clase: "body-lede",
+    tamano: "1.125rem / 18px",
+  },
+  {
+    nombre: "Cuerpo",
+    muestra: "Texto base para párrafos y contenido general.",
+    clase: "font-body text-base text-text",
+    tamano: "1rem / 16px",
+  },
+  {
+    nombre: "Cuerpo secundario",
+    muestra: "Texto de apoyo dentro de cards y tablas.",
+    clase: "font-body text-sm text-muted",
+    tamano: "0.875rem / 14px",
+  },
+  {
+    nombre: "Nota al pie",
+    muestra: "Fuente: control de gestión.",
+    clase: "font-body text-xs text-faint",
+    tamano: "0.75rem / 12px",
+  },
+  {
+    nombre: "Cifra KPI",
+    muestra: "1.248",
+    clase: "display-title text-4xl text-text tabular",
+    tamano: "2.25rem / 36px",
+  },
+];
+
 export default function UiKitPage() {
   const [chipActivo, setChipActivo] = useState("Construcción");
 
@@ -39,10 +111,27 @@ export default function UiKitPage() {
       {/* Tipografía */}
       <section className={SECCION_CLASES}>
         <h2 className="label-meta text-faint">Tipografía</h2>
-        <p className="display-title text-3xl text-text">Display — Barlow Condensed</p>
-        <p className="label-meta text-text">Label — Barlow Semi Condensed</p>
-        <p className="body-lede">Body lede — Barlow, para subtítulos y descripciones.</p>
-        <p className="font-body text-sm text-muted">Body regular, tamaño base para párrafos.</p>
+        <p className="font-body text-sm text-muted max-w-2xl">
+          Tres familias: <span className="text-text">Barlow Condensed</span> (display),{" "}
+          <span className="text-text">Barlow Semi Condensed</span> (labels) y{" "}
+          <span className="text-text">Barlow</span> (cuerpo). Los px son a raíz 16px; la raíz
+          escala hasta 20px en pantallas de 1920px, así que la jerarquía se mantiene.
+        </p>
+        <div className="flex flex-col divide-y divide-border">
+          {TIPOGRAFIA.map(({ nombre, muestra, clase, tamano }) => (
+            <div
+              key={nombre}
+              className="flex flex-col gap-2 py-4 sm:flex-row sm:items-baseline sm:gap-6"
+            >
+              <div className="sm:w-52 sm:shrink-0">
+                <p className="font-label text-sm text-text">{nombre}</p>
+                <p className="font-label text-[11px] text-faint tabular">{tamano}</p>
+                <code className="block font-label text-[11px] text-muted break-words">{clase}</code>
+              </div>
+              <p className={`${clase} min-w-0`}>{muestra}</p>
+            </div>
+          ))}
+        </div>
       </section>
 
       {/* Cards */}
