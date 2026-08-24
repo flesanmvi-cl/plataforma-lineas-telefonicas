@@ -86,19 +86,24 @@ body {
   padding: 0;
 }
 
-/* Tamaño raíz fluido: el ~90% de usuarios corre Windows a 150% de escala en un monitor
-   1920x1200, que el navegador renderiza como si fuera 1280x800px CSS (viewport lógico) — ese
-   es el diseño "de referencia" (16px, el default de hoy, sin cambios). Quien corre a 100% en
-   el mismo monitor (más viewport lógico, 1920px) ve ese mismo diseño de 16px físicamente más
-   chico, porque no tiene el 1.5x del SO ayudando. Como todo el spacing/tipografía de la app
-   está en rem (Tailwind), escalar solo esta única variable alcanza para que absolutamente
-   todo — texto, padding, gaps, max-w-* de los contenedores — crezca en conjunto sin tocar
-   componente por componente. Se achica hacia 1280px (no más), crece hasta 1920px y de ahí no
-   sigue escalando (evita monitores ultra-anchos con todo gigante). No afecta clases con
-   tamaños en px puro (ej. algún `text-[10px]` suelto) — esas quedan fijas a propósito o por
-   quedar pendientes de migrar a rem. */
+/* Tamaño raíz fluido — densidad pareja en 100%, 125% y 150% de escala de Windows.
+   En un monitor de 1920px físicos, el navegador reporta distinto viewport CSS según la
+   escala del SO: 1920px a 100%, 1536px a 125% y 1280px a 150%. Con un tamaño raíz fijo,
+   el que corre a 150% ve MENOS información (menos rem de ancho) y encima el texto le
+   queda físicamente más grande — de ahí el scroll constante.
+   La raíz se define proporcional al viewport (1.05vw ≈ 1/95), de modo que:
+     viewport 1280 (150%) → 13.4px CSS × 1.5 = 20px físicos → ~95rem de ancho útil
+     viewport 1536 (125%) → 16.1px CSS × 1.25 = 20px físicos → ~95rem
+     viewport 1920 (100%) → 20px CSS × 1.0 = 20px físicos → 96rem
+   Es decir: el MISMO tamaño percibido de letra y la MISMA cantidad de contenido en
+   pantalla en las tres escalas. Los 13px de piso no son "letra chica": a 150% se
+   renderizan como 20px físicos, más grandes que el default de 16px de cualquier sitio.
+   El tope de 20px evita que en monitores ultra-anchos todo crezca sin control.
+   Como el spacing y la tipografía están en rem (Tailwind), basta esta variable para que
+   texto, padding, gaps y max-w-* acompañen. No afecta tamaños en px puro (ej. algún
+   `text-[10px]` suelto), que quedan fijos a propósito. */
 html {
-  font-size: clamp(16px, calc(8px + 0.625vw), 20px);
+  font-size: clamp(13px, 1.05vw, 20px);
 }
 
 body {
@@ -116,6 +121,20 @@ body {
   a {
     color: inherit;
     text-decoration: none;
+  }
+}
+
+/* Ancho de contenido de las páginas. 84rem aprovecha el viewport útil (96rem menos el
+   riel de 15rem) sin estirar los bloques de texto, que llevan su propio max-w-*. */
+.page-shell {
+  width: 100%;
+  max-width: 84rem;
+  margin-inline: auto;
+  padding-inline: 1rem;
+}
+@media (min-width: 1024px) {
+  .page-shell {
+    padding-inline: 2rem;
   }
 }
 
@@ -359,6 +378,45 @@ body {
   background: color-mix(in srgb, #fff 14%, transparent);
   border-color: color-mix(in srgb, #fff 28%, transparent);
   color: var(--color-text);
+}
+
+/* Toggle on/off — dos opciones dentro de una pastilla; la activa se marca con
+   un botón circular sólido (ver ThemeToggle y NavStyleToggle). */
+.toggle-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.125rem;
+  padding: 0.1875rem;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  background: var(--color-surface-2);
+}
+
+.toggle-pill-option {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--color-faint);
+  cursor: pointer;
+  transition: background-color 150ms var(--ease-flesan-out), color 150ms var(--ease-flesan-out);
+}
+@media (hover: hover) {
+  .toggle-pill-option:hover:not(.is-active) {
+    color: var(--color-text);
+  }
+}
+.toggle-pill-option.is-active {
+  background: var(--color-flesan-black);
+  color: #fff;
+}
+.dark .toggle-pill-option.is-active {
+  background: #fff;
+  color: var(--color-flesan-black);
 }
 
 .badge {

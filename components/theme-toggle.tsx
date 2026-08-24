@@ -9,23 +9,26 @@ export function ThemeToggle() {
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
 
+  // Antes de montar no se conoce el tema: se reserva el mismo alto/ancho de la
+  // pastilla para que no haya salto de layout.
   if (!mounted) {
-    return <span className="inline-flex w-18 h-9 border border-border" aria-hidden />;
+    return (
+      <span className="toggle-pill" aria-hidden>
+        <span className="toggle-pill-option" />
+        <span className="toggle-pill-option" />
+      </span>
+    );
   }
 
-  const base = "inline-flex items-center justify-center w-9 h-9 border transition-colors";
-  const active = "border-text bg-text text-surface";
-  const idle = "border-border bg-surface text-muted hover:text-text hover:border-text";
-
   return (
-    <div className="inline-flex">
+    <div className="toggle-pill">
       <button
         type="button"
         onClick={() => setTheme("light")}
         title="Tema claro"
         aria-label="Tema claro"
         aria-pressed={resolvedTheme === "light"}
-        className={`${base} ${resolvedTheme === "light" ? active : idle}`}
+        className={`toggle-pill-option ${resolvedTheme === "light" ? "is-active" : ""}`}
       >
         <Sun className="w-4 h-4" />
       </button>
@@ -35,7 +38,7 @@ export function ThemeToggle() {
         title="Tema oscuro"
         aria-label="Tema oscuro"
         aria-pressed={resolvedTheme === "dark"}
-        className={`${base} ${resolvedTheme === "dark" ? active : idle} -ml-px`}
+        className={`toggle-pill-option ${resolvedTheme === "dark" ? "is-active" : ""}`}
       >
         <Moon className="w-4 h-4" />
       </button>

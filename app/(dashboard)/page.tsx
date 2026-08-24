@@ -30,7 +30,7 @@ const SECCIONES = [
 
 export default function HomePage() {
   return (
-    <div className="animate-fade-in px-4 py-8 lg:px-8 lg:py-10 max-w-5xl mx-auto">
+    <div className="animate-fade-in page-shell py-6 lg:py-8">
       <div className="mb-10">
         <p className="label-eyebrow brand-bullet mb-3">Grupo Flesan</p>
         <h1 className="display-title text-4xl sm:text-5xl text-text mb-4">

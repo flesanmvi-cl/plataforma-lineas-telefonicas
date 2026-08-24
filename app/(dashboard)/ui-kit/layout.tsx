@@ -11,7 +11,7 @@ const TABS = [
 export default function UiKitLayout({ children }: { children: React.ReactNode }) {
   return (
     <div>
-      <div className="px-4 lg:px-8 pt-8 lg:pt-10 max-w-5xl mx-auto">
+      <div className="page-shell pt-6 lg:pt-8">
         <p className="label-eyebrow brand-bullet mb-3">Sistema de Diseño</p>
         <h1 className="display-title text-4xl text-text mb-3">Guía de Estilo</h1>
         <p className="body-lede max-w-2xl">
@@ -21,8 +21,8 @@ export default function UiKitLayout({ children }: { children: React.ReactNode })
           puntual en una sesión futura.
         </p>
       </div>
-      <div className="sticky top-14 z-20 bg-bg/95 backdrop-blur supports-[backdrop-filter]:bg-bg/85 mt-6 px-4 lg:px-8">
-        <div className="max-w-5xl mx-auto">
+      <div className="sticky top-14 z-20 bg-bg/95 backdrop-blur supports-[backdrop-filter]:bg-bg/85 mt-6">
+        <div className="page-shell">
           <SectionTabs tabs={TABS} />
         </div>
       </div>

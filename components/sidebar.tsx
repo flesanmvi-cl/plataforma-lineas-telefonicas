@@ -8,6 +8,7 @@ import { cn } from "@/lib/cn";
 import { NAV_ITEMS, isNavActive } from "@/lib/nav";
 import { esAdmin } from "@/lib/roles";
 import { useUsuarioActual } from "@/components/user-context";
+import { CiaLogo } from "@/components/cia-logo";
 
 const COLLAPSE_KEY = "sidebar-collapsed";
 
@@ -42,9 +43,7 @@ export function Sidebar() {
     >
       {/* Logo + nombre de la plataforma + toggle de colapsar */}
       <div className={cn("flex items-center h-14 border-b border-border", collapsed ? "justify-center px-2 gap-1.5" : "gap-3 px-5")}>
-        <div className="w-5 h-5 flex items-center justify-center border border-flesan-red flex-shrink-0">
-          <span className="font-display text-xs font-bold italic text-flesan-red leading-none">F</span>
-        </div>
+        <CiaLogo className="w-5 h-5 shrink-0 text-flesan-red dark:text-white" />
         {!collapsed && (
           // TODO: reemplazar por el nombre real de la plataforma.
           <span className="font-display text-sm font-bold italic uppercase tracking-[0.04em] text-text leading-none whitespace-nowrap flex-1">

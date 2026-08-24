@@ -9,7 +9,7 @@ export default function BotonesPage() {
   const [vista, setVista] = useState<"lista" | "grilla">("lista");
 
   return (
-    <div className="animate-fade-in px-4 py-8 lg:px-8 lg:py-10 max-w-5xl mx-auto">
+    <div className="animate-fade-in page-shell py-6 lg:py-8">
       <p className="label-meta text-faint mb-6">
         Familia completa de <code className="font-label text-xs normal-case">.btn-flesan</code> más variantes de
         estado, ícono y forma.
@@ -66,7 +66,7 @@ export default function BotonesPage() {
           <button className="btn-flesan btn-flesan-primary btn-flesan-pill">Filtrar</button>
         </GalleryItem>
 
-        <GalleryItem code="BT-109" title="Segmented / toggle group" description="Selección exclusiva entre 2-3 opciones, mismo patrón que ThemeToggle.">
+        <GalleryItem code="BT-109" title="Segmented / toggle group" description="Selección exclusiva entre 2-3 opciones con etiqueta. Para toggles de solo ícono usar .toggle-pill (ver ThemeToggle).">
           <div className="inline-flex">
             <button
               type="button"

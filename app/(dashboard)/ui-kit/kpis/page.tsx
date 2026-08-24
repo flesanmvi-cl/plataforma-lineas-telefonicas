@@ -7,7 +7,7 @@ import { KP105Sparkline } from "@/components/kpis/kp-105-sparkline";
 
 export default function KpisPage() {
   return (
-    <div className="animate-fade-in px-4 py-8 lg:px-8 lg:py-10 max-w-5xl mx-auto">
+    <div className="animate-fade-in page-shell py-6 lg:py-8">
       <p className="label-meta text-faint mb-6">
         Cada tarjeta es un componente independiente en <code className="font-label text-xs normal-case">components/kpis/</code>, ya con su propia .card — insértala tal cual.
       </p>

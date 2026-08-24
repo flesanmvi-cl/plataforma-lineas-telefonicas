@@ -90,7 +90,7 @@ export function UsuariosClient() {
   }
 
   return (
-    <div className="animate-fade-in px-4 py-8 lg:px-8 lg:py-10 max-w-5xl mx-auto flex flex-col gap-8">
+    <div className="animate-fade-in page-shell py-6 lg:py-8 flex flex-col gap-8">
       <div>
         <p className="label-eyebrow brand-bullet mb-3">Configuración</p>
         <h1 className="display-title text-3xl sm:text-4xl text-text mb-4">Usuarios y roles</h1>

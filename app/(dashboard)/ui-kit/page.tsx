@@ -91,7 +91,7 @@ export default function UiKitPage() {
   const [chipActivo, setChipActivo] = useState("Construcción");
 
   return (
-    <div className="animate-fade-in px-4 py-8 lg:px-8 lg:py-10 max-w-5xl mx-auto">
+    <div className="animate-fade-in page-shell py-6 lg:py-8">
       {/* Colores */}
       <section className={`${SECCION_CLASES} pt-0`}>
         <h2 className="label-meta text-faint">Colores</h2>

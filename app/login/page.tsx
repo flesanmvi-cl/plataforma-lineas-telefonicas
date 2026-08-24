@@ -1,4 +1,5 @@
 import { signIn } from "@/auth";
+import { CiaLogo } from "@/components/cia-logo";
 
 // Auth.js manda errores a esta misma página (pages.error = "/login").
 const ERRORES: Record<string, string> = {
@@ -40,9 +41,7 @@ export default async function LoginPage({
         <div className="rounded-2xl border border-white/[0.08] bg-[#161616]/80 p-10 shadow-2xl backdrop-blur-xl">
           {/* Marca — TODO: reemplazar por el logo real de la plataforma (public/brand/) */}
           <div className="flex flex-col items-center text-center">
-            <div className="w-14 h-14 mb-5 flex items-center justify-center border-2 border-flesan-red">
-              <span className="font-display text-2xl font-bold italic text-flesan-red leading-none">F</span>
-            </div>
+            <CiaLogo className="w-14 h-14 mb-5 text-white" />
             <h1 className="font-display text-3xl font-extrabold italic uppercase tracking-tight text-text leading-none">
               Nombre Plataforma
             </h1>

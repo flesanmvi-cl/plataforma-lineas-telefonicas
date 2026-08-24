@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { ChevronRight } from "lucide-react";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { NavStyleToggle } from "@/components/nav-style-toggle";
+import { CiaLogo } from "@/components/cia-logo";
 import { UserMenu } from "@/components/user-menu";
 import { useUsuarioActual } from "@/components/user-context";
 import { useBreadcrumbContext } from "@/components/breadcrumb-context";
@@ -25,9 +26,7 @@ export function TopNav() {
     <header className="sticky top-0 z-30 border-b border-border bg-surface/90 backdrop-blur supports-[backdrop-filter]:bg-surface/75">
       <div className="flex items-center gap-3 h-14 px-4 lg:px-6">
         <Link href="/" className="flex items-center gap-2.5 shrink-0" aria-label="Inicio">
-          <div className="w-5 h-5 flex items-center justify-center border border-flesan-red flex-shrink-0">
-            <span className="font-display text-xs font-bold italic text-flesan-red leading-none">F</span>
-          </div>
+          <CiaLogo className="w-5 h-5 shrink-0 text-flesan-red dark:text-white" />
           {/* TODO: reemplazar por el nombre real de la plataforma. */}
           <span className="hidden sm:block font-display text-sm font-bold italic uppercase tracking-[0.04em] text-text leading-none whitespace-nowrap">
             Nombre <span className="text-flesan-red">Plataforma</span>
