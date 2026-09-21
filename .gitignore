@@ -40,3 +40,9 @@ next-env.d.ts
 
 # herramientas de verificacion (playwright-cli)
 .playwright-cli/
+
+# Base CIA: secretos, respaldos de .env y artefactos (servicios-compartidos/plantillas/gitignore-base)
+.env.*
+!.env.example
+*.pyc
+__pycache__/
