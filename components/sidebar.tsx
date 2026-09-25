@@ -125,8 +125,8 @@ export function Sidebar() {
             {SAP_WORKZONE_URL && (
               <AccesoDirecto
                 href={SAP_WORKZONE_URL}
-                label="Workzone"
-                titulo="Abrir SAP Workzone en otra pestaña"
+                label="WZ"
+                nombre="SAP Workzone"
                 collapsed={collapsed}
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -136,8 +136,8 @@ export function Sidebar() {
             {PORTAL_CIA_URL && (
               <AccesoDirecto
                 href={PORTAL_CIA_URL}
-                label="Portal CIA"
-                titulo="Abrir el Portal CIA en otra pestaña"
+                label="CIA"
+                nombre="Portal CIA"
                 collapsed={collapsed}
               >
                 <CiaLogo className="w-3.5 h-3.5 shrink-0 text-flesan-red dark:text-white" />
@@ -187,41 +187,55 @@ export function Sidebar() {
   );
 }
 
-// Acceso directo a un portal externo: botón compacto (ícono + nombre + ↗) bajo el título;
-// colapsado, solo el ícono. Abre en otra pestaña.
+// Acceso directo a un portal externo: botón compacto (ícono + sigla + ↗) bajo el título; el
+// nombre completo aparece en un globo al pasar el mouse o con foco de teclado. Colapsado, solo
+// el ícono. Abre en otra pestaña.
 function AccesoDirecto({
   href,
   label,
-  titulo,
+  nombre,
   collapsed,
   children,
 }: {
   href: string;
   label: string;
-  titulo: string;
+  nombre: string;
   collapsed: boolean;
   children: React.ReactNode;
 }) {
+  const idGlobo = `portal-${label.toLowerCase()}`;
   return (
-    <a
-      href={href}
-      target="_blank"
-      rel="noopener noreferrer"
-      title={titulo}
-      aria-label={collapsed ? titulo : undefined}
-      className={cn(
-        "flex items-center justify-center gap-1.5 h-8 border border-border rounded-flesan-sm bg-surface-2 font-label text-[0.6875rem] tracking-[0.06em] uppercase text-muted hover:text-text hover:border-border-strong transition-colors whitespace-nowrap",
-        collapsed ? "w-8" : "flex-1 px-2",
-      )}
-    >
-      {children}
-      {!collapsed && (
-        <>
-          {label}
-          <ArrowUpRight className="w-3 h-3 shrink-0 text-faint" />
-        </>
-      )}
-    </a>
+    <span className={cn("group relative flex", !collapsed && "flex-1")}>
+      <a
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label={`Abrir ${nombre} en otra pestaña`}
+        aria-describedby={idGlobo}
+        className={cn(
+          "flex items-center justify-center gap-1.5 h-8 border border-border rounded-flesan-sm bg-surface-2 font-label text-[0.6875rem] tracking-[0.06em] uppercase text-muted hover:text-text hover:border-border-strong transition-colors whitespace-nowrap",
+          collapsed ? "w-8" : "flex-1 px-2",
+        )}
+      >
+        {children}
+        {!collapsed && (
+          <>
+            {label}
+            <ArrowUpRight className="w-3 h-3 shrink-0 text-faint" />
+          </>
+        )}
+      </a>
+      <span
+        id={idGlobo}
+        role="tooltip"
+        className={cn(
+          "pointer-events-none absolute z-50 whitespace-nowrap rounded-flesan-sm bg-text text-bg px-2 py-1 text-xs opacity-0 transition-opacity group-hover:opacity-100 group-focus-within:opacity-100",
+          collapsed ? "left-full top-1/2 -translate-y-1/2 ml-2" : "top-full left-1/2 -translate-x-1/2 mt-1.5",
+        )}
+      >
+        {nombre}
+      </span>
+    </span>
   );
 }
 
