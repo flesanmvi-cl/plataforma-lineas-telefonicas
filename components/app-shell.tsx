@@ -4,6 +4,7 @@ import { Sidebar } from "@/components/sidebar";
 import { TopBar } from "@/components/topbar";
 import { TopNav } from "@/components/top-nav";
 import { useNavStyle, type NavStyle } from "@/components/nav-style-context";
+import { PantallaCompletaProvider, usePantallaCompleta } from "@/components/pantalla-completa";
 
 // Por ahora la plantilla usa solo el riel lateral: el selector (NavStyleToggle) está
 // oculto y la nav superior (TopNav) queda en pausa. Para reactivar la elección, vuelve
@@ -13,7 +14,18 @@ const NAV_STYLE_FIJO: NavStyle | null = "sidebar";
 // Punto único donde se decide el layout del dashboard: riel lateral colapsable o nav
 // superior estilo portal-cia, sin sidebar.
 export function AppShell({ children }: { children: React.ReactNode }) {
+  return (
+    <PantallaCompletaProvider>
+      <Marco>{children}</Marco>
+    </PantallaCompletaProvider>
+  );
+}
+
+function Marco({ children }: { children: React.ReactNode }) {
   const { navStyle: preferido } = useNavStyle();
+  // En pantalla completa (reportería) se oculta el sidebar; la barra superior queda con la
+  // ruta y el botón para salir.
+  const { activa: pantallaCompleta } = usePantallaCompleta();
   const navStyle = NAV_STYLE_FIJO ?? preferido;
 
   if (navStyle === "topnav") {
@@ -27,7 +39,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="h-screen flex bg-bg overflow-hidden">
-      <Sidebar />
+      {!pantallaCompleta && <Sidebar />}
       <div className="flex-1 flex flex-col min-w-0">
         <TopBar />
         <main className="flex-1 min-w-0 overflow-y-auto">{children}</main>

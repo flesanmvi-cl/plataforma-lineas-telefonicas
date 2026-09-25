@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { BotonPantallaCompleta } from "@/components/pantalla-completa";
 import { UserMenu } from "@/components/user-menu";
 import { useUsuarioActual } from "@/components/user-context";
 import { cn } from "@/lib/cn";
@@ -14,7 +15,8 @@ import { NAV_ITEMS, isNavActive, migasDe } from "@/lib/nav";
 
 const claseMiga = "font-label text-xs tracking-[0.08em] uppercase truncate";
 
-// Barra superior: solo la ruta de migas (Inicio › Sección › Subpanel › drilldown…).
+// Barra superior: la ruta de migas (Inicio › Sección › Subpanel › drilldown…) y, a la derecha,
+// el botón de pantalla completa para reportería.
 // Menú, configuración, tema y usuario viven en el sidebar. En móvil, donde el sidebar
 // se oculta, la barra vuelve a mostrar el menú, el tema y el usuario.
 export function TopBar() {
@@ -90,6 +92,10 @@ export function TopBar() {
       </nav>
 
       <div className="flex-1" />
+
+      <span className="hidden md:flex">
+        <BotonPantallaCompleta />
+      </span>
 
       <div className="flex md:hidden items-center gap-3">
         <ThemeToggle />
