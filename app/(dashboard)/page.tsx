@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Palette, Settings, LayoutGrid } from "lucide-react";
+import { PageHeader } from "@/components/page-header";
 
 const SECCIONES = [
   {
@@ -31,26 +32,20 @@ const SECCIONES = [
 export default function HomePage() {
   return (
     <div className="animate-fade-in page-shell py-6 lg:py-8">
-      <div className="mb-10">
-        <p className="label-eyebrow brand-bullet mb-3">Grupo Flesan</p>
-        <h1 className="display-title text-4xl sm:text-5xl text-text mb-4">
-          Nombre Plataforma
-        </h1>
-        <p className="body-lede max-w-xl">
-          Base de plataforma con el sistema de diseño de Grupo Flesan ya instalado — sidebar, dark
-          mode, tipografía, componentes y stack de Next.js listos para usar.
-        </p>
-      </div>
+      <PageHeader
+        title="Nombre Plataforma"
+        description="Base de plataforma con el sistema de diseño de Grupo Flesan ya instalado: sidebar, dark mode, tipografía, componentes y stack de Next.js listos para usar."
+      />
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {SECCIONES.map(({ href, title, description, icon: Icon, tag, available }) => (
           <div key={href} className="relative h-full">
             {available ? (
-              <Link href={href} className="card card-hover flex flex-col gap-4 p-6 cursor-pointer block h-full">
+              <Link href={href} className="card card-hover flex flex-col dens-gap dens-card cursor-pointer block h-full">
                 <CardContent title={title} description={description} icon={Icon} tag={tag} />
               </Link>
             ) : (
-              <div className="card flex flex-col gap-4 p-6 opacity-50 cursor-not-allowed h-full">
+              <div className="card flex flex-col dens-gap dens-card opacity-50 cursor-not-allowed h-full">
                 <CardContent title={title} description={description} icon={Icon} tag={tag} />
                 <span className="badge self-start mt-auto">Próximamente</span>
               </div>

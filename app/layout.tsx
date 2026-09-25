@@ -57,6 +57,15 @@ const barlowSemi = localFont({
   display: "swap",
 });
 
+// Inter Tight (variable, 100-900) solo para el estilo de reportería: se activa con
+// data-estilo="reporte" en una página o bloque (ver globals.css). Formularios y el
+// marco de la plataforma siguen en Barlow.
+const interTight = localFont({
+  src: [{ path: "./fonts/inter-tight/InterTight-Variable.ttf", weight: "100 900", style: "normal" }],
+  variable: "--font-inter-tight",
+  display: "swap",
+});
+
 export const metadata: Metadata = {
   title: "Nombre Plataforma · Grupo Flesan",
   description: "Mockup base de plataforma — Grupo Flesan.",
@@ -74,7 +83,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     <html
       lang="es-CL"
       suppressHydrationWarning
-      className={`${barlow.variable} ${barlowCondensed.variable} ${barlowSemi.variable} h-full antialiased`}
+      className={`${barlow.variable} ${barlowCondensed.variable} ${barlowSemi.variable} ${interTight.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>

@@ -18,7 +18,7 @@ export function KP105Sparkline({ label = "Ingresos semanales", valor = "$78,4M" 
   const path = buildSmoothPath(points);
 
   return (
-    <div className="card p-5 flex items-center justify-between gap-4">
+    <div className="card dens-card flex items-center justify-between gap-4">
       <div>
         <p className="label-eyebrow mb-1">{label}</p>
         <p className="display-title text-3xl text-text">{valor}</p>

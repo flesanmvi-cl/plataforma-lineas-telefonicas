@@ -42,7 +42,7 @@ export function TB102Ordenable() {
     const activo = sortCol === col;
     return (
       <th
-        className={`px-4 py-2.5 font-label text-[10px] uppercase tracking-wider text-faint cursor-pointer select-none ${
+        className={`px-(--densidad-celda-x) py-(--densidad-celda-y) font-label text-[10px] uppercase tracking-wider text-faint cursor-pointer select-none ${
           align === "right" ? "text-right" : "text-left"
         }`}
         onClick={() => toggleSort(col)}
@@ -76,9 +76,9 @@ export function TB102Ordenable() {
         <tbody>
           {filas.map((d) => (
             <tr key={d.nombre} className="border-b border-border last:border-0 hover:bg-bg">
-              <td className="px-4 py-2.5 font-body text-text">{d.nombre}</td>
-              <td className="px-4 py-2.5 font-body text-muted">{d.region}</td>
-              <td className="px-4 py-2.5 font-body text-text text-right tabular">{d.avance}%</td>
+              <td className="px-(--densidad-celda-x) py-(--densidad-celda-y) font-body text-text">{d.nombre}</td>
+              <td className="px-(--densidad-celda-x) py-(--densidad-celda-y) font-body text-muted">{d.region}</td>
+              <td className="px-(--densidad-celda-x) py-(--densidad-celda-y) font-body text-text text-right tabular">{d.avance}%</td>
             </tr>
           ))}
         </tbody>

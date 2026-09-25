@@ -15,7 +15,7 @@ export function KP104Comparativo({
   const pct = Math.min(100, Math.round((actual / meta) * 100));
 
   return (
-    <div className="card p-5">
+    <div className="card dens-card">
       <p className="label-eyebrow mb-2">{label}</p>
       <div className="flex items-baseline gap-2 mb-3">
         <p className="display-title text-3xl text-text">{actual}</p>

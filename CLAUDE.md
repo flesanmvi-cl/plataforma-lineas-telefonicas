@@ -28,7 +28,7 @@ archivo y los puntos de referencia abajo.
    `.card` / `.card-hover`, `.chip-flesan` (+ `.is-active`), `.badge`, `.field-input`, `.skeleton`,
    `.display-title`, `.label-eyebrow`, `.label-meta`, `.body-lede`, `.brand-bullet`,
    `.toggle-pill` (+ `.toggle-pill-option.is-active`) y `.page-shell` — este último es el
-   contenedor de ancho de todas las páginas (84rem + padding), no reintroducir `max-w-5xl`
+   contenedor de ancho de todas las páginas (hasta 120rem + padding), no reintroducir `max-w-5xl`
    suelto en cada page. `/ui-kit` tiene además tabs (KPIs/Gráficos/Tablas/Botones) con una
    vitrina de componentes reales, cada uno con
    un código de catálogo (ej. `GL-201`) — ver `docs/UI-KIT-CATALOG.md` para el índice completo
@@ -40,6 +40,22 @@ archivo y los puntos de referencia abajo.
 3. Para añadir o reordenar secciones del menú: edita únicamente `lib/nav.ts` (`NAV_ITEMS`).
    `components/sidebar.tsx` y `components/topbar.tsx` lo consumen — no dupliques la lista de
    navegación en ambos archivos.
+   - Un ítem **sin** `children` es enlace directo; **con** `children` abre un menú flotante con
+     sus subpaneles (agrupables con `grupo`). Pedido típico: «Ventas: Gerencia, Vendedor» o
+     «Ventas: Vistas [Gerencia, Vendedor] / Detalle [Por proyecto]».
+   - Configuración (`NAV_CONFIG`), el tema y el usuario viven en el pie del sidebar. La barra
+     superior solo muestra la ruta (`migasDe`); los niveles de drilldown de una página se
+     agregan con `BreadcrumbContext`.
+
+## Escala y densidad (default de la plantilla)
+
+- Raíz **fluida suave**: `html { font-size: clamp(14px, calc(8.5px + 0.5vw), 16px) }`. Todo va
+  en rem; no hardcodear `px` en tamaños de texto ni de controles.
+- Densidad **compacta** por defecto: tokens `--densidad-*` en `:root` (`app/globals.css`), que
+  consumen `.btn-flesan`, `.field-input`, `.dens-card`, `.dens-gap`, `.dens-control`, `.dens-tabla`
+  y las celdas de TB-1xx. Para un formulario largo, `data-densidad="comoda"` en su contenedor.
+  En tarjetas nuevas usar `dens-card` en vez de `p-5`/`p-6`.
+- Comparación de alternativas en `/ui-kit/escala`.
 
 ## Skill de marca completa
 

@@ -14,9 +14,10 @@ interface BreadcrumbContextValue {
 
 const BreadcrumbContext = createContext<BreadcrumbContextValue | null>(null);
 
-// Permite que una pagina con navegacion interna (ej. un drill-down con
-// estado propio) publique su propia ruta para que el TopBar la muestre,
-// en vez del titulo estatico que viene de tituloDe(pathname).
+// Permite que una pagina con navegacion interna (ej. un drill-down con estado
+// propio) publique sus niveles. El TopBar los agrega despues de la ruta que sale
+// de la URL (migasDe en lib/nav.ts): Inicio > Ventas > Gerencia > [Zona Centro > ...].
+// `items` son solo los niveles del drilldown; onNavigate(i) vuelve al nivel i.
 export function BreadcrumbProvider({ children }: { children: ReactNode }) {
   const [state, setState] = useState<BreadcrumbState | null>(null);
   return <BreadcrumbContext.Provider value={{ state, setState }}>{children}</BreadcrumbContext.Provider>;

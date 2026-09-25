@@ -5,6 +5,7 @@ import useSWR from "swr";
 import { toast } from "sonner";
 import { Search, Trash2 } from "lucide-react";
 import { cn } from "@/lib/cn";
+import { PageHeader } from "@/components/page-header";
 import { etiquetaRol, type Rol } from "@/lib/roles";
 import type { Colaborador } from "@/lib/colaboradores-db";
 import type { UsuarioAsignado } from "@/lib/usuarios-db";
@@ -90,15 +91,12 @@ export function UsuariosClient() {
   }
 
   return (
-    <div className="animate-fade-in page-shell py-6 lg:py-8 flex flex-col gap-8">
-      <div>
-        <p className="label-eyebrow brand-bullet mb-3">Configuración</p>
-        <h1 className="display-title text-3xl sm:text-4xl text-text mb-4">Usuarios y roles</h1>
-        <p className="body-lede max-w-2xl">
-          Asigna el rol administrador o miembro a cualquier colaborador de Flesan. Sin rol asignado
-          acá, un colaborador entra como miembro por defecto.
-        </p>
-      </div>
+    <div className="animate-fade-in page-shell py-6 lg:py-8 flex flex-col gap-6">
+      <PageHeader
+        title="Usuarios y roles"
+        className="mb-0"
+        description="Asigna el rol administrador o miembro a cualquier colaborador de Flesan. Sin rol asignado acá, un colaborador entra como miembro por defecto."
+      />
 
       {/* Buscar colaborador + asignar rol */}
       <div className="card flex flex-col md:flex-row overflow-hidden">

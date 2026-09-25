@@ -20,11 +20,14 @@ export function ThemeToggle() {
     );
   }
 
+  // Cualquiera de los dos íconos alterna el tema, no solo el inactivo.
+  const alternar = () => setTheme(resolvedTheme === "dark" ? "light" : "dark");
+
   return (
     <div className="toggle-pill">
       <button
         type="button"
-        onClick={() => setTheme("light")}
+        onClick={alternar}
         title="Tema claro"
         aria-label="Tema claro"
         aria-pressed={resolvedTheme === "light"}
@@ -34,7 +37,7 @@ export function ThemeToggle() {
       </button>
       <button
         type="button"
-        onClick={() => setTheme("dark")}
+        onClick={alternar}
         title="Tema oscuro"
         aria-label="Tema oscuro"
         aria-pressed={resolvedTheme === "dark"}

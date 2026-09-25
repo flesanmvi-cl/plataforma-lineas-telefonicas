@@ -32,6 +32,10 @@ tokens `--color-chart-*` de `app/globals.css` (tema-aware).
 
 Cada componente ya trae su propia `.card` — se inserta directo en un grid, sin envoltorio adicional.
 
+**Fila alineada:** el grid que contiene los KPIs lleva `.kpi-fila` y cada tarjeta `.kpi-card`
+(título / valor / pie como hijos directos). Con subgrid, si un título ocupa dos líneas, todas las
+tarjetas de la fila lo acompañan y los valores quedan a la misma altura. KP-101 ya lo trae.
+
 | Código | Nombre | Archivo | Descripción |
 |---|---|---|---|
 | KP-101 | Simple | `components/kpis/kp-101-simple.tsx` | Valor grande + variación (↑/↓) vs período anterior. |
@@ -73,6 +77,9 @@ Todo vive como clases utilitarias en `app/globals.css` (sección BUTTONS) — la
   `buildAreaPath`, `arcSlicePath`, `toSlices`, `polarToCartesian`, `CHART_COLORS`). Cualquier
   gráfico nuevo debería apoyarse en esto antes de reinventar la geometría.
 - `components/ui-kit/gallery-item.tsx` — envoltorio título + código + card usado en las 4 vistas.
+- `components/page-header.tsx` — encabezado de toda vista: `<PageHeader title description actions />`.
+  Título en una línea, la descripción detrás de un ícono (i) y las acciones a la derecha. No
+  reintroducir eyebrow + título grande + párrafo: empuja el contenido hacia abajo.
 - `components/section-tabs.tsx` — tabs de navegación secundaria (usado por el layout de `/ui-kit`,
   reutilizable en cualquier sección con sub-vistas).
 - `--color-chart-1..5` y `--color-chart-grid` en `app/globals.css` (`@theme` + override `.dark`).

@@ -36,17 +36,17 @@ export function TB103EstadosPaginacion() {
       <table className="w-full text-sm">
         <thead>
           <tr className="border-b border-border">
-            <th className="text-left font-label text-[10px] uppercase tracking-wider text-faint px-4 py-2.5">Obra</th>
-            <th className="text-left font-label text-[10px] uppercase tracking-wider text-faint px-4 py-2.5">Responsable</th>
-            <th className="text-left font-label text-[10px] uppercase tracking-wider text-faint px-4 py-2.5">Estado</th>
+            <th className="text-left font-label text-[10px] uppercase tracking-wider text-faint px-(--densidad-celda-x) py-(--densidad-celda-y)">Obra</th>
+            <th className="text-left font-label text-[10px] uppercase tracking-wider text-faint px-(--densidad-celda-x) py-(--densidad-celda-y)">Responsable</th>
+            <th className="text-left font-label text-[10px] uppercase tracking-wider text-faint px-(--densidad-celda-x) py-(--densidad-celda-y)">Estado</th>
           </tr>
         </thead>
         <tbody>
           {filas.map((d) => (
             <tr key={d.nombre} className="border-b border-border last:border-0 hover:bg-bg">
-              <td className="px-4 py-2.5 font-body text-text">{d.nombre}</td>
-              <td className="px-4 py-2.5 font-body text-muted">{d.responsable}</td>
-              <td className="px-4 py-2.5">
+              <td className="px-(--densidad-celda-x) py-(--densidad-celda-y) font-body text-text">{d.nombre}</td>
+              <td className="px-(--densidad-celda-x) py-(--densidad-celda-y) font-body text-muted">{d.responsable}</td>
+              <td className="px-(--densidad-celda-x) py-(--densidad-celda-y)">
                 <span className="badge" style={{ color: ESTADO_COLOR[d.estado], borderColor: ESTADO_COLOR[d.estado] }}>
                   {d.estado}
                 </span>
@@ -55,7 +55,7 @@ export function TB103EstadosPaginacion() {
           ))}
         </tbody>
       </table>
-      <div className="flex items-center justify-between px-4 py-2.5 border-t border-border">
+      <div className="flex items-center justify-between px-(--densidad-celda-x) py-(--densidad-celda-y) border-t border-border">
         <p className="font-label text-[10px] text-faint">
           Página {pagina + 1} de {totalPaginas}
         </p>

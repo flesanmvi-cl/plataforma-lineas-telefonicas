@@ -3,13 +3,18 @@
 import { Sidebar } from "@/components/sidebar";
 import { TopBar } from "@/components/topbar";
 import { TopNav } from "@/components/top-nav";
-import { useNavStyle } from "@/components/nav-style-context";
+import { useNavStyle, type NavStyle } from "@/components/nav-style-context";
 
-// Punto único donde se decide el layout del dashboard según la preferencia
-// guardada (ver NavStyleToggle): riel lateral colapsable (por defecto) o
-// nav superior estilo portal-cia, sin sidebar.
+// Por ahora la plantilla usa solo el riel lateral: el selector (NavStyleToggle) está
+// oculto y la nav superior (TopNav) queda en pausa. Para reactivar la elección, vuelve
+// a leer la preferencia guardada y muestra NavStyleToggle en el sidebar.
+const NAV_STYLE_FIJO: NavStyle | null = "sidebar";
+
+// Punto único donde se decide el layout del dashboard: riel lateral colapsable o nav
+// superior estilo portal-cia, sin sidebar.
 export function AppShell({ children }: { children: React.ReactNode }) {
-  const { navStyle } = useNavStyle();
+  const { navStyle: preferido } = useNavStyle();
+  const navStyle = NAV_STYLE_FIJO ?? preferido;
 
   if (navStyle === "topnav") {
     return (

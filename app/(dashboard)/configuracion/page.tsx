@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Users, type LucideIcon } from "lucide-react";
+import { PageHeader } from "@/components/page-header";
 
 /**
  * Landing de /configuracion como grilla de secciones — escala mejor que un formulario único
@@ -26,15 +27,14 @@ const SECCIONES: Seccion[] = [
 export default function ConfiguracionPage() {
   return (
     <div className="animate-fade-in page-shell py-6 lg:py-8">
-      <div className="mb-10">
-        <p className="label-eyebrow brand-bullet mb-3">Grupo Flesan</p>
-        <h1 className="display-title text-3xl sm:text-4xl text-text mb-4">Configuración</h1>
-        <p className="body-lede max-w-xl">Administración de la plataforma — visible solo para administradores.</p>
-      </div>
+      <PageHeader
+        title="Configuración"
+        description="Administración de la plataforma, visible solo para administradores."
+      />
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 max-w-4xl">
         {SECCIONES.map(({ href, title, description, icon: Icon }) => (
-          <Link key={href} href={href} className="card card-hover flex flex-col gap-4 p-6 h-full cursor-pointer block">
+          <Link key={href} href={href} className="card card-hover flex flex-col dens-gap dens-card h-full cursor-pointer block">
             <div className="w-10 h-10 flex items-center justify-center bg-flesan-red/10 text-flesan-red">
               <Icon className="w-5 h-5" />
             </div>

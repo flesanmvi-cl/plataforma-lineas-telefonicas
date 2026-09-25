@@ -13,17 +13,17 @@ export function TB101Zebra() {
       <table className="w-full text-sm">
         <thead>
           <tr className="border-b border-border">
-            <th className="text-left font-label text-[10px] uppercase tracking-wider text-faint px-4 py-2.5">Obra</th>
-            <th className="text-left font-label text-[10px] uppercase tracking-wider text-faint px-4 py-2.5">Región</th>
-            <th className="text-right font-label text-[10px] uppercase tracking-wider text-faint px-4 py-2.5">Avance</th>
+            <th className="text-left font-label text-[10px] uppercase tracking-wider text-faint px-(--densidad-celda-x) py-(--densidad-celda-y)">Obra</th>
+            <th className="text-left font-label text-[10px] uppercase tracking-wider text-faint px-(--densidad-celda-x) py-(--densidad-celda-y)">Región</th>
+            <th className="text-right font-label text-[10px] uppercase tracking-wider text-faint px-(--densidad-celda-x) py-(--densidad-celda-y)">Avance</th>
           </tr>
         </thead>
         <tbody>
           {DATA.map((d, i) => (
             <tr key={d.nombre} className={i % 2 === 1 ? "bg-surface-2" : ""}>
-              <td className="px-4 py-2.5 font-body text-text">{d.nombre}</td>
-              <td className="px-4 py-2.5 font-body text-muted">{d.region}</td>
-              <td className="px-4 py-2.5 font-body text-text text-right tabular">{d.avance}%</td>
+              <td className="px-(--densidad-celda-x) py-(--densidad-celda-y) font-body text-text">{d.nombre}</td>
+              <td className="px-(--densidad-celda-x) py-(--densidad-celda-y) font-body text-muted">{d.region}</td>
+              <td className="px-(--densidad-celda-x) py-(--densidad-celda-y) font-body text-text text-right tabular">{d.avance}%</td>
             </tr>
           ))}
         </tbody>

@@ -18,7 +18,7 @@ export function KP102IconoFranja({
   return (
     <div className="card overflow-hidden">
       <div className="h-1" style={{ background: color }} />
-      <div className="p-5 flex items-start gap-4">
+      <div className="dens-card flex items-start gap-4">
         <div className="w-10 h-10 flex items-center justify-center border border-border shrink-0" style={{ color }}>
           <Icon className="w-5 h-5" />
         </div>
