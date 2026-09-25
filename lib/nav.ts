@@ -37,6 +37,7 @@ export const NAV_ITEMS: NavItem[] = [
       { href: "/ui-kit/graficos", label: "Gráficos", grupo: "Componentes" },
       { href: "/ui-kit/tablas", label: "Tablas", grupo: "Componentes" },
       { href: "/ui-kit/botones", label: "Botones", grupo: "Componentes" },
+      { href: "/ui-kit/laboratorio-graficos", label: "Laboratorio de gráficos", grupo: "Exploración" },
     ],
   },
 ];

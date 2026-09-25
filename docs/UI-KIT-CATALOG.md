@@ -90,3 +90,20 @@ Todo vive como clases utilitarias en `app/globals.css` (sección BUTTONS) — la
 2. Súmalo a la página correspondiente en `app/(dashboard)/ui-kit/<vista>/page.tsx` envuelto en
    `<GalleryItem code="..." title="..." description="...">`.
 3. Agrega la fila a la tabla correspondiente en este archivo.
+
+## Laboratorio de gráficos (exploración, no es catálogo)
+
+`/ui-kit/laboratorio-graficos` reúne ~55 gráficos de ejemplo (ECharts, Nivo, visx + motion,
+MapLibre y tablas HTML) para elegir el estándar de reportes. No tienen código de catálogo: cuando
+uno se elija, se promueve a `components/charts|kpis|tables/` con su código y se agrega arriba.
+
+- Vistas: Galería (por familia y librería), Comparador (un gráfico con todas las variantes de
+  superficie, paleta, letra, curva o animación) y En contexto (tablero de ejemplo).
+- Panel «Tema»: paleta, letra, superficie, radio, grosor, modo, animación, tooltip, curva,
+  grilla, etiquetas y densidad. «Exportar tema» entrega los tokens para el `@theme`.
+- Contrato de un gráfico: `lib/lab-graficos/tema.ts` (tokens), `lib/lab-graficos/estilos.ts`
+  (helpers ECharts/Nivo), `components/lab-graficos/tipos.ts` (`GraficoLab`). Cada familia vive en
+  `components/lab-graficos/graficos/<familia>/` con su `index.ts`.
+- Datos sintéticos en `lib/lab-graficos/datos.ts`. Letras extra en `app/fonts/lab/`, mapa de
+  regiones en `public/lab/chile-regiones.json` y worker de MapLibre en `public/lab/maplibre/`.
+- Lo que no se elija se borra al definir el estándar (carpetas `lab-graficos`, fuentes y librerías).
