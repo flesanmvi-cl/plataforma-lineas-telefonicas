@@ -30,8 +30,10 @@ archivo y los puntos de referencia abajo.
    `.toggle-pill` (+ `.toggle-pill-option.is-active`) y `.page-shell` — este último es el
    contenedor de ancho de todas las páginas (hasta 120rem + padding), no reintroducir `max-w-5xl`
    suelto en cada page.
-   **Gráficos, KPIs, tablas y botones se eligen en el laboratorio de diseño**
-   (`/ui-kit/laboratorio/<graficos|kpis|tablas|botones>`, más «En contexto»): galería por
+   **Gráficos, KPIs, tablas, botones y formularios se eligen en el laboratorio de diseño**
+   (`/ui-kit/laboratorio/<sección>`, más «En contexto»); lo vigente está en la pestaña
+   «Estándar» (`/ui-kit`, datos en `lib/lab-graficos/estandar.ts`) y se ve aplicado en el menú
+   «Pruebas» del sidebar (reportes y formularios tipo 1-3). En el laboratorio hay galería por
    sección, comparador de variantes y panel «Tema» cuyo «Exportar tema» entrega los tokens.
    Los códigos de catálogo (GL-201, KP-101, TB-101, BT-109…) se retiraron: lo que existía quedó
    en el laboratorio marcado «Plantilla actual». Cuando el usuario elija, lo elegido se promueve

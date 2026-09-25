@@ -29,7 +29,7 @@ export function LabCard({ grafico, alto = 280, sinEnlace, titulo, limpia, classN
   const [visible, setVisible] = useState(false);
   const familia = FAMILIAS.find((f) => f.id === grafico.familia)?.nombre;
   const { Componente } = grafico;
-  const crece = seccionDe(grafico.familia) === "botones";
+  const crece = ["botones", "formularios"].includes(seccionDe(grafico.familia));
 
   useEffect(() => {
     const el = ref.current;

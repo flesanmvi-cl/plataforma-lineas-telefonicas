@@ -1,4 +1,4 @@
-import { LayoutGrid, Palette, Settings, type LucideIcon } from "lucide-react";
+import { FlaskConical, LayoutGrid, Palette, Settings, type LucideIcon } from "lucide-react";
 
 // Fuente única de navegación: Sidebar, TopBar (ruta de migas) y las tabs de sección
 // consumen estos arreglos para no mantener listas sincronizadas a mano.
@@ -31,13 +31,28 @@ export const NAV_ITEMS: NavItem[] = [
     label: "Guía de Estilo",
     icon: Palette,
     children: [
-      { href: "/ui-kit", label: "Fundamentos", grupo: "Base" },
-      { href: "/ui-kit/escala", label: "Escala", grupo: "Base" },
+      { href: "/ui-kit", label: "Estándar", grupo: "Vigente" },
       { href: "/ui-kit/laboratorio/graficos", label: "Gráficos", grupo: "Laboratorio" },
       { href: "/ui-kit/laboratorio/kpis", label: "KPIs", grupo: "Laboratorio" },
       { href: "/ui-kit/laboratorio/tablas", label: "Tablas", grupo: "Laboratorio" },
       { href: "/ui-kit/laboratorio/botones", label: "Botones", grupo: "Laboratorio" },
+      { href: "/ui-kit/laboratorio/formularios", label: "Formularios", grupo: "Laboratorio" },
       { href: "/ui-kit/laboratorio/contexto", label: "En contexto", grupo: "Laboratorio" },
+    ],
+  },
+  {
+    // Pantallas de prueba armadas solo con el estándar vigente (lib/lab-graficos/estandar.ts):
+    // sirven para ver cómo queda una plataforma real con lo elegido.
+    href: "/pruebas",
+    label: "Pruebas",
+    icon: FlaskConical,
+    children: [
+      { href: "/pruebas/reportes/tipo-1", label: "Reporte Tipo 1", grupo: "Reportes" },
+      { href: "/pruebas/reportes/tipo-2", label: "Reporte Tipo 2", grupo: "Reportes" },
+      { href: "/pruebas/reportes/tipo-3", label: "Reporte Tipo 3", grupo: "Reportes" },
+      { href: "/pruebas/formularios/tipo-1", label: "Formulario Tipo 1", grupo: "Formularios" },
+      { href: "/pruebas/formularios/tipo-2", label: "Formulario Tipo 2", grupo: "Formularios" },
+      { href: "/pruebas/formularios/tipo-3", label: "Formulario Tipo 3", grupo: "Formularios" },
     ],
   },
 ];

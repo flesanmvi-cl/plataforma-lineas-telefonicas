@@ -10,15 +10,18 @@ export type Familia =
   | "kpi"
   | "tablas"
   | "botones"
-  | "controles";
+  | "controles"
+  | "campos"
+  | "base";
 export type Libreria = "ECharts" | "Nivo" | "visx" | "MapLibre" | "HTML" | "SVG";
-export type Seccion = "graficos" | "kpis" | "tablas" | "botones";
+export type Seccion = "graficos" | "kpis" | "tablas" | "botones" | "formularios";
 
 export const SECCIONES: { id: Seccion; nombre: string; familias: Familia[] }[] = [
   { id: "graficos", nombre: "Gráficos", familias: ["comparacion", "composicion", "tiempo", "flujos", "distribucion", "mapas"] },
   { id: "kpis", nombre: "KPIs", familias: ["kpi"] },
   { id: "tablas", nombre: "Tablas", familias: ["tablas"] },
   { id: "botones", nombre: "Botones", familias: ["botones", "controles"] },
+  { id: "formularios", nombre: "Formularios", familias: ["campos", "base"] },
 ];
 
 export function seccionDe(familia: Familia): Seccion {
@@ -36,6 +39,8 @@ export const FAMILIAS: { id: Familia; nombre: string }[] = [
   { id: "tablas", nombre: "Tablas" },
   { id: "botones", nombre: "Botones y acciones" },
   { id: "controles", nombre: "Grupos y controles" },
+  { id: "campos", nombre: "Campos" },
+  { id: "base", nombre: "Chips, insignias, tarjetas y carga" },
 ];
 
 /** Propiedades que recibe todo gráfico del laboratorio. */

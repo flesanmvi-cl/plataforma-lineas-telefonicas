@@ -9,7 +9,7 @@ const nextConfig: NextConfig = {
   async redirects() {
     const lab = "/ui-kit/laboratorio";
     return [
-      ...["graficos", "kpis", "tablas", "botones"].map((s) => ({ source: `/ui-kit/${s}`, destination: `${lab}/${s}`, permanent: false })),
+      ...["graficos", "kpis", "tablas", "botones", "formularios"].map((s) => ({ source: `/ui-kit/${s}`, destination: `${lab}/${s}`, permanent: false })),
       { source: "/ui-kit/laboratorio-graficos", destination: `${lab}/graficos`, permanent: false },
       { source: "/ui-kit/laboratorio-graficos/comparador", destination: `${lab}/graficos/comparador`, permanent: false },
       { source: "/ui-kit/laboratorio-graficos/contexto", destination: `${lab}/contexto`, permanent: false },

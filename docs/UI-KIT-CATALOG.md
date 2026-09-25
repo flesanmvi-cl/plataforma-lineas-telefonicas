@@ -2,11 +2,17 @@
 
 `/ui-kit` tiene dos partes:
 
-- **Base** — `Fundamentos` (tokens, tipografía, clases utilitarias) y `Escala` (raíz fluida y
-  densidad). Son la base de toda plataforma y no se eligen en el laboratorio.
-- **Laboratorio de diseño** — `/ui-kit/laboratorio/<sección>` para **gráficos, KPIs, tablas y
-  botones**, más `En contexto` (un tablero de ejemplo con todo junto). Es el método para elegir
-  el estándar visual de reportes y plataformas.
+- **Estándar** (`/ui-kit`) — resumen de lo vigente: identidad y color, tipografía, escala y
+  densidad, superficie y forma, formularios y la muestra elegida de cada sección, cada tarjeta con
+  «Ver tokens» copiables y el botón «Exportar estándar». Sale de `lib/lab-graficos/estandar.ts`
+  (tema + muestra elegida por sección). La comparación de escalas sigue en `/ui-kit/escala`,
+  enlazada desde su tarjeta.
+- **Laboratorio de diseño** — `/ui-kit/laboratorio/<sección>` para **gráficos, KPIs, tablas,
+  botones y formularios**, más `En contexto`. Es el método para elegir el estándar visual.
+
+Además, el menú **Pruebas** del sidebar (`/pruebas/reportes/tipo-1..3` y
+`/pruebas/formularios/tipo-1..3`) tiene pantallas de plataforma armadas solo con el estándar
+vigente (su layout usa `LabTemaFijo` con `ESTANDAR.tema`), para ver cómo queda en uso real.
 
 ## Los códigos de catálogo se retiraron (2026-09-25)
 
@@ -49,7 +55,9 @@ actual»**, para compararlo con lo nuevo (filtro «Origen» en la galería). Las
 1. Pasar los tokens de «Exportar tema» al `@theme` de `app/globals.css`.
 2. Promover las muestras elegidas a componentes estándar (con código nuevo) en
    `components/charts|kpis|tables|buttons/`, y documentarlos aquí.
-3. Borrar lo que no se eligió: muestras, letras de `app/fonts/lab/` y librerías sin uso.
+3. Actualizar `lib/lab-graficos/estandar.ts` (`tema`, `muestras`, `provisorio: false`,
+   `vigenteDesde`, `version`): la pestaña Estándar y las pantallas de Pruebas lo toman solas.
+4. Borrar lo que no se eligió: muestras, letras de `app/fonts/lab/` y librerías sin uso.
 
 ## Infraestructura compartida
 

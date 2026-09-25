@@ -83,3 +83,29 @@ export function useLabTema(): ValorContexto {
 export function useTokens(): TokensLab {
   return useLabTema().tokens;
 }
+
+/**
+ * Tema fijo (no se guarda ni se edita): para la pestaña «Estándar» y las pantallas de prueba,
+ * que deben verse con lo elegido y no con lo que se esté probando en el laboratorio.
+ */
+export function LabTemaFijo({ tema, children }: { tema: TemaLab; children: ReactNode }) {
+  const { resolvedTheme } = useTheme();
+  const [montado, setMontado] = useState(false);
+  const [fuentesListas, setFuentesListas] = useState(0);
+
+  useEffect(() => {
+    setMontado(true);
+    document.fonts?.ready.then(() => setFuentesListas((n) => n + 1));
+  }, []);
+
+  const oscuro = montado && resolvedTheme === "dark";
+  const tokens = useMemo(
+    () => calcularTokens(tema, oscuro, montado ? resolverFuente(tema.fuente) : "sans-serif"),
+    // fuentesListas fuerza el recálculo cuando terminan de cargar las letras.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [tema, oscuro, fuentesListas, montado],
+  );
+  const noEditable = () => {};
+
+  return <Contexto.Provider value={{ tema, setTema: noEditable, reiniciar: noEditable, tokens }}>{children}</Contexto.Provider>;
+}

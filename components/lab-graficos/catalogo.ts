@@ -9,6 +9,8 @@ import { GRAFICOS_TABLAS } from "@/components/lab-graficos/graficos/tablas";
 import { GRAFICOS_MAPAS } from "@/components/lab-graficos/graficos/mapas";
 import { GRAFICOS_BOTONES } from "@/components/lab-graficos/graficos/botones";
 import { GRAFICOS_CONTROLES } from "@/components/lab-graficos/graficos/controles";
+import { GRAFICOS_CAMPOS } from "@/components/lab-graficos/graficos/campos";
+import { GRAFICOS_BASE } from "@/components/lab-graficos/graficos/base";
 
 /** Catálogo completo del laboratorio, en el orden de las familias. */
 export const CATALOGO: GraficoLab[] = [
@@ -22,6 +24,8 @@ export const CATALOGO: GraficoLab[] = [
   ...GRAFICOS_MAPAS,
   ...GRAFICOS_BOTONES,
   ...GRAFICOS_CONTROLES,
+  ...GRAFICOS_CAMPOS,
+  ...GRAFICOS_BASE,
 ];
 
 export function graficoPorId(id: string | null | undefined): GraficoLab | undefined {

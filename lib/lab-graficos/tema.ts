@@ -19,6 +19,7 @@
  * - botones: tokens.boton (caja, peso, radio, relleno, sombra, alto y texto por tamaño).
  * - tablas: tokens.tabla (zebra, bordes, encabezado, alto de fila, hover).
  * - KPIs: tokens.kpi (tamaño de cifra, acento de la tarjeta).
+ * - formularios: tokens.campo (estilo, etiqueta, alto, radio y colores por estado).
  */
 
 export type PaletaId = "marca" | "marca-extendida" | "grafito" | "equilibrada" | "tableau" | "okabe-ito" | "tierra";
@@ -45,6 +46,8 @@ export type TablaBordes = "filas" | "grilla" | "ninguno";
 export type TablaEncabezado = "suave" | "marcado" | "oscuro";
 export type KpiCifra = "m" | "l" | "xl";
 export type KpiAcento = "ninguno" | "franja" | "punto";
+export type CampoEstilo = "contorno" | "relleno" | "subrayado";
+export type CampoEtiqueta = "arriba" | "flotante" | "izquierda";
 
 export interface TemaLab {
   paleta: PaletaId;
@@ -71,6 +74,9 @@ export interface TemaLab {
   // KPIs
   kpiCifra: KpiCifra;
   kpiAcento: KpiAcento;
+  // Formularios
+  campoEstilo: CampoEstilo;
+  campoEtiqueta: CampoEtiqueta;
 }
 
 export const TEMA_INICIAL: TemaLab = {
@@ -95,6 +101,8 @@ export const TEMA_INICIAL: TemaLab = {
   tablaEncabezado: "suave",
   kpiCifra: "l",
   kpiAcento: "ninguno",
+  campoEstilo: "contorno",
+  campoEtiqueta: "arriba",
 };
 
 interface DefPaleta {
@@ -269,6 +277,20 @@ export interface TokensLab {
   };
   /** KPIs: tamaño de la cifra principal y acento de la tarjeta. */
   kpi: { cifra: number; acento: KpiAcento };
+  /** Campos de formulario: estilo, posición de la etiqueta y colores por estado. */
+  campo: {
+    estilo: CampoEstilo;
+    etiqueta: CampoEtiqueta;
+    alto: number;
+    radio: number;
+    fondo: string;
+    borde: string;
+    bordeFoco: string;
+    anilloFoco: string;
+    error: string;
+    deshabilitado: string;
+    placeholder: string;
+  };
 }
 
 /** Lee la familia real que next/font puso en la variable CSS (para canvas y SVG). */
@@ -365,6 +387,19 @@ export function calcularTokens(tema: TemaLab, oscuro: boolean, fuente: string): 
       hover: oscuro ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.035)",
     },
     kpi: { cifra: { m: 24, l: 32, xl: 42 }[tema.kpiCifra], acento: tema.kpiAcento },
+    campo: {
+      estilo: tema.campoEstilo,
+      etiqueta: tema.campoEtiqueta,
+      alto: compacta ? 36 : 44,
+      radio: tema.campoEstilo === "subrayado" ? 0 : Math.min(tema.radio, 10),
+      fondo: tema.campoEstilo === "relleno" ? (oscuro ? "#232323" : "#F1F1F1") : oscuro ? "#1A1A1A" : "#FFFFFF",
+      borde: tema.campoEstilo === "relleno" ? "transparent" : oscuro ? "#3A3A3A" : "#D9D9D9",
+      bordeFoco: colores[0],
+      anilloFoco: conAlfa(colores[0], 0.18),
+      error: oscuro ? "#FF5A63" : "#E30613",
+      deshabilitado: oscuro ? "#161616" : "#F4F4F4",
+      placeholder: oscuro ? "#6B6B6B" : "#8B8C8E",
+    },
   };
 }
 
@@ -406,6 +441,8 @@ export function exportarCss(tokens: TokensLab): string {
     `--tabla-encabezado: ${tema.tablaEncabezado};`,
     `--kpi-cifra: ${tema.kpiCifra};`,
     `--kpi-acento: ${tema.kpiAcento};`,
+    `--campo-estilo: ${tema.campoEstilo};`,
+    `--campo-etiqueta: ${tema.campoEtiqueta};`,
   ];
   return lineas.join("\n");
 }

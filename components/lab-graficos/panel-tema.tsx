@@ -27,6 +27,8 @@ import {
   type KpiCifra,
   type TablaBordes,
   type TablaEncabezado,
+  type CampoEstilo,
+  type CampoEtiqueta,
 } from "@/lib/lab-graficos/tema";
 import type { Seccion } from "@/components/lab-graficos/tipos";
 
@@ -305,6 +307,33 @@ export function PanelTema({ seccion = null }: { seccion?: Seccion | null }) {
         </Bloque>
       )}
 
+      {mostrar("formularios") && (
+        <Bloque titulo="Formularios">
+          <Grupo titulo="Estilo de campo">
+            <Segmento<CampoEstilo>
+              valor={tema.campoEstilo}
+              opciones={[
+                { id: "contorno", nombre: "Contorno" },
+                { id: "relleno", nombre: "Relleno" },
+                { id: "subrayado", nombre: "Subrayado" },
+              ]}
+              onChange={(campoEstilo) => setTema({ campoEstilo })}
+            />
+          </Grupo>
+          <Grupo titulo="Etiqueta">
+            <Segmento<CampoEtiqueta>
+              valor={tema.campoEtiqueta}
+              opciones={[
+                { id: "arriba", nombre: "Arriba" },
+                { id: "flotante", nombre: "Flotante" },
+                { id: "izquierda", nombre: "Izquierda" },
+              ]}
+              onChange={(campoEtiqueta) => setTema({ campoEtiqueta })}
+            />
+          </Grupo>
+        </Bloque>
+      )}
+
       {mostrar("botones") && (
         <Bloque titulo="Botones">
           <Grupo titulo="Forma">
@@ -422,7 +451,7 @@ function Segmento<T extends string>({
   );
 }
 
-function DialogoExportar({ css, json, onCerrar }: { css: string; json: string; onCerrar: () => void }) {
+export function DialogoExportar({ css, json, onCerrar }: { css: string; json: string; onCerrar: () => void }) {
   const [copiado, setCopiado] = useState<"css" | "json" | null>(null);
 
   async function copiar(tipo: "css" | "json") {
