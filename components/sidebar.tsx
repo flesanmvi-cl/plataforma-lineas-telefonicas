@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ArrowUpRight, ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/cn";
 import {
   NAV_CONFIG,
@@ -130,7 +130,7 @@ export function Sidebar() {
                 collapsed={collapsed}
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src="/sap-logo.svg" alt="" className="h-3.5 w-auto shrink-0" />
+                <img src="/sap-logo.svg" alt="" className="h-4 w-auto shrink-0" />
               </AccesoDirecto>
             )}
             {PORTAL_CIA_URL && (
@@ -140,7 +140,7 @@ export function Sidebar() {
                 nombre="Portal CIA"
                 collapsed={collapsed}
               >
-                <CiaLogo className="w-3.5 h-3.5 shrink-0 text-flesan-red dark:text-white" />
+                <CiaLogo className="w-4 h-4 shrink-0 text-flesan-red dark:text-white" />
               </AccesoDirecto>
             )}
           </div>
@@ -187,7 +187,7 @@ export function Sidebar() {
   );
 }
 
-// Acceso directo a un portal externo: botón compacto (ícono + sigla + ↗) bajo el título; el
+// Acceso directo a un portal externo: ícono con la sigla abajo, bajo el título; el
 // nombre completo aparece en un globo al pasar el mouse o con foco de teclado. Colapsado, solo
 // el ícono. Abre en otra pestaña.
 function AccesoDirecto({
@@ -213,17 +213,12 @@ function AccesoDirecto({
         aria-label={`Abrir ${nombre} en otra pestaña`}
         aria-describedby={idGlobo}
         className={cn(
-          "flex items-center justify-center gap-1.5 h-8 border border-border rounded-flesan-sm bg-surface-2 font-label text-[0.6875rem] tracking-[0.06em] uppercase text-muted hover:text-text hover:border-border-strong transition-colors whitespace-nowrap",
-          collapsed ? "w-8" : "flex-1 px-2",
+          "flex flex-col items-center justify-center gap-1 py-1.5 rounded-flesan-sm font-label text-xs tracking-[0.08em] uppercase text-muted hover:text-text hover:bg-bg transition-colors whitespace-nowrap",
+          collapsed ? "w-8" : "flex-1",
         )}
       >
         {children}
-        {!collapsed && (
-          <>
-            {label}
-            <ArrowUpRight className="w-3 h-3 shrink-0 text-faint" />
-          </>
-        )}
+        {!collapsed && label}
       </a>
       <span
         id={idGlobo}
