@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ArrowUpRight, ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/cn";
 import {
   NAV_CONFIG,
@@ -96,32 +96,55 @@ export function Sidebar() {
         collapsed ? "w-16" : "w-60",
       )}
     >
-      {/* Logo + nombre de la plataforma + toggle de colapsar */}
-      <div
-        className={cn(
-          "flex items-center h-14 border-b border-border",
-          collapsed ? "justify-center px-2 gap-1.5" : "gap-3 px-5",
-        )}
-      >
-        <CiaLogo className="w-5 h-5 shrink-0 text-flesan-red dark:text-white" />
-        {!collapsed && (
-          // TODO: reemplazar por el nombre real de la plataforma.
-          <span className="font-display text-sm font-bold italic uppercase tracking-[0.04em] text-text leading-none whitespace-nowrap flex-1">
-            Nombre <span className="text-flesan-red">Plataforma</span>
-          </span>
-        )}
-        <button
-          type="button"
-          onClick={toggleCollapsed}
-          title={collapsed ? "Expandir menú" : "Colapsar menú"}
-          className="flex items-center justify-center w-6 h-6 shrink-0 border border-border-strong text-muted hover:text-text hover:border-text cursor-pointer"
-        >
-          {collapsed ? (
-            <ChevronRight className="w-[0.8125rem] h-[0.8125rem]" />
-          ) : (
-            <ChevronLeft className="w-[0.8125rem] h-[0.8125rem]" />
+      {/* Encabezado: logo + nombre + colapsar (su borde calza con el de la barra superior), y bajo
+          el título los accesos a los portales */}
+      <div className={cn((SAP_WORKZONE_URL || PORTAL_CIA_URL) && "border-b border-border")}>
+        <div className={cn("flex items-center h-14 border-b border-border", collapsed ? "justify-center px-2 gap-1.5" : "gap-3 px-5")}>
+          <CiaLogo className="w-5 h-5 shrink-0 text-flesan-red dark:text-white" />
+          {!collapsed && (
+            // TODO: reemplazar por el nombre real de la plataforma.
+            <span className="font-display text-sm font-bold italic uppercase tracking-[0.04em] text-text leading-none whitespace-nowrap flex-1">
+              Nombre <span className="text-flesan-red">Plataforma</span>
+            </span>
           )}
-        </button>
+          <button
+            type="button"
+            onClick={toggleCollapsed}
+            title={collapsed ? "Expandir menú" : "Colapsar menú"}
+            className="flex items-center justify-center w-6 h-6 shrink-0 border border-border-strong text-muted hover:text-text hover:border-text cursor-pointer"
+          >
+            {collapsed ? (
+              <ChevronRight className="w-[0.8125rem] h-[0.8125rem]" />
+            ) : (
+              <ChevronLeft className="w-[0.8125rem] h-[0.8125rem]" />
+            )}
+          </button>
+        </div>
+        {(SAP_WORKZONE_URL || PORTAL_CIA_URL) && (
+          <div className={cn("flex gap-1.5 py-3", collapsed ? "flex-col items-center px-2" : "px-4")}>
+            {SAP_WORKZONE_URL && (
+              <AccesoDirecto
+                href={SAP_WORKZONE_URL}
+                label="Workzone"
+                titulo="Abrir SAP Workzone en otra pestaña"
+                collapsed={collapsed}
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src="/sap-logo.svg" alt="" className="h-3.5 w-auto shrink-0" />
+              </AccesoDirecto>
+            )}
+            {PORTAL_CIA_URL && (
+              <AccesoDirecto
+                href={PORTAL_CIA_URL}
+                label="Portal CIA"
+                titulo="Abrir el Portal CIA en otra pestaña"
+                collapsed={collapsed}
+              >
+                <CiaLogo className="w-3.5 h-3.5 shrink-0 text-flesan-red dark:text-white" />
+              </AccesoDirecto>
+            )}
+          </div>
+        )}
       </div>
 
       {/* Navegación: enlace directo, o menú flotante si el ítem tiene subpaneles */}
@@ -143,26 +166,6 @@ export function Sidebar() {
         )}
       </nav>
 
-      {/* Accesos directos a otros sistemas del grupo */}
-      <div className={cn("flex flex-col gap-1 py-3 border-t border-border", collapsed ? "px-2" : "px-3")}>
-        {!collapsed && (
-          <p className="font-label text-[0.625rem] font-semibold tracking-[0.14em] uppercase text-faint text-center px-3 pb-1">
-            Abrir portales
-          </p>
-        )}
-        {SAP_WORKZONE_URL && (
-          <AccesoDirecto href={SAP_WORKZONE_URL} label="Workzone" titulo="Ir a SAP Workzone" collapsed={collapsed}>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/sap-logo.svg" alt="SAP" className="h-4 w-auto shrink-0" />
-          </AccesoDirecto>
-        )}
-        {PORTAL_CIA_URL && (
-          <AccesoDirecto href={PORTAL_CIA_URL} label="Portal CIA" titulo="Ir al Portal CIA" collapsed={collapsed}>
-            <CiaLogo className="w-4 h-4 shrink-0 text-flesan-red dark:text-white" />
-          </AccesoDirecto>
-        )}
-      </div>
-
       {/* Pie: configuración (solo admin) y usuario; el tema vive en el menú del usuario */}
       <div className={cn("border-t border-border flex flex-col gap-2 py-3", collapsed ? "px-2 items-center" : "px-3")}>
         {admin && (
@@ -170,15 +173,9 @@ export function Sidebar() {
             href={NAV_CONFIG.href}
             title={collapsed ? NAV_CONFIG.label : undefined}
             aria-current={configActiva ? "page" : undefined}
-            className={cn(
-              "relative flex items-center justify-center w-full h-9 px-3 font-label text-xs tracking-[0.08em] uppercase whitespace-nowrap transition-colors hover:bg-bg",
-              configActiva ? "text-text" : "text-muted hover:text-text",
-            )}
+            className={claseItem(configActiva, collapsed)}
           >
-            {/* Igual que los accesos: ícono a la izquierda, texto centrado en la fila */}
-            <span className={cn("flex items-center justify-center w-6", !collapsed && "absolute left-3")}>
-              <ConfigIcon className={cn("w-4 h-4 shrink-0", configActiva && "text-flesan-red")} />
-            </span>
+            <ConfigIcon className={cn("w-4 h-4 shrink-0", configActiva && "text-flesan-red")} />
             {!collapsed && NAV_CONFIG.label}
           </Link>
         )}
@@ -190,8 +187,8 @@ export function Sidebar() {
   );
 }
 
-// Fila de acceso directo: el ícono queda fijo a la izquierda y el texto centrado en todo
-// el ancho de la fila, sin contar el ícono. Colapsado, solo el ícono al centro.
+// Acceso directo a un portal externo: botón compacto (ícono + nombre + ↗) bajo el título;
+// colapsado, solo el ícono. Abre en otra pestaña.
 function AccesoDirecto({
   href,
   label,
@@ -211,10 +208,19 @@ function AccesoDirecto({
       target="_blank"
       rel="noopener noreferrer"
       title={titulo}
-      className="relative flex items-center justify-center h-9 px-3 font-label text-xs tracking-[0.08em] uppercase text-muted hover:text-text hover:bg-bg transition-colors whitespace-nowrap"
+      aria-label={collapsed ? titulo : undefined}
+      className={cn(
+        "flex items-center justify-center gap-1.5 h-8 border border-border rounded-flesan-sm bg-surface-2 font-label text-[0.6875rem] tracking-[0.06em] uppercase text-muted hover:text-text hover:border-border-strong transition-colors whitespace-nowrap",
+        collapsed ? "w-8" : "flex-1 px-2",
+      )}
     >
-      <span className={cn("flex items-center justify-center w-6", !collapsed && "absolute left-3")}>{children}</span>
-      {!collapsed && label}
+      {children}
+      {!collapsed && (
+        <>
+          {label}
+          <ArrowUpRight className="w-3 h-3 shrink-0 text-faint" />
+        </>
+      )}
     </a>
   );
 }
