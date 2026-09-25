@@ -5,7 +5,7 @@ import { motion } from "motion/react";
 import { useTokens } from "@/components/lab-graficos/tema-context";
 import type { PropsGraficoLab } from "@/components/lab-graficos/tipos";
 import { azar, formato, LINEAS, realVsMeta } from "@/lib/lab-graficos/datos";
-import { estiloCelda, estiloContenedor, fondoResaltado, rellenoBarra } from "./comun";
+import { estiloCelda, estiloContenedor, estiloTabla, fondoFila, ocultoVisual, rellenoBarra } from "./comun";
 import { EncabezadoOrdenable, type Direccion } from "./encabezado-ordenable";
 
 type Columna = "obra" | "linea" | "real" | "meta" | "desvio" | "monto";
@@ -48,22 +48,23 @@ export function TablaBarrasCelda({ alto }: PropsGraficoLab) {
   const ordenar = (col: Columna) =>
     setOrden((o) => (o.col === col ? { col, dir: o.dir === "asc" ? "desc" : "asc" } : { col, dir: col === "obra" || col === "linea" ? "asc" : "desc" }));
 
-  const celda = estiloCelda(t);
+  const celda = (col: number) => estiloCelda(t, { col });
   const segundos = t.animacion.duracion / 1000;
   const neutro = t.colores.find((c) => c !== t.acento) ?? t.textoSuave;
 
   return (
     <div style={estiloContenedor(t, alto)}>
-      <table style={{ width: "100%", borderCollapse: "separate", borderSpacing: 0 }}>
-        <caption style={{ position: "absolute", width: 1, height: 1, overflow: "hidden", clip: "rect(0 0 0 0)" }}>
+      <table style={estiloTabla()}>
+        <caption style={ocultoVisual}>
           Avance real contra meta por obra
         </caption>
         <thead>
           <tr>
-            {COLUMNAS.map((c) => (
+            {COLUMNAS.map((c, j) => (
               <EncabezadoOrdenable
                 key={c.id}
                 t={t}
+                col={j}
                 etiqueta={c.etiqueta}
                 activo={orden.col === c.id}
                 direccion={orden.dir}
@@ -85,11 +86,11 @@ export function TablaBarrasCelda({ alto }: PropsGraficoLab) {
                 transition={{ duration: segundos * 0.6, ease: [0.22, 1, 0.36, 1] }}
                 onMouseEnter={() => setActiva(f.obra)}
                 onMouseLeave={() => setActiva(null)}
-                style={{ background: activa === f.obra ? fondoResaltado(t) : "transparent" }}
+                style={{ background: fondoFila(t, i, activa === f.obra) }}
               >
-                <td style={{ ...celda, fontWeight: 600 }}>{f.obra}</td>
-                <td style={{ ...celda, color: t.textoSuave }}>{f.linea}</td>
-                <td style={celda}>
+                <td style={{ ...celda(0), fontWeight: 600 }}>{f.obra}</td>
+                <td style={{ ...celda(1), color: t.textoSuave }}>{f.linea}</td>
+                <td style={celda(2)}>
                   <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                     <div
                       role="meter"
@@ -122,12 +123,12 @@ export function TablaBarrasCelda({ alto }: PropsGraficoLab) {
                     <span style={{ width: 36, textAlign: "right", fontWeight: 600 }}>{formato.porcentaje(f.real)}</span>
                   </div>
                 </td>
-                <td style={{ ...celda, textAlign: "right", color: t.textoSuave }}>{formato.porcentaje(f.meta)}</td>
-                <td style={{ ...celda, textAlign: "right", color: bajo ? t.acento : t.texto, fontWeight: 600 }}>
+                <td style={{ ...celda(3), textAlign: "right", color: t.textoSuave }}>{formato.porcentaje(f.meta)}</td>
+                <td style={{ ...celda(4), textAlign: "right", color: bajo ? t.acento : t.texto, fontWeight: 600 }}>
                   {f.desvio > 0 ? "+" : ""}
                   {formato.entero(f.desvio)} pp
                 </td>
-                <td style={{ ...celda, textAlign: "right" }}>{formato.millones(f.monto)}</td>
+                <td style={{ ...celda(5), textAlign: "right" }}>{formato.millones(f.monto)}</td>
               </motion.tr>
             );
           })}

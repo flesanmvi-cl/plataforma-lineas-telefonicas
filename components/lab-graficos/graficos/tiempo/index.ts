@@ -8,6 +8,12 @@ import { GanttObra } from "./gantt-obra";
 import { LineaHitos } from "./linea-hitos";
 import { LineaMultiserie } from "./linea-multiserie";
 import { LineaPeriodo } from "./linea-periodo";
+import { PlantillaAreaApilada } from "./plantilla-area-apilada";
+import { PlantillaAreaSimple } from "./plantilla-area-simple";
+import { PlantillaLineaArea } from "./plantilla-linea-area";
+import { PlantillaLineaMultiserie } from "./plantilla-linea-multiserie";
+import { PlantillaLineaSimple } from "./plantilla-linea-simple";
+import { PlantillaLineaTooltip } from "./plantilla-linea-tooltip";
 import { Streamgraph } from "./streamgraph";
 
 export const GRAFICOS_TIEMPO: GraficoLab[] = [
@@ -103,5 +109,65 @@ export const GRAFICOS_TIEMPO: GraficoLab[] = [
     descripcion: "Ranking acumulado que se reordena mes a mes; útil para contar una historia en presentación.",
     interacciones: ["Reproducir y pausar", "Deslizador de mes", "Tooltip"],
     Componente: CarreraBarras,
+  },
+  {
+    id: "plantilla-linea-simple",
+    nombre: "Plantilla actual: Línea simple",
+    familia: "tiempo",
+    libreria: "SVG",
+    descripcion: "Una serie mensual suavizada con puntos y grilla horizontal, sin ejes; SVG hecho a mano.",
+    interacciones: [],
+    plantilla: true,
+    Componente: PlantillaLineaSimple,
+  },
+  {
+    id: "plantilla-linea-area",
+    nombre: "Plantilla actual: Línea con área",
+    familia: "tiempo",
+    libreria: "SVG",
+    descripcion: "Tendencia semanal con relleno en degradado bajo la curva.",
+    interacciones: [],
+    plantilla: true,
+    Componente: PlantillaLineaArea,
+  },
+  {
+    id: "plantilla-linea-multiserie",
+    nombre: "Plantilla actual: Línea multiserie",
+    familia: "tiempo",
+    libreria: "SVG",
+    descripcion: "Tres obras comparadas mes a mes en líneas suavizadas, con leyenda debajo.",
+    interacciones: [],
+    plantilla: true,
+    Componente: PlantillaLineaMultiserie,
+  },
+  {
+    id: "plantilla-linea-tooltip",
+    nombre: "Plantilla actual: Línea con tooltip",
+    familia: "tiempo",
+    libreria: "SVG",
+    descripcion: "Serie mensual que marca el punto más cercano al mouse con guía punteada y valor.",
+    interacciones: ["Tooltip al pasar el mouse", "Resaltar punto"],
+    plantilla: true,
+    Componente: PlantillaLineaTooltip,
+  },
+  {
+    id: "plantilla-area-simple",
+    nombre: "Plantilla actual: Área simple",
+    familia: "tiempo",
+    libreria: "SVG",
+    descripcion: "Volumen semanal con relleno sólido semitransparente, sin degradado.",
+    interacciones: [],
+    plantilla: true,
+    Componente: PlantillaAreaSimple,
+  },
+  {
+    id: "plantilla-area-apilada",
+    nombre: "Plantilla actual: Área apilada",
+    familia: "tiempo",
+    libreria: "SVG",
+    descripcion: "Mano de obra y materiales acumulados por mes en dos capas, con leyenda debajo.",
+    interacciones: [],
+    plantilla: true,
+    Componente: PlantillaAreaApilada,
   },
 ];

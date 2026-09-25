@@ -7,6 +7,8 @@ import { GRAFICOS_DISTRIBUCION } from "@/components/lab-graficos/graficos/distri
 import { GRAFICOS_KPI } from "@/components/lab-graficos/graficos/kpi";
 import { GRAFICOS_TABLAS } from "@/components/lab-graficos/graficos/tablas";
 import { GRAFICOS_MAPAS } from "@/components/lab-graficos/graficos/mapas";
+import { GRAFICOS_BOTONES } from "@/components/lab-graficos/graficos/botones";
+import { GRAFICOS_CONTROLES } from "@/components/lab-graficos/graficos/controles";
 
 /** Catálogo completo del laboratorio, en el orden de las familias. */
 export const CATALOGO: GraficoLab[] = [
@@ -18,6 +20,8 @@ export const CATALOGO: GraficoLab[] = [
   ...GRAFICOS_KPI,
   ...GRAFICOS_TABLAS,
   ...GRAFICOS_MAPAS,
+  ...GRAFICOS_BOTONES,
+  ...GRAFICOS_CONTROLES,
 ];
 
 export function graficoPorId(id: string | null | undefined): GraficoLab | undefined {

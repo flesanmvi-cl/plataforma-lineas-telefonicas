@@ -7,6 +7,9 @@ import { Bullet } from "./bullet";
 import { Bump } from "./bump";
 import { Dumbbell } from "./dumbbell";
 import { Lollipop } from "./lollipop";
+import { PlantillaBarrasAgrupadas } from "./plantilla-barras-agrupadas";
+import { PlantillaBarrasHorizontales } from "./plantilla-barras-horizontales";
+import { PlantillaBarrasVerticales } from "./plantilla-barras-verticales";
 import { Radar } from "./radar";
 import { Slope } from "./slope";
 
@@ -100,5 +103,35 @@ export const GRAFICOS_COMPARACION: GraficoLab[] = [
     descripcion: "Tres obras en seis dimensiones: perfil de fortalezas y debilidades.",
     interacciones: ["Chips muestran u ocultan obras", "Tooltip por dimensión"],
     Componente: Radar,
+  },
+  {
+    id: "plantilla-barras-verticales",
+    nombre: "Plantilla actual: Barras verticales",
+    familia: "comparacion",
+    libreria: "SVG",
+    descripcion: "Barras simples de una serie por mes, sin ejes ni valores; SVG hecho a mano.",
+    interacciones: [],
+    plantilla: true,
+    Componente: PlantillaBarrasVerticales,
+  },
+  {
+    id: "plantilla-barras-horizontales",
+    nombre: "Plantilla actual: Barras horizontales",
+    familia: "comparacion",
+    libreria: "SVG",
+    descripcion: "Ranking de obras con riel de fondo y el porcentaje en la punta de cada barra.",
+    interacciones: [],
+    plantilla: true,
+    Componente: PlantillaBarrasHorizontales,
+  },
+  {
+    id: "plantilla-barras-agrupadas",
+    nombre: "Plantilla actual: Barras agrupadas",
+    familia: "comparacion",
+    libreria: "SVG",
+    descripcion: "Meta contra real por trimestre en pares de barras, con leyenda debajo.",
+    interacciones: [],
+    plantilla: true,
+    Componente: PlantillaBarrasAgrupadas,
   },
 ];

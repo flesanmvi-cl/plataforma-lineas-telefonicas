@@ -5,7 +5,7 @@ import { useTokens } from "@/components/lab-graficos/tema-context";
 import type { PropsGraficoLab } from "@/components/lab-graficos/tipos";
 import { formato, MESES, OBRAS, serieMensual } from "@/lib/lab-graficos/datos";
 import { conAlfa } from "@/lib/lab-graficos/tema";
-import { altoFila, colorEnEscala, estiloContenedor, textoSobre } from "./comun";
+import { altoFila, colorEnEscala, estiloContenedor, ocultoVisual, textoSobre } from "./comun";
 import { EncabezadoOrdenable, type Direccion } from "./encabezado-ordenable";
 
 /** Columna de orden: índice de mes (0-11) o «prom» para el promedio anual. */
@@ -80,7 +80,7 @@ export function TablaHeatmap({ alto }: PropsGraficoLab) {
     <div style={{ ...estiloContenedor(t, alto), overflow: "hidden", display: "flex", flexDirection: "column" }} onMouseLeave={() => setFoco(null)}>
       <div style={{ flex: 1, overflow: "auto" }}>
         <table style={{ width: "100%", borderCollapse: "separate", borderSpacing: 3 }}>
-          <caption style={{ position: "absolute", width: 1, height: 1, overflow: "hidden", clip: "rect(0 0 0 0)" }}>
+          <caption style={ocultoVisual}>
             Índice mensual por obra
           </caption>
           <thead>
@@ -91,7 +91,7 @@ export function TablaHeatmap({ alto }: PropsGraficoLab) {
                 activo={orden.col === "obra"}
                 direccion={orden.dir}
                 onOrdenar={() => ordenar("obra")}
-                estilo={{ borderBottom: "none", padding: "0 6px" }}
+                estilo={{ borderBottom: "none", borderLeft: "none", padding: "0 6px" }}
               />
               {MESES.map((m, j) => (
                 <EncabezadoOrdenable
@@ -102,7 +102,7 @@ export function TablaHeatmap({ alto }: PropsGraficoLab) {
                   direccion={orden.dir}
                   alinear="center"
                   onOrdenar={() => ordenar(j)}
-                  estilo={{ ...encabezadoMes, borderBottom: "none", color: foco?.col === j ? t.texto : t.textoSuave }}
+                  estilo={{ ...encabezadoMes, borderBottom: "none", borderLeft: "none", opacity: foco && foco.col !== j ? 0.6 : 1 }}
                 />
               ))}
               <EncabezadoOrdenable
@@ -112,7 +112,7 @@ export function TablaHeatmap({ alto }: PropsGraficoLab) {
                 direccion={orden.dir}
                 alinear="right"
                 onOrdenar={() => ordenar("prom")}
-                estilo={{ borderBottom: "none", padding: "0 6px" }}
+                estilo={{ borderBottom: "none", borderLeft: "none", padding: "0 6px" }}
               />
             </tr>
           </thead>

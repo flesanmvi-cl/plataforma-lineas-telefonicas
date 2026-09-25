@@ -107,7 +107,7 @@ export function Gauge({ alto }: PropsGraficoLab) {
             offsetCenter: [0, "34%"],
             formatter: (v: number) => `{v|${formato.porcentaje(Math.round(v))}}`,
             rich: {
-              v: { color: t.texto, fontFamily: t.fuente, fontSize: t.tamano.valor, fontWeight: 600 },
+              v: { color: t.texto, fontFamily: t.fuente, fontSize: t.kpi.cifra, fontWeight: 600 },
             },
           },
           data: [{ value: ind.valor, name: `${ind.nombre} · ${nivel}` }],

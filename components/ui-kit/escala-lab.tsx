@@ -3,7 +3,8 @@
 import { useEffect, useState } from "react";
 import { ArrowDown, ArrowUp, Download, Filter } from "lucide-react";
 import { cn } from "@/lib/cn";
-import { GL201LineaSimple } from "@/components/charts/gl-201-linea-simple";
+import { PlantillaLineaSimple } from "@/components/lab-graficos/graficos/tiempo/plantilla-linea-simple";
+import { LabTemaProvider } from "@/components/lab-graficos/tema-context";
 
 /**
  * Laboratorio de escala (/ui-kit/escala). La plataforma usa por defecto la raíz fluida
@@ -308,7 +309,10 @@ function Reporte() {
 
       <div className="card dens-card">
         <p className="label-eyebrow mb-3">Avance mensual</p>
-        <GL201LineaSimple />
+        {/* El gráfico sale del laboratorio de diseño y toma su tema (colores y letra). */}
+        <LabTemaProvider>
+          <PlantillaLineaSimple alto={180} />
+        </LabTemaProvider>
       </div>
     </>
   );

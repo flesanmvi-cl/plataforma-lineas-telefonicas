@@ -29,11 +29,15 @@ archivo y los puntos de referencia abajo.
    `.display-title`, `.label-eyebrow`, `.label-meta`, `.body-lede`, `.brand-bullet`,
    `.toggle-pill` (+ `.toggle-pill-option.is-active`) y `.page-shell` — este último es el
    contenedor de ancho de todas las páginas (hasta 120rem + padding), no reintroducir `max-w-5xl`
-   suelto en cada page. `/ui-kit` tiene además tabs (KPIs/Gráficos/Tablas/Botones) con una
-   vitrina de componentes reales, cada uno con
-   un código de catálogo (ej. `GL-201`) — ver `docs/UI-KIT-CATALOG.md` para el índice completo
-   código → archivo. Si el usuario pide "usar el gráfico/KPI/tabla/botón <código>", el componente
-   ya existe en `components/charts|kpis|tables/`; ábrelo y reutilízalo en vez de escribirlo de cero.
+   suelto en cada page.
+   **Gráficos, KPIs, tablas y botones se eligen en el laboratorio de diseño**
+   (`/ui-kit/laboratorio/<graficos|kpis|tablas|botones>`, más «En contexto»): galería por
+   sección, comparador de variantes y panel «Tema» cuyo «Exportar tema» entrega los tokens.
+   Los códigos de catálogo (GL-201, KP-101, TB-101, BT-109…) se retiraron: lo que existía quedó
+   en el laboratorio marcado «Plantilla actual». Cuando el usuario elija, lo elegido se promueve
+   a componente estándar (con código nuevo) y lo demás se borra. Ver `docs/UI-KIT-CATALOG.md`.
+   Si el usuario pide una muestra del laboratorio, está en
+   `components/lab-graficos/graficos/<familia>/` (id en su `index.ts`); reutilízala.
 2. Si necesitas un color o tamaño que no está en `app/globals.css` (`@theme`), agrégalo ahí como
    variable CSS — no hardcodees hex sueltos en componentes ni reintroduzcas un
    `tailwind.config.js`.

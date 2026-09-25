@@ -6,7 +6,7 @@ import { useTokens } from "@/components/lab-graficos/tema-context";
 import type { PropsGraficoLab } from "@/components/lab-graficos/tipos";
 import { formato, LINEAS, MESES, OBRAS, serieMensual } from "@/lib/lab-graficos/datos";
 import { conAlfa, type TokensLab } from "@/lib/lab-graficos/tema";
-import { altoFila, estiloCelda, estiloContenedor, estiloEncabezado, fondoResaltado } from "./comun";
+import { altoFila, estiloCelda, estiloContenedor, estiloEncabezado, estiloTabla, fondoFila, ocultoVisual } from "./comun";
 import { EncabezadoOrdenable, type Direccion } from "./encabezado-ordenable";
 import { Sparkline } from "./sparkline";
 
@@ -74,24 +74,25 @@ export function TablaSparkline({ alto }: PropsGraficoLab) {
   const ordenar = (col: Columna) =>
     setOrden((o) => (o.col === col ? { col, dir: o.dir === "asc" ? "desc" : "asc" } : { col, dir: col === "obra" ? "asc" : "desc" }));
 
-  const celda = estiloCelda(t);
+  const celda = (col: number) => estiloCelda(t, { col });
   const color = t.colores.find((c) => c !== t.acento) ?? t.textoSuave;
 
   return (
     <div style={estiloContenedor(t, alto)}>
-      <table style={{ width: "100%", borderCollapse: "separate", borderSpacing: 0 }}>
-        <caption style={{ position: "absolute", width: 1, height: 1, overflow: "hidden", clip: "rect(0 0 0 0)" }}>
+      <table style={estiloTabla()}>
+        <caption style={ocultoVisual}>
           Producción mensual por obra con tendencia y variación
         </caption>
         <thead>
           <tr>
             <EncabezadoOrdenable t={t} etiqueta="Obra" activo={orden.col === "obra"} direccion={orden.dir} onOrdenar={() => ordenar("obra")} />
-            <th scope="col" style={{ ...estiloEncabezado(t), width: "34%" }}>
+            <th scope="col" style={{ ...estiloEncabezado(t, { col: 1 }), width: "34%" }}>
               Tendencia {MESES[0]}–{MESES[MESES.length - 1]}
             </th>
             <EncabezadoOrdenable
               t={t}
               etiqueta="Último"
+              col={2}
               alinear="right"
               activo={orden.col === "ultimo"}
               direccion={orden.dir}
@@ -100,6 +101,7 @@ export function TablaSparkline({ alto }: PropsGraficoLab) {
             <EncabezadoOrdenable
               t={t}
               etiqueta="vs mes ant."
+              col={3}
               alinear="right"
               activo={orden.col === "mensual"}
               direccion={orden.dir}
@@ -108,6 +110,7 @@ export function TablaSparkline({ alto }: PropsGraficoLab) {
             <EncabezadoOrdenable
               t={t}
               etiqueta="vs enero"
+              col={4}
               alinear="right"
               activo={orden.col === "anual"}
               direccion={orden.dir}
@@ -116,18 +119,18 @@ export function TablaSparkline({ alto }: PropsGraficoLab) {
           </tr>
         </thead>
         <tbody>
-          {ordenadas.map((f) => (
+          {ordenadas.map((f, i) => (
             <tr
               key={f.obra}
               onMouseEnter={() => setActiva(f.obra)}
               onMouseLeave={() => setActiva(null)}
-              style={{ background: activa === f.obra ? fondoResaltado(t) : "transparent" }}
+              style={{ background: fondoFila(t, i, activa === f.obra) }}
             >
-              <td style={celda}>
+              <td style={celda(0)}>
                 <div style={{ fontWeight: 600, lineHeight: 1.2 }}>{f.obra}</div>
                 {t.tema.densidad === "comoda" && <div style={{ fontSize: t.tamano.eje, color: t.textoSuave, lineHeight: 1.2 }}>{f.linea}</div>}
               </td>
-              <td style={{ ...celda, paddingTop: 4, paddingBottom: 4 }}>
+              <td style={{ ...celda(1), paddingTop: 4, paddingBottom: 4 }}>
                 <Sparkline
                   t={t}
                   valores={f.valores}
@@ -137,11 +140,11 @@ export function TablaSparkline({ alto }: PropsGraficoLab) {
                   formatear={(n) => formato.millones(n)}
                 />
               </td>
-              <td style={{ ...celda, textAlign: "right", fontWeight: 700 }}>{formato.millones(f.ultimo)}</td>
-              <td style={{ ...celda, textAlign: "right" }}>
+              <td style={{ ...celda(2), textAlign: "right", fontWeight: 700 }}>{formato.millones(f.ultimo)}</td>
+              <td style={{ ...celda(3), textAlign: "right" }}>
                 <ChipDelta t={t} valor={f.mensual} />
               </td>
-              <td style={{ ...celda, textAlign: "right" }}>
+              <td style={{ ...celda(4), textAlign: "right" }}>
                 <ChipDelta t={t} valor={f.anual} />
               </td>
             </tr>

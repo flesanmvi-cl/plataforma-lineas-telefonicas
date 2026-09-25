@@ -7,7 +7,17 @@ import { useTokens } from "@/components/lab-graficos/tema-context";
 import type { PropsGraficoLab } from "@/components/lab-graficos/tipos";
 import { azar, formato, LINEAS } from "@/lib/lab-graficos/datos";
 import { conAlfa, type TokensLab } from "@/lib/lab-graficos/tema";
-import { estiloCelda, estiloContenedor, estiloEncabezado, fondoResaltado, rellenoBarra } from "./comun";
+import {
+  estiloBotonTabla,
+  estiloCelda,
+  estiloContenedor,
+  estiloEncabezado,
+  estiloPie,
+  estiloTabla,
+  fondoFila,
+  ocultoVisual,
+  rellenoBarra,
+} from "./comun";
 
 /** Nombres genéricos de obra por línea (sintéticos). */
 const NOMBRES: Record<string, string[]> = {
@@ -82,20 +92,12 @@ export function TablaAgrupada({ alto }: PropsGraficoLab) {
     });
   const todosAbiertos = abiertos.size === grupos.length;
 
-  const celda = estiloCelda(t);
-  const num = { ...celda, textAlign: "right" as const };
+  const celda = (col: number) => estiloCelda(t, { col });
+  const num = (col: number) => ({ ...celda(col), textAlign: "right" as const });
   const segundos = t.animacion.duracion / 1000;
   const neutro = t.colores.find((c) => c !== t.acento) ?? t.textoSuave;
   // Pie fijo abajo con el fondo de la tarjeta.
-  const pie: CSSProperties = {
-    ...num,
-    position: "sticky",
-    bottom: 0,
-    background: t.fondoTarjeta,
-    borderTop: `1.5px solid ${t.texto}`,
-    borderBottom: "none",
-    fontWeight: 700,
-  };
+  const pie = (col: number): CSSProperties => estiloPie(t, { col });
   const fondoGrupo = conAlfa(t.oscuro ? "#FFFFFF" : "#231F20", t.superficie === "plana" ? 0.03 : 0.045);
 
   return (
@@ -104,24 +106,14 @@ export function TablaAgrupada({ alto }: PropsGraficoLab) {
         <button
           type="button"
           onClick={() => setAbiertos(todosAbiertos ? new Set() : new Set(grupos.map((g) => g.linea)))}
-          style={{
-            font: "inherit",
-            fontSize: t.tamano.eje,
-            fontWeight: 600,
-            color: t.texto,
-            background: "transparent",
-            border: `1px solid ${t.eje}`,
-            borderRadius: Math.min(t.radio, 999),
-            padding: "3px 10px",
-            cursor: "pointer",
-          }}
+          style={estiloBotonTabla(t)}
         >
           {todosAbiertos ? "Contraer todo" : "Expandir todo"}
         </button>
       </div>
       <div style={{ flex: 1, overflow: "auto" }}>
-        <table style={{ width: "100%", borderCollapse: "separate", borderSpacing: 0 }}>
-          <caption style={{ position: "absolute", width: 1, height: 1, overflow: "hidden", clip: "rect(0 0 0 0)" }}>
+        <table style={estiloTabla()}>
+          <caption style={ocultoVisual}>
             Presupuesto, costo y avance por línea de negocio y obra
           </caption>
           <thead>
@@ -129,16 +121,16 @@ export function TablaAgrupada({ alto }: PropsGraficoLab) {
               <th scope="col" style={estiloEncabezado(t)}>
                 Línea / obra
               </th>
-              <th scope="col" style={{ ...estiloEncabezado(t), textAlign: "right" }}>
+              <th scope="col" style={{ ...estiloEncabezado(t, { col: 1 }), textAlign: "right" }}>
                 Presupuesto
               </th>
-              <th scope="col" style={{ ...estiloEncabezado(t), textAlign: "right" }}>
+              <th scope="col" style={{ ...estiloEncabezado(t, { col: 2 }), textAlign: "right" }}>
                 Costo real
               </th>
-              <th scope="col" style={{ ...estiloEncabezado(t), textAlign: "right" }}>
+              <th scope="col" style={{ ...estiloEncabezado(t, { col: 3 }), textAlign: "right" }}>
                 Desvío
               </th>
-              <th scope="col" style={{ ...estiloEncabezado(t), textAlign: "right" }}>
+              <th scope="col" style={{ ...estiloEncabezado(t, { col: 4 }), textAlign: "right" }}>
                 Avance
               </th>
             </tr>
@@ -149,7 +141,7 @@ export function TablaAgrupada({ alto }: PropsGraficoLab) {
               return (
                 <Fragment key={g.linea}>
                   <tr style={{ background: fondoGrupo }}>
-                    <th scope="row" style={{ ...celda, textAlign: "left", fontWeight: 700 }}>
+                    <th scope="row" style={{ ...celda(0), textAlign: "left", fontWeight: 700 }}>
                       <button
                         type="button"
                         aria-expanded={abierto}
@@ -179,12 +171,12 @@ export function TablaAgrupada({ alto }: PropsGraficoLab) {
                         <span style={{ fontWeight: 500, color: t.textoSuave, fontSize: t.tamano.eje }}>({g.obras.length})</span>
                       </button>
                     </th>
-                    <td style={{ ...num, fontWeight: 700 }}>{formato.millones(g.total.presupuesto)}</td>
-                    <td style={{ ...num, fontWeight: 700 }}>{formato.millones(g.total.costo)}</td>
-                    <td style={num}>
+                    <td style={{ ...num(1), fontWeight: 700 }}>{formato.millones(g.total.presupuesto)}</td>
+                    <td style={{ ...num(2), fontWeight: 700 }}>{formato.millones(g.total.costo)}</td>
+                    <td style={num(3)}>
                       <Desvio t={t} valor={g.total.desvio} />
                     </td>
-                    <td style={{ ...num, fontWeight: 700 }}>
+                    <td style={{ ...num(4), fontWeight: 700 }}>
                       <Avance t={t} valor={g.total.avance} color={neutro} />
                     </td>
                   </tr>
@@ -202,15 +194,15 @@ export function TablaAgrupada({ alto }: PropsGraficoLab) {
                             transition={{ duration: Math.min(segundos, 0.3), delay: Math.min(segundos, 0.3) * k * 0.15 }}
                             onMouseEnter={() => setActiva(id)}
                             onMouseLeave={() => setActiva(null)}
-                            style={{ background: activa === id ? fondoResaltado(t) : "transparent" }}
+                            style={{ background: fondoFila(t, k, activa === id) }}
                           >
-                            <td style={{ ...celda, paddingLeft: 32 }}>{o.nombre}</td>
-                            <td style={num}>{formato.millones(o.presupuesto)}</td>
-                            <td style={num}>{formato.millones(o.costo)}</td>
-                            <td style={num}>
+                            <td style={{ ...celda(0), paddingLeft: 32 }}>{o.nombre}</td>
+                            <td style={num(1)}>{formato.millones(o.presupuesto)}</td>
+                            <td style={num(2)}>{formato.millones(o.costo)}</td>
+                            <td style={num(3)}>
                               <Desvio t={t} valor={desvio} />
                             </td>
-                            <td style={num}>
+                            <td style={num(4)}>
                               <Avance t={t} valor={o.avance} color={desvio > 0 ? t.acento : neutro} />
                             </td>
                           </motion.tr>
@@ -223,15 +215,15 @@ export function TablaAgrupada({ alto }: PropsGraficoLab) {
           </tbody>
           <tfoot>
             <tr>
-              <th scope="row" style={{ ...pie, textAlign: "left" }}>
+              <th scope="row" style={{ ...pie(0), textAlign: "left" }}>
                 Total general
               </th>
-              <td style={pie}>{formato.millones(general.presupuesto)}</td>
-              <td style={pie}>{formato.millones(general.costo)}</td>
-              <td style={pie}>
+              <td style={pie(1)}>{formato.millones(general.presupuesto)}</td>
+              <td style={pie(2)}>{formato.millones(general.costo)}</td>
+              <td style={pie(3)}>
                 <Desvio t={t} valor={general.desvio} />
               </td>
-              <td style={pie}>
+              <td style={pie(4)}>
                 <Avance t={t} valor={general.avance} color={neutro} />
               </td>
             </tr>

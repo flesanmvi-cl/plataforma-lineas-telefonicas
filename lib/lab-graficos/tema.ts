@@ -1,5 +1,5 @@
 /**
- * Tema del laboratorio de gráficos (/ui-kit/laboratorio-graficos).
+ * Tema del laboratorio de diseño (/ui-kit/laboratorio/<sección>): gráficos, KPIs, tablas y botones.
  *
  * Todas las opciones que se pueden elegir en el panel «Tema» y los tokens que salen de
  * ellas. Cada gráfico del laboratorio lee `TokensLab` (vía useLabTema) y NO hardcodea
@@ -16,6 +16,9 @@
  * - animación: tokens.animacion.duracion (ms, 0 = sin) y tokens.animacion.easing.
  * - curva: tokens.curva; grilla: tokens.grilla visible según tokens.grillaModo.
  * - etiquetas: tokens.etiquetas ("leyenda" | "directas").
+ * - botones: tokens.boton (caja, peso, radio, relleno, sombra, alto y texto por tamaño).
+ * - tablas: tokens.tabla (zebra, bordes, encabezado, alto de fila, hover).
+ * - KPIs: tokens.kpi (tamaño de cifra, acento de la tarjeta).
  */
 
 export type PaletaId = "marca" | "marca-extendida" | "grafito" | "equilibrada" | "tableau" | "okabe-ito" | "tierra";
@@ -35,6 +38,13 @@ export type TooltipId = "oscuro" | "claro" | "tarjeta";
 export type Curva = "recta" | "suave" | "escalonada";
 export type GrillaModo = "completa" | "minima" | "sin";
 export type Etiquetas = "leyenda" | "directas";
+export type BotonCaja = "mayusculas" | "normal";
+export type BotonForma = "recta" | "redondeada" | "pastilla";
+export type BotonRelleno = "solido" | "suave";
+export type TablaBordes = "filas" | "grilla" | "ninguno";
+export type TablaEncabezado = "suave" | "marcado" | "oscuro";
+export type KpiCifra = "m" | "l" | "xl";
+export type KpiAcento = "ninguno" | "franja" | "punto";
 
 export interface TemaLab {
   paleta: PaletaId;
@@ -48,6 +58,19 @@ export interface TemaLab {
   grillaModo: GrillaModo;
   etiquetas: Etiquetas;
   grosorLinea: number;
+  // Botones
+  botonCaja: BotonCaja;
+  botonPeso: 500 | 600 | 700;
+  botonForma: BotonForma;
+  botonRelleno: BotonRelleno;
+  botonSombra: boolean;
+  // Tablas
+  tablaZebra: boolean;
+  tablaBordes: TablaBordes;
+  tablaEncabezado: TablaEncabezado;
+  // KPIs
+  kpiCifra: KpiCifra;
+  kpiAcento: KpiAcento;
 }
 
 export const TEMA_INICIAL: TemaLab = {
@@ -62,6 +85,16 @@ export const TEMA_INICIAL: TemaLab = {
   grillaModo: "minima",
   etiquetas: "leyenda",
   grosorLinea: 2,
+  botonCaja: "mayusculas",
+  botonPeso: 600,
+  botonForma: "redondeada",
+  botonRelleno: "solido",
+  botonSombra: false,
+  tablaZebra: false,
+  tablaBordes: "filas",
+  tablaEncabezado: "suave",
+  kpiCifra: "l",
+  kpiAcento: "ninguno",
 };
 
 interface DefPaleta {
@@ -209,6 +242,33 @@ export interface TokensLab {
   grosorLinea: number;
   /** Tamaños de letra en px para ejes, etiquetas y títulos internos del gráfico. */
   tamano: { eje: number; etiqueta: number; valor: number };
+  /** Botones: todo lo que un botón del laboratorio necesita para dibujarse. */
+  boton: {
+    textTransform: "uppercase" | "none";
+    letterSpacing: string;
+    fontWeight: number;
+    /** Radio en px (la forma «pastilla» usa 999). */
+    radio: number;
+    relleno: BotonRelleno;
+    sombra: string;
+    /** Alto por tamaño, en px, según densidad. */
+    alto: { sm: number; md: number; lg: number };
+    tamanoTexto: { sm: number; md: number; lg: number };
+  };
+  /** Tablas: fondos, bordes y encabezado. */
+  tabla: {
+    zebra: string | null;
+    bordes: TablaBordes;
+    borde: string;
+    encabezadoFondo: string;
+    encabezadoTexto: string;
+    /** Encabezado en mayúsculas espaciadas (suave/marcado) o en caja normal (oscuro). */
+    encabezadoMayusculas: boolean;
+    altoFila: number;
+    hover: string;
+  };
+  /** KPIs: tamaño de la cifra principal y acento de la tarjeta. */
+  kpi: { cifra: number; acento: KpiAcento };
 }
 
 /** Lee la familia real que next/font puso en la variable CSS (para canvas y SVG). */
@@ -275,6 +335,36 @@ export function calcularTokens(tema: TemaLab, oscuro: boolean, fuente: string): 
     etiquetas: tema.etiquetas,
     grosorLinea: tema.grosorLinea,
     tamano: compacta ? { eje: 11, etiqueta: 12, valor: 22 } : { eje: 12, etiqueta: 13, valor: 26 },
+    boton: {
+      textTransform: tema.botonCaja === "mayusculas" ? "uppercase" : "none",
+      letterSpacing: tema.botonCaja === "mayusculas" ? "0.08em" : "0",
+      fontWeight: tema.botonPeso,
+      radio: tema.botonForma === "pastilla" ? 999 : tema.botonForma === "recta" ? 0 : Math.min(tema.radio, 12),
+      relleno: tema.botonRelleno,
+      sombra: tema.botonSombra ? (oscuro ? "0 8px 20px -8px rgba(0,0,0,0.8)" : `0 8px 18px -8px ${conAlfa(colores[0], 0.55)}`) : "none",
+      alto: compacta ? { sm: 28, md: 36, lg: 44 } : { sm: 32, md: 44, lg: 52 },
+      tamanoTexto: compacta ? { sm: 11, md: 12, lg: 14 } : { sm: 12, md: 14, lg: 15 },
+    },
+    tabla: {
+      zebra: tema.tablaZebra ? (oscuro ? "rgba(255,255,255,0.03)" : "rgba(0,0,0,0.025)") : null,
+      bordes: tema.tablaBordes,
+      borde: oscuro ? "#2C2C2C" : "#ECECEC",
+      encabezadoFondo:
+        tema.tablaEncabezado === "oscuro"
+          ? oscuro
+            ? "#F4F4F4"
+            : "#231F20"
+          : tema.tablaEncabezado === "marcado"
+            ? oscuro
+              ? "#232323"
+              : "#F4F4F4"
+            : "transparent",
+      encabezadoTexto: tema.tablaEncabezado === "oscuro" ? (oscuro ? "#231F20" : "#FFFFFF") : oscuro ? "#A8A9A9" : "#6B6C6E",
+      encabezadoMayusculas: tema.tablaEncabezado !== "oscuro",
+      altoFila: compacta ? 34 : 44,
+      hover: oscuro ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.035)",
+    },
+    kpi: { cifra: { m: 24, l: 32, xl: 42 }[tema.kpiCifra], acento: tema.kpiAcento },
   };
 }
 
@@ -306,6 +396,16 @@ export function exportarCss(tokens: TokensLab): string {
     `--chart-etiquetas: ${tema.etiquetas};`,
     `--chart-linea: ${tema.grosorLinea}px;`,
     `--chart-densidad: ${tema.densidad};`,
+    `--boton-caja: ${tema.botonCaja};`,
+    `--boton-peso: ${tema.botonPeso};`,
+    `--boton-forma: ${tema.botonForma};`,
+    `--boton-relleno: ${tema.botonRelleno};`,
+    `--boton-sombra: ${tema.botonSombra ? "si" : "no"};`,
+    `--tabla-zebra: ${tema.tablaZebra ? "si" : "no"};`,
+    `--tabla-bordes: ${tema.tablaBordes};`,
+    `--tabla-encabezado: ${tema.tablaEncabezado};`,
+    `--kpi-cifra: ${tema.kpiCifra};`,
+    `--kpi-acento: ${tema.kpiAcento};`,
   ];
   return lineas.join("\n");
 }

@@ -1,7 +1,20 @@
 import type { GraficoLab } from "@/components/lab-graficos/tipos";
 import { AnillosActividad } from "./anillos-actividad";
 import { Gauge } from "./gauge";
+import { KpiComparativoPeriodos } from "./kpi-comparativo-periodos";
+import { KpiDesglose } from "./kpi-desglose";
+import { KpiHero } from "./kpi-hero";
+import { KpiMeta } from "./kpi-meta";
+import { KpiMiniDona } from "./kpi-mini-dona";
+import { KpiProyeccion } from "./kpi-proyeccion";
+import { KpiSemaforo } from "./kpi-semaforo";
+import { KpiStrip } from "./kpi-strip";
 import { KpiCifras } from "./kpi-cifras";
+import { PlantillaComparativo } from "./plantilla-comparativo";
+import { PlantillaGauge } from "./plantilla-gauge";
+import { PlantillaIconoFranja } from "./plantilla-icono-franja";
+import { PlantillaSimple } from "./plantilla-simple";
+import { PlantillaSparkline } from "./plantilla-sparkline";
 import { ProgresoEtapas } from "./progreso-etapas";
 import { SparklinesGrilla } from "./sparklines-grilla";
 import { Termometro } from "./termometro";
@@ -60,5 +73,151 @@ export const GRAFICOS_KPI: GraficoLab[] = [
     descripcion: "Avance anual vertical de cada indicador contra su meta.",
     interacciones: ["Relleno animado", "Detalle al pasar el mouse"],
     Componente: Termometro,
+  },
+  {
+    id: "kpi-meta",
+    nombre: "Tarjeta con meta",
+    familia: "kpi",
+    libreria: "HTML",
+    descripcion: "Acumulado contra meta: % de cumplimiento con color de estado y barra con la meta marcada.",
+    interacciones: ["Cifra animada", "Barra animada"],
+    ancho: true,
+    alto: 190,
+    Componente: KpiMeta,
+  },
+  {
+    id: "kpi-comparativo-periodos",
+    nombre: "Comparativo de períodos",
+    familia: "kpi",
+    libreria: "HTML",
+    descripcion: "Este mes contra el mes anterior y el mismo mes del año anterior, con su variación.",
+    interacciones: ["Cifra animada", "Valor del período al pasar el mouse"],
+    ancho: true,
+    alto: 190,
+    Componente: KpiComparativoPeriodos,
+  },
+  {
+    id: "kpi-semaforo",
+    nombre: "Semáforo con umbrales",
+    familia: "kpi",
+    libreria: "HTML",
+    descripcion: "Estado de cada indicador (en plazo, en riesgo, atrasado) y su posición en la escala de umbrales.",
+    interacciones: ["Marcador animado", "Regla de umbral al pasar el mouse"],
+    ancho: true,
+    alto: 180,
+    Componente: KpiSemaforo,
+  },
+  {
+    id: "kpi-mini-dona",
+    nombre: "Tarjeta con mini dona",
+    familia: "kpi",
+    libreria: "SVG",
+    descripcion: "Un total y su composición en un anillo pequeño con la lista de partes al lado.",
+    interacciones: ["Llenado animado", "Participación al pasar el mouse"],
+    ancho: true,
+    alto: 180,
+    Componente: KpiMiniDona,
+  },
+  {
+    id: "kpi-hero",
+    nombre: "KPI protagonista",
+    familia: "kpi",
+    libreria: "visx",
+    descripcion: "Una cifra grande con variación, contexto contra la meta y tendencia; para portadas de reporte.",
+    interacciones: ["Cifra animada", "Valor del mes al pasar el mouse"],
+    Componente: KpiHero,
+  },
+  {
+    id: "kpi-proyeccion",
+    nombre: "KPI con proyección",
+    familia: "kpi",
+    libreria: "visx",
+    descripcion: "Real acumulado a la fecha y cierre proyectado con intervalo, contra la meta o el presupuesto.",
+    interacciones: ["Trazo animado", "Real o proyectado del mes al pasar el mouse"],
+    ancho: true,
+    alto: 260,
+    Componente: KpiProyeccion,
+  },
+  {
+    id: "kpi-strip",
+    nombre: "Franja de KPIs",
+    familia: "kpi",
+    libreria: "HTML",
+    descripcion: "Seis cifras en una banda con separadores finos, para el encabezado de un tablero.",
+    interacciones: ["Cifras animadas", "Detalle al pasar el mouse"],
+    ancho: true,
+    alto: 100,
+    Componente: KpiStrip,
+  },
+  {
+    id: "kpi-desglose",
+    nombre: "KPI con desglose",
+    familia: "kpi",
+    libreria: "HTML",
+    descripcion: "La tarjeta se da vuelta al hacer clic y muestra cómo se compone el total.",
+    interacciones: ["Clic para voltear", "Barras animadas"],
+    ancho: true,
+    alto: 190,
+    Componente: KpiDesglose,
+  },
+  {
+    id: "plantilla-kpi-simple",
+    nombre: "Plantilla actual: simple",
+    familia: "kpi",
+    libreria: "HTML",
+    descripcion: "Rótulo, valor grande y variación contra el mes anterior (KPI simple de la plantilla).",
+    interacciones: ["Sin interacción"],
+    ancho: true,
+    plantilla: true,
+    alto: 150,
+    Componente: PlantillaSimple,
+  },
+  {
+    id: "plantilla-kpi-icono-franja",
+    nombre: "Plantilla actual: ícono y franja",
+    familia: "kpi",
+    libreria: "HTML",
+    descripcion: "Ícono en caja y franja de color arriba para distinguir categorías de indicadores.",
+    interacciones: ["Sin interacción"],
+    ancho: true,
+    plantilla: true,
+    alto: 150,
+    Componente: PlantillaIconoFranja,
+  },
+  {
+    id: "plantilla-kpi-gauge",
+    nombre: "Plantilla actual: gauge",
+    familia: "kpi",
+    libreria: "SVG",
+    descripcion: "Arco semicircular con color según umbral (bueno, alerta, malo).",
+    interacciones: ["Sin interacción"],
+    ancho: true,
+    plantilla: true,
+    alto: 190,
+    Componente: PlantillaGauge,
+  },
+  {
+    id: "plantilla-kpi-comparativo",
+    nombre: "Plantilla actual: comparativo",
+    familia: "kpi",
+    libreria: "HTML",
+    descripcion: "Valor actual sobre la meta con barra lineal y % logrado.",
+    interacciones: ["Sin interacción"],
+    ancho: true,
+    plantilla: true,
+    alto: 160,
+    Componente: PlantillaComparativo,
+  },
+  {
+    id: "plantilla-kpi-sparkline",
+    nombre: "Plantilla actual: sparkline",
+    familia: "kpi",
+    libreria: "SVG",
+    descripcion: "Rótulo y valor con una mini tendencia sin ejes a la derecha.",
+    interacciones: ["Sin interacción"],
+    ancho: true,
+    plantilla: true,
+    alto: 130,
+    Componente: PlantillaSparkline,
   },
 ];

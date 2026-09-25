@@ -9,6 +9,7 @@ import { formato, MESES, serieMensual } from "@/lib/lab-graficos/datos";
 import { conAlfa, type TokensLab } from "@/lib/lab-graficos/tema";
 import { CifraAnimada } from "./cifra-animada";
 import { Sparkline } from "./sparkline";
+import { ALTO_FRANJA } from "./tarjeta-kpi";
 
 interface Kpi {
   nombre: string;
@@ -103,13 +104,21 @@ function Celda({ k, i, t, columnas, ancho, alto }: { k: Kpi; i: number; t: Token
   const ultimo = k.valores[k.valores.length - 1];
   const anchoTexto = columnas ? ancho - pad * 2 : Math.max(ancho * 0.5, 150);
   const anchoSpark = columnas ? ancho - pad * 2 : ancho - anchoTexto - pad * 3;
-  const altoSpark = columnas ? Math.max(alto - 118, 30) : alto - pad * 2;
+  // Acento de la tarjeta (t.kpi): franja arriba o punto junto al nombre.
+  const franja = t.kpi.acento === "franja";
+  const extraArriba = franja ? ALTO_FRANJA : 0;
+  // Cabecera en columna: nombre, cifra (t.kpi.cifra) y chip; lo que sobra es para la sparkline.
+  const altoSpark = columnas
+    ? Math.max(alto - pad * 3 - extraArriba - t.tamano.eje * 1.5 - t.kpi.cifra * 1.15 - 30, 20)
+    : alto - pad * 2 - extraArriba;
 
   return (
     <div
       style={{
         ...estiloCelda(t, color),
+        position: "relative",
         padding: pad,
+        paddingTop: pad + extraArriba,
         display: "flex",
         flexDirection: columnas ? "column" : "row",
         alignItems: columnas ? "stretch" : "center",
@@ -118,9 +127,13 @@ function Celda({ k, i, t, columnas, ancho, alto }: { k: Kpi; i: number; t: Token
         overflow: "hidden",
       }}
     >
+      {franja && <span aria-hidden style={{ position: "absolute", top: 0, left: 0, right: 0, height: ALTO_FRANJA, background: color }} />}
       <div style={{ width: columnas ? "auto" : anchoTexto, minWidth: 0 }}>
         <div style={{ color: t.textoSuave, fontSize: t.tamano.eje, display: "flex", justifyContent: "space-between", gap: 6 }}>
-          <span>{k.nombre}</span>
+          <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
+            {t.kpi.acento === "punto" && <span aria-hidden style={{ width: 7, height: 7, borderRadius: 999, background: color }} />}
+            {k.nombre}
+          </span>
           {hover !== null && (
             <span style={{ color: t.texto }}>
               {MESES[hover]}: {k.formatear(k.valores[hover])}
@@ -136,7 +149,17 @@ function Celda({ k, i, t, columnas, ancho, alto }: { k: Kpi; i: number; t: Token
             flexWrap: "wrap",
           }}
         >
-          <div style={{ color: t.texto, fontSize: t.tamano.valor, fontWeight: 600, lineHeight: 1.15, marginTop: 2, whiteSpace: "nowrap" }}>
+          <div
+            style={{
+              color: t.texto,
+              fontSize: t.kpi.cifra,
+              fontWeight: 600,
+              lineHeight: 1.15,
+              letterSpacing: "-0.02em",
+              marginTop: 2,
+              whiteSpace: "nowrap",
+            }}
+          >
             <CifraAnimada valor={ultimo} formatear={k.formatear} t={t} retraso={i * 0.08} />
           </div>
           <span

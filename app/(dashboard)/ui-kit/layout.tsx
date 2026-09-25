@@ -15,10 +15,9 @@ export default function UiKitLayout({ children }: { children: React.ReactNode })
           className="mb-0"
           description={
             <>
-              Referencia viva de tokens y una vitrina de componentes ya disponibles en este proyecto.
-              Cada objeto trae un código (ej. <strong>GL-201</strong>); ver{" "}
-              <code className="font-label text-xs">docs/UI-KIT-CATALOG.md</code> para pedirlo por
-              código en una sesión futura.
+              Fundamentos y escala de la plantilla, y el laboratorio de diseño para elegir el estándar de
+              gráficos, KPIs, tablas y botones. Ver{" "}
+              <code className="font-label text-xs">docs/UI-KIT-CATALOG.md</code>.
             </>
           }
         />

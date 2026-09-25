@@ -33,11 +33,11 @@ export const NAV_ITEMS: NavItem[] = [
     children: [
       { href: "/ui-kit", label: "Fundamentos", grupo: "Base" },
       { href: "/ui-kit/escala", label: "Escala", grupo: "Base" },
-      { href: "/ui-kit/kpis", label: "KPIs", grupo: "Componentes" },
-      { href: "/ui-kit/graficos", label: "Gráficos", grupo: "Componentes" },
-      { href: "/ui-kit/tablas", label: "Tablas", grupo: "Componentes" },
-      { href: "/ui-kit/botones", label: "Botones", grupo: "Componentes" },
-      { href: "/ui-kit/laboratorio-graficos", label: "Laboratorio de gráficos", grupo: "Exploración" },
+      { href: "/ui-kit/laboratorio/graficos", label: "Gráficos", grupo: "Laboratorio" },
+      { href: "/ui-kit/laboratorio/kpis", label: "KPIs", grupo: "Laboratorio" },
+      { href: "/ui-kit/laboratorio/tablas", label: "Tablas", grupo: "Laboratorio" },
+      { href: "/ui-kit/laboratorio/botones", label: "Botones", grupo: "Laboratorio" },
+      { href: "/ui-kit/laboratorio/contexto", label: "En contexto", grupo: "Laboratorio" },
     ],
   },
 ];

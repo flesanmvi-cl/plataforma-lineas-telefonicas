@@ -14,6 +14,7 @@ export function EncabezadoOrdenable({
   activo,
   direccion,
   alinear = "left",
+  col,
   onOrdenar,
   estilo,
 }: {
@@ -22,6 +23,8 @@ export function EncabezadoOrdenable({
   activo: boolean;
   direccion: Direccion;
   alinear?: "left" | "right" | "center";
+  /** Índice de columna (para la línea vertical en modo grilla). */
+  col?: number;
   onOrdenar: () => void;
   estilo?: CSSProperties;
 }) {
@@ -30,7 +33,7 @@ export function EncabezadoOrdenable({
     <th
       scope="col"
       aria-sort={activo ? (direccion === "asc" ? "ascending" : "descending") : "none"}
-      style={{ ...estiloEncabezado(t), textAlign: alinear, ...estilo }}
+      style={{ ...estiloEncabezado(t, { col }), textAlign: alinear, ...estilo }}
     >
       <button
         type="button"
@@ -44,12 +47,15 @@ export function EncabezadoOrdenable({
           border: "none",
           padding: 0,
           font: "inherit",
+          letterSpacing: "inherit",
+          textTransform: "inherit",
           cursor: "pointer",
-          color: activo ? t.texto : t.textoSuave,
+          color: "inherit",
+          fontWeight: activo ? 700 : 600,
         }}
       >
         {etiqueta}
-        <Icono size={12} strokeWidth={2} aria-hidden style={{ opacity: activo ? 1 : 0.5 }} />
+        <Icono size={12} strokeWidth={2} aria-hidden style={{ opacity: activo ? 1 : 0.45 }} />
       </button>
     </th>
   );

@@ -3,6 +3,9 @@ import { AreaApilada100 } from "./area-apilada-100";
 import { CirclePackingZoom } from "./circle-packing-zoom";
 import { DonaValorCentral } from "./dona-valor-central";
 import { Marimekko } from "./marimekko";
+import { PlantillaDonaLeyenda } from "./plantilla-dona-leyenda";
+import { PlantillaDonaValorCentral } from "./plantilla-dona-valor-central";
+import { PlantillaTortaBasica } from "./plantilla-torta-basica";
 import { RosaNightingale } from "./rosa-nightingale";
 import { SunburstDrilldown } from "./sunburst-drilldown";
 import { TortaClasica } from "./torta-clasica";
@@ -90,5 +93,35 @@ export const GRAFICOS_COMPOSICION: GraficoLab[] = [
     descripcion: "Sectores separados con rótulos y guías; referencia para comparar con las demás.",
     interacciones: ["Tooltip", "Clic destaca sector", "Leyenda filtra"],
     Componente: TortaClasica,
+  },
+  {
+    id: "plantilla-torta-basica",
+    nombre: "Plantilla actual: Torta básica",
+    familia: "composicion",
+    libreria: "SVG",
+    descripcion: "Torta de cuatro líneas de negocio con leyenda lateral y porcentaje por sector.",
+    interacciones: [],
+    plantilla: true,
+    Componente: PlantillaTortaBasica,
+  },
+  {
+    id: "plantilla-dona-valor-central",
+    nombre: "Plantilla actual: Dona con valor central",
+    familia: "composicion",
+    libreria: "SVG",
+    descripcion: "Un solo indicador de avance: el porcentaje al centro y el resto del anillo en gris.",
+    interacciones: [],
+    plantilla: true,
+    Componente: PlantillaDonaValorCentral,
+  },
+  {
+    id: "plantilla-dona-leyenda",
+    nombre: "Plantilla actual: Dona con leyenda",
+    familia: "composicion",
+    libreria: "SVG",
+    descripcion: "Estado de un portafolio (en plazo, en riesgo, atrasado) con colores de estado y porcentajes al lado.",
+    interacciones: [],
+    plantilla: true,
+    Componente: PlantillaDonaLeyenda,
   },
 ];

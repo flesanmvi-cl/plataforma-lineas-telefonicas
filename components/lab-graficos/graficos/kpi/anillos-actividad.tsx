@@ -125,7 +125,7 @@ function Anillos({ ancho, alto, t }: { ancho: number; alto: number; t: TokensLab
           );
         })}
         {/* Centro: detalle del anillo activo o el primero */}
-        <text x={c} y={c - 4} textAnchor="middle" fill={t.texto} fontFamily={t.fuente} fontSize={t.tamano.valor * 0.9} fontWeight={600}>
+        <text x={c} y={c - 4} textAnchor="middle" fill={t.texto} fontFamily={t.fuente} fontSize={Math.min(t.kpi.cifra, lado * 0.2)} fontWeight={600}>
           {formato.porcentaje(ANILLOS[activo ?? 0].valor)}
         </text>
         <text x={c} y={c + 14} textAnchor="middle" fill={t.textoSuave} fontFamily={t.fuente} fontSize={t.tamano.eje - 1}>
@@ -169,7 +169,7 @@ function Anillos({ ancho, alto, t }: { ancho: number; alto: number; t: TokensLab
                   <span style={{ width: 8, height: 8, borderRadius: 2, background: color, flexShrink: 0 }} />
                   {a.nombre}
                 </div>
-                <div style={{ color: t.texto, fontSize: t.tamano.etiqueta + 4, fontWeight: 600, lineHeight: 1.2 }}>{formato.porcentaje(a.valor)}</div>
+                <div style={{ color: t.texto, fontSize: Math.round(t.kpi.cifra * 0.6), fontWeight: 600, lineHeight: 1.2 }}>{formato.porcentaje(a.valor)}</div>
                 {activo === i && <div style={{ color: t.textoSuave, fontSize: t.tamano.eje - 1 }}>{a.detalle}</div>}
               </li>
             );

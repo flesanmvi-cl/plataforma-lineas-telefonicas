@@ -15,11 +15,16 @@ export interface SectionTab {
 
 export function SectionTabs({ tabs }: { tabs: SectionTab[] }) {
   const pathname = usePathname();
+  // Activa la tab cuya ruta calza más largo (así /laboratorio/graficos/comparador marca «Gráficos»
+  // y no «Fundamentos», que es la raíz de todas).
+  const activa = tabs
+    .filter((t) => pathname === t.href || pathname.startsWith(`${t.href}/`))
+    .sort((a, b) => b.href.length - a.href.length)[0]?.href;
 
   return (
     <nav className="flex items-center gap-1 overflow-x-auto border-b border-border [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
       {tabs.map((tab) => {
-        const active = pathname === tab.href;
+        const active = tab.href === activa;
         return (
           <Link
             key={tab.href}

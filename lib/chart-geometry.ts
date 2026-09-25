@@ -1,4 +1,4 @@
-// Helpers puros de geometría SVG para los gráficos de /ui-kit (components/charts/*).
+// Helpers puros de geometría SVG para las muestras «Plantilla actual» del laboratorio de diseño.
 // Sin librería externa (recharts/d3): mantiene el stack minimalista y todo el
 // color viene de tokens (--color-chart-*) para que los gráficos respondan a
 // modo oscuro sin lógica adicional.

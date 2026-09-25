@@ -5,7 +5,7 @@ import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { cn } from "@/lib/cn";
 import { useTokens } from "@/components/lab-graficos/tema-context";
-import { FAMILIAS, type GraficoLab } from "@/components/lab-graficos/tipos";
+import { FAMILIAS, seccionDe, type GraficoLab } from "@/components/lab-graficos/tipos";
 
 interface LabCardProps {
   grafico: GraficoLab;
@@ -29,6 +29,7 @@ export function LabCard({ grafico, alto = 280, sinEnlace, titulo, limpia, classN
   const [visible, setVisible] = useState(false);
   const familia = FAMILIAS.find((f) => f.id === grafico.familia)?.nombre;
   const { Componente } = grafico;
+  const crece = seccionDe(grafico.familia) === "botones";
 
   useEffect(() => {
     const el = ref.current;
@@ -55,12 +56,25 @@ export function LabCard({ grafico, alto = 280, sinEnlace, titulo, limpia, classN
             {titulo ?? grafico.nombre}
           </h3>
         </div>
-        <span hidden={limpia} className="ml-auto shrink-0 font-label text-[0.625rem] font-semibold tracking-[0.08em] uppercase border border-border-strong text-muted px-1.5 py-0.5 rounded-flesan-sm">
+        {grafico.plantilla && !limpia && (
+          <span className="ml-auto shrink-0 font-label text-[0.625rem] font-semibold tracking-[0.08em] uppercase bg-text text-bg px-1.5 py-0.5 rounded-flesan-sm">
+            Plantilla actual
+          </span>
+        )}
+        <span
+          hidden={limpia}
+          className={cn(
+            "shrink-0 font-label text-[0.625rem] font-semibold tracking-[0.08em] uppercase border border-border-strong text-muted px-1.5 py-0.5 rounded-flesan-sm",
+            !grafico.plantilla && "ml-auto",
+          )}
+        >
           {grafico.libreria}
         </span>
       </header>
 
-      <div style={{ height: alto }} className="min-w-0">
+      {/* Los gráficos necesitan alto fijo (ECharts, visx); botones y controles crecen con su
+          contenido para no montarse sobre el título cuando la tarjeta es angosta. */}
+      <div style={crece ? { minHeight: alto } : { height: alto }} className="min-w-0">
         {visible ? (
           <LimiteError nombre={grafico.nombre}>
             <Componente alto={alto} />
@@ -78,7 +92,7 @@ export function LabCard({ grafico, alto = 280, sinEnlace, titulo, limpia, classN
         ))}
         {!sinEnlace && (
           <Link
-            href={`/ui-kit/laboratorio-graficos/comparador?g=${grafico.id}`}
+            href={`/ui-kit/laboratorio/${seccionDe(grafico.familia)}/comparador?g=${grafico.id}`}
             className="ml-auto flex items-center gap-1 font-label text-[0.6875rem] tracking-[0.06em] uppercase text-muted hover:text-flesan-red"
           >
             Comparar estilos

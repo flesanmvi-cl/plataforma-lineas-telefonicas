@@ -7,6 +7,7 @@ import type { PropsGraficoLab } from "@/components/lab-graficos/tipos";
 import { formato, MESES, OBRAS, serieMensual } from "@/lib/lab-graficos/datos";
 import { conAlfa, type TokensLab } from "@/lib/lab-graficos/tema";
 import { Sparkline } from "./sparkline";
+import { ALTO_FRANJA } from "./tarjeta-kpi";
 
 /** Productividad mensual (HH por unidad) de cada obra. */
 function series() {
@@ -31,7 +32,10 @@ function Grilla({ ancho, alto, t }: { ancho: number; alto: number; t: TokensLab 
   const gap = 10;
   const anchoCelda = (ancho - gap * (cols - 1)) / cols;
   const altoCelda = (alto - gap * (filas - 1)) / filas;
-  const altoCabecera = 34;
+  // Cifra de cada celda a escala del tamaño elegido (t.kpi.cifra); la cabecera crece con ella.
+  const cifra = Math.round(t.kpi.cifra * 0.55);
+  const franja = t.kpi.acento === "franja";
+  const altoCabecera = Math.round(t.tamano.eje * 1.4 + cifra * 1.2) + 2;
   const pad = 8;
   const variaciones = datos.map((d) => ((d.valores[d.valores.length - 1] - d.valores[0]) / d.valores[0]) * 100);
   const destacada = variaciones.indexOf(Math.max(...variaciones));
@@ -59,7 +63,9 @@ function Grilla({ ancho, alto, t }: { ancho: number; alto: number; t: TokensLab 
           <div
             key={d.obra}
             style={{
+              position: "relative",
               padding: pad,
+              paddingTop: pad + (franja ? ALTO_FRANJA : 0),
               borderRadius: Math.min(t.radio, 12),
               border: t.superficie === "contorno" ? `1px solid ${t.eje}` : "1px solid transparent",
               background:
@@ -77,13 +83,15 @@ function Grilla({ ancho, alto, t }: { ancho: number; alto: number; t: TokensLab 
               overflow: "hidden",
             }}
           >
+            {franja && <span aria-hidden style={{ position: "absolute", top: 0, left: 0, right: 0, height: ALTO_FRANJA, background: color }} />}
             <div style={{ height: altoCabecera, display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 6 }}>
               <div style={{ minWidth: 0 }}>
-                <div style={{ fontSize: t.tamano.eje, color: t.textoSuave, whiteSpace: "nowrap" }}>
+                <div style={{ fontSize: t.tamano.eje, color: t.textoSuave, whiteSpace: "nowrap", display: "flex", alignItems: "center", gap: 6 }}>
+                  {t.kpi.acento === "punto" && <span aria-hidden style={{ width: 7, height: 7, borderRadius: 999, background: color }} />}
                   {d.obra}
                   {mes !== null && <span style={{ color: t.texto }}> · {MESES[mes]}</span>}
                 </div>
-                <div style={{ fontSize: t.tamano.etiqueta + 2, fontWeight: 600, color: t.texto, lineHeight: 1.2 }}>
+                <div style={{ fontSize: cifra, fontWeight: 600, color: t.texto, lineHeight: 1.2 }}>
                   {formato.entero(valorMostrado)}
                 </div>
               </div>
@@ -94,7 +102,7 @@ function Grilla({ ancho, alto, t }: { ancho: number; alto: number; t: TokensLab 
             <Sparkline
               valores={d.valores}
               ancho={anchoCelda - pad * 2 - 2}
-              alto={Math.max(altoCelda - altoCabecera - pad * 2 - 4, 16)}
+              alto={Math.max(altoCelda - altoCabecera - pad * 2 - 4 - (franja ? ALTO_FRANJA : 0), 16)}
               color={color}
               t={t}
               onHover={setMes}

@@ -20,18 +20,34 @@ import {
   type PaletaId,
   type Superficie,
   type TooltipId,
+  type BotonCaja,
+  type BotonForma,
+  type BotonRelleno,
+  type KpiAcento,
+  type KpiCifra,
+  type TablaBordes,
+  type TablaEncabezado,
 } from "@/lib/lab-graficos/tema";
+import type { Seccion } from "@/components/lab-graficos/tipos";
 
-/** Panel «Tema» del laboratorio: todo lo que se elige aquí lo obedecen todos los gráficos. */
-export function PanelTema() {
+/**
+ * Panel «Tema» del laboratorio: arriba lo global (paleta, letra, superficie…), abajo lo propio
+ * de la sección abierta. En «En contexto» (seccion null) se muestra todo.
+ */
+export function PanelTema({ seccion = null }: { seccion?: Seccion | null }) {
   const { tema, setTema, reiniciar, tokens } = useLabTema();
   const { setTheme } = useTheme();
   const [exportando, setExportando] = useState(false);
 
+  const mostrar = (s: Seccion) => seccion === null || seccion === s;
   const fueraDeMarca = !PALETAS[tema.paleta].deMarca || !SUPERFICIES[tema.superficie].deMarca;
 
   return (
-    <div data-superficie={tema.superficie} className="lab-card p-4 flex flex-col gap-5 text-text" style={{ fontFamily: "var(--font-body)" }}>
+    <div
+      data-superficie={tema.superficie}
+      className="lab-card p-4 flex flex-col gap-5 text-text"
+      style={{ fontFamily: "var(--font-body)" }}
+    >
       <div className="flex items-center gap-2">
         <h2 className="font-label text-xs font-semibold tracking-[0.12em] uppercase">Tema</h2>
         <button
@@ -66,7 +82,11 @@ export function PanelTema() {
               >
                 <span className="flex items-center gap-2 w-full text-[0.8125rem] font-medium">
                   {p.nombre}
-                  {p.deMarca && <span className="ml-auto font-label text-[0.625rem] tracking-[0.1em] uppercase text-faint">Marca</span>}
+                  {p.deMarca && (
+                    <span className="ml-auto font-label text-[0.625rem] tracking-[0.1em] uppercase text-faint">
+                      Marca
+                    </span>
+                  )}
                 </span>
                 <span className="flex w-full h-3 rounded-sm overflow-hidden">
                   {p.colores.slice(0, 8).map((c) => (
@@ -127,19 +147,6 @@ export function PanelTema() {
         />
       </Grupo>
 
-      <Grupo titulo={`Grosor de línea · ${tema.grosorLinea}px`}>
-        <input
-          type="range"
-          min={1}
-          max={4}
-          step={0.5}
-          value={tema.grosorLinea}
-          onChange={(e) => setTema({ grosorLinea: Number(e.target.value) })}
-          aria-label="Grosor de línea"
-          className="w-full accent-flesan-red"
-        />
-      </Grupo>
-
       <Grupo titulo="Modo">
         <Segmento
           valor={tokens.oscuro ? "oscuro" : "claro"}
@@ -159,53 +166,6 @@ export function PanelTema() {
         />
       </Grupo>
 
-      <Grupo titulo="Tooltip">
-        <Segmento<TooltipId>
-          valor={tema.tooltip}
-          opciones={[
-            { id: "oscuro", nombre: "Oscuro" },
-            { id: "claro", nombre: "Claro" },
-            { id: "tarjeta", nombre: "Tarjeta" },
-          ]}
-          onChange={(tooltip) => setTema({ tooltip })}
-        />
-      </Grupo>
-
-      <Grupo titulo="Curva">
-        <Segmento<Curva>
-          valor={tema.curva}
-          opciones={[
-            { id: "recta", nombre: "Recta" },
-            { id: "suave", nombre: "Suave" },
-            { id: "escalonada", nombre: "Escalonada" },
-          ]}
-          onChange={(curva) => setTema({ curva })}
-        />
-      </Grupo>
-
-      <Grupo titulo="Grilla">
-        <Segmento<GrillaModo>
-          valor={tema.grillaModo}
-          opciones={[
-            { id: "completa", nombre: "Completa" },
-            { id: "minima", nombre: "Mínima" },
-            { id: "sin", nombre: "Sin" },
-          ]}
-          onChange={(grillaModo) => setTema({ grillaModo })}
-        />
-      </Grupo>
-
-      <Grupo titulo="Etiquetas">
-        <Segmento<Etiquetas>
-          valor={tema.etiquetas}
-          opciones={[
-            { id: "leyenda", nombre: "Leyenda" },
-            { id: "directas", nombre: "Directas" },
-          ]}
-          onChange={(etiquetas) => setTema({ etiquetas })}
-        />
-      </Grupo>
-
       <Grupo titulo="Densidad">
         <Segmento<Densidad>
           valor={tema.densidad}
@@ -217,12 +177,212 @@ export function PanelTema() {
         />
       </Grupo>
 
+      {mostrar("graficos") && (
+        <Bloque titulo="Gráficos">
+          <Grupo titulo={`Grosor de línea · ${tema.grosorLinea}px`}>
+            <input
+              type="range"
+              min={1}
+              max={4}
+              step={0.5}
+              value={tema.grosorLinea}
+              onChange={(e) => setTema({ grosorLinea: Number(e.target.value) })}
+              aria-label="Grosor de línea"
+              className="w-full accent-flesan-red"
+            />
+          </Grupo>
+
+          <Grupo titulo="Tooltip">
+            <Segmento<TooltipId>
+              valor={tema.tooltip}
+              opciones={[
+                { id: "oscuro", nombre: "Oscuro" },
+                { id: "claro", nombre: "Claro" },
+                { id: "tarjeta", nombre: "Tarjeta" },
+              ]}
+              onChange={(tooltip) => setTema({ tooltip })}
+            />
+          </Grupo>
+
+          <Grupo titulo="Curva">
+            <Segmento<Curva>
+              valor={tema.curva}
+              opciones={[
+                { id: "recta", nombre: "Recta" },
+                { id: "suave", nombre: "Suave" },
+                { id: "escalonada", nombre: "Escalonada" },
+              ]}
+              onChange={(curva) => setTema({ curva })}
+            />
+          </Grupo>
+
+          <Grupo titulo="Grilla">
+            <Segmento<GrillaModo>
+              valor={tema.grillaModo}
+              opciones={[
+                { id: "completa", nombre: "Completa" },
+                { id: "minima", nombre: "Mínima" },
+                { id: "sin", nombre: "Sin" },
+              ]}
+              onChange={(grillaModo) => setTema({ grillaModo })}
+            />
+          </Grupo>
+
+          <Grupo titulo="Etiquetas">
+            <Segmento<Etiquetas>
+              valor={tema.etiquetas}
+              opciones={[
+                { id: "leyenda", nombre: "Leyenda" },
+                { id: "directas", nombre: "Directas" },
+              ]}
+              onChange={(etiquetas) => setTema({ etiquetas })}
+            />
+          </Grupo>
+        </Bloque>
+      )}
+
+      {mostrar("kpis") && (
+        <Bloque titulo="KPIs">
+          <Grupo titulo="Cifra principal">
+            <Segmento<KpiCifra>
+              valor={tema.kpiCifra}
+              opciones={[
+                { id: "m", nombre: "Mediana" },
+                { id: "l", nombre: "Grande" },
+                { id: "xl", nombre: "Muy grande" },
+              ]}
+              onChange={(kpiCifra) => setTema({ kpiCifra })}
+            />
+          </Grupo>
+          <Grupo titulo="Acento de la tarjeta">
+            <Segmento<KpiAcento>
+              valor={tema.kpiAcento}
+              opciones={[
+                { id: "ninguno", nombre: "Sin" },
+                { id: "franja", nombre: "Franja" },
+                { id: "punto", nombre: "Punto" },
+              ]}
+              onChange={(kpiAcento) => setTema({ kpiAcento })}
+            />
+          </Grupo>
+        </Bloque>
+      )}
+
+      {mostrar("tablas") && (
+        <Bloque titulo="Tablas">
+          <Grupo titulo="Encabezado">
+            <Segmento<TablaEncabezado>
+              valor={tema.tablaEncabezado}
+              opciones={[
+                { id: "suave", nombre: "Suave" },
+                { id: "marcado", nombre: "Marcado" },
+                { id: "oscuro", nombre: "Oscuro" },
+              ]}
+              onChange={(tablaEncabezado) => setTema({ tablaEncabezado })}
+            />
+          </Grupo>
+          <Grupo titulo="Bordes">
+            <Segmento<TablaBordes>
+              valor={tema.tablaBordes}
+              opciones={[
+                { id: "filas", nombre: "Entre filas" },
+                { id: "grilla", nombre: "Grilla" },
+                { id: "ninguno", nombre: "Sin" },
+              ]}
+              onChange={(tablaBordes) => setTema({ tablaBordes })}
+            />
+          </Grupo>
+          <Grupo titulo="Filas alternas">
+            <Segmento<"si" | "no">
+              valor={tema.tablaZebra ? "si" : "no"}
+              opciones={[
+                { id: "no", nombre: "Sin zebra" },
+                { id: "si", nombre: "Zebra" },
+              ]}
+              onChange={(v) => setTema({ tablaZebra: v === "si" })}
+            />
+          </Grupo>
+        </Bloque>
+      )}
+
+      {mostrar("botones") && (
+        <Bloque titulo="Botones">
+          <Grupo titulo="Forma">
+            <Segmento<BotonForma>
+              valor={tema.botonForma}
+              opciones={[
+                { id: "recta", nombre: "Recta" },
+                { id: "redondeada", nombre: "Redondeada" },
+                { id: "pastilla", nombre: "Pastilla" },
+              ]}
+              onChange={(botonForma) => setTema({ botonForma })}
+            />
+          </Grupo>
+          <Grupo titulo="Texto">
+            <Segmento<BotonCaja>
+              valor={tema.botonCaja}
+              opciones={[
+                { id: "mayusculas", nombre: "Mayúsculas" },
+                { id: "normal", nombre: "Caja normal" },
+              ]}
+              onChange={(botonCaja) => setTema({ botonCaja })}
+            />
+          </Grupo>
+          <Grupo titulo="Peso">
+            <Segmento<"500" | "600" | "700">
+              valor={String(tema.botonPeso) as "500" | "600" | "700"}
+              opciones={[
+                { id: "500", nombre: "Medio" },
+                { id: "600", nombre: "Semibold" },
+                { id: "700", nombre: "Bold" },
+              ]}
+              onChange={(v) => setTema({ botonPeso: Number(v) as 500 | 600 | 700 })}
+            />
+          </Grupo>
+          <Grupo titulo="Relleno del principal">
+            <Segmento<BotonRelleno>
+              valor={tema.botonRelleno}
+              opciones={[
+                { id: "solido", nombre: "Sólido" },
+                { id: "suave", nombre: "Suave" },
+              ]}
+              onChange={(botonRelleno) => setTema({ botonRelleno })}
+            />
+          </Grupo>
+          <Grupo titulo="Sombra">
+            <Segmento<"si" | "no">
+              valor={tema.botonSombra ? "si" : "no"}
+              opciones={[
+                { id: "no", nombre: "Sin" },
+                { id: "si", nombre: "Con sombra" },
+              ]}
+              onChange={(v) => setTema({ botonSombra: v === "si" })}
+            />
+          </Grupo>
+        </Bloque>
+      )}
+
       <button type="button" onClick={() => setExportando(true)} className="btn-flesan btn-flesan-primary w-full">
         <Download className="w-4 h-4" />
         Exportar tema
       </button>
 
-      {exportando && <DialogoExportar css={exportarCss(tokens)} json={JSON.stringify(tema, null, 2)} onCerrar={() => setExportando(false)} />}
+      {exportando && (
+        <DialogoExportar
+          css={exportarCss(tokens)}
+          json={JSON.stringify(tema, null, 2)}
+          onCerrar={() => setExportando(false)}
+        />
+      )}
+    </div>
+  );
+}
+
+function Bloque({ titulo, children }: { titulo: string; children: ReactNode }) {
+  return (
+    <div className="flex flex-col gap-5 pt-4 border-t border-border">
+      <span className="font-label text-xs font-semibold tracking-[0.12em] uppercase text-text">{titulo}</span>
+      {children}
     </div>
   );
 }
@@ -284,13 +444,18 @@ function DialogoExportar({ css, json, onCerrar }: { css: string; json: string; o
       <div className="card w-full max-w-2xl p-5 flex flex-col gap-4" onClick={(e) => e.stopPropagation()}>
         <div className="flex items-center gap-2">
           <h2 className="display-title text-xl text-text">Exportar tema</h2>
-          <button type="button" onClick={onCerrar} aria-label="Cerrar" className="ml-auto text-muted hover:text-text cursor-pointer">
+          <button
+            type="button"
+            onClick={onCerrar}
+            aria-label="Cerrar"
+            className="ml-auto text-muted hover:text-text cursor-pointer"
+          >
             <X className="w-5 h-5" />
           </button>
         </div>
         <p className="text-sm text-muted">
-          Estos tokens son los que se llevan al <code className="font-label text-xs">@theme</code> de la plantilla cuando
-          definamos el estándar. El JSON sirve para volver a cargar esta misma combinación.
+          Estos tokens son los que se llevan al <code className="font-label text-xs">@theme</code> de la plantilla
+          cuando definamos el estándar. El JSON sirve para volver a cargar esta misma combinación.
         </p>
         {[
           { tipo: "css" as const, titulo: "Tokens CSS", texto: css },
@@ -299,7 +464,11 @@ function DialogoExportar({ css, json, onCerrar }: { css: string; json: string; o
           <div key={b.tipo} className="flex flex-col gap-2">
             <div className="flex items-center">
               <span className="label-eyebrow">{b.titulo}</span>
-              <button type="button" onClick={() => copiar(b.tipo)} className="ml-auto btn-flesan btn-flesan-ghost btn-flesan-sm">
+              <button
+                type="button"
+                onClick={() => copiar(b.tipo)}
+                className="ml-auto btn-flesan btn-flesan-ghost btn-flesan-sm"
+              >
                 {copiado === b.tipo ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
                 {copiado === b.tipo ? "Copiado" : "Copiar"}
               </button>

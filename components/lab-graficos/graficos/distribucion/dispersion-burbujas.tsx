@@ -57,7 +57,8 @@ export function DispersionBurbujas({ alto }: PropsGraficoLab) {
         ...baseEcharts(t).tooltip,
         trigger: "item",
         formatter: (p: unknown) => {
-          const { seriesName, data, color } = p as { seriesName: string; data: [number, number, number, string]; color: string };
+          // Cada punto es { value: [...] } (para rotular solo algunos), así que se lee value, no data.
+          const { seriesName, value: data, color } = p as { seriesName: string; value: [number, number, number, string]; color: string };
           const punto = `<span style="display:inline-block;width:8px;height:8px;border-radius:2px;background:${typeof color === "string" ? color : t.acento};margin-right:6px"></span>`;
           return `${punto}<b>${data[3]}</b> · ${seriesName}<br/>Plazo ${data[0]} meses<br/>Costo ${formato.millones(data[1])}<br/>Dotación ${data[2]} personas`;
         },

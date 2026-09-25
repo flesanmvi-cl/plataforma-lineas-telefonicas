@@ -1,109 +1,62 @@
-# Catálogo de la vitrina de /ui-kit
+# Guía de estilo y laboratorio de diseño
 
-Índice de todos los objetos con código de catálogo disponibles en `/ui-kit`, para poder pedirlos
-por código en una sesión futura — ej. **"usa el gráfico de línea GL-201"** o **"la tabla TB-102"**.
-Cada fila apunta al archivo real: ábrelo, cópialo o impórtalo directo, no hay que regenerarlo.
+`/ui-kit` tiene dos partes:
 
-Convención de códigos: `[familia]-[bloque][número]`. La familia son 2 letras (GL/GB/GT/GA/KP/TB/BT),
-el bloque agrupa variantes del mismo "tipo" dentro de gráficos (100=barra, 200=línea, 300=torta/dona,
-400=área) y en KPI/Tabla/Botón es un bloque único (1xx).
+- **Base** — `Fundamentos` (tokens, tipografía, clases utilitarias) y `Escala` (raíz fluida y
+  densidad). Son la base de toda plataforma y no se eligen en el laboratorio.
+- **Laboratorio de diseño** — `/ui-kit/laboratorio/<sección>` para **gráficos, KPIs, tablas y
+  botones**, más `En contexto` (un tablero de ejemplo con todo junto). Es el método para elegir
+  el estándar visual de reportes y plataformas.
 
-## Gráficos — `/ui-kit/graficos`
+## Los códigos de catálogo se retiraron (2026-09-25)
 
-Sin librería externa (recharts/d3): SVG a mano sobre `lib/chart-geometry.ts`, coloreado con los
-tokens `--color-chart-*` de `app/globals.css` (tema-aware).
+Antes había una vitrina por pestañas con códigos (GL-201, GB-101, GA-401, GT-301, KP-101,
+TB-101, BT-101…). Se retiraron: el estándar se define desde cero en el laboratorio y **se
+codifica recién al elegir**. Lo que existía quedó en el laboratorio marcado **«Plantilla
+actual»**, para compararlo con lo nuevo (filtro «Origen» en la galería). Las rutas viejas
+(`/ui-kit/graficos|kpis|tablas|botones`, `/ui-kit/laboratorio-graficos`) redirigen al laboratorio
+(ver `next.config.ts`).
 
-| Código | Nombre | Archivo | Descripción |
-|---|---|---|---|
-| GL-201 | Línea simple | `components/charts/gl-201-linea-simple.tsx` | Una serie, sin relleno, con puntos y grid horizontal. |
-| GL-202 | Línea con área | `components/charts/gl-202-linea-area.tsx` | Relleno en gradiente bajo la curva. |
-| GL-203 | Línea multi-serie | `components/charts/gl-203-linea-multiserie.tsx` | 2-3 líneas comparativas con leyenda inline. |
-| GL-204 | Línea con tooltip | `components/charts/gl-204-linea-tooltip.tsx` | Hover interactivo: línea guía + tooltip con valor. |
-| GB-101 | Barras verticales | `components/charts/gb-101-barras-verticales.tsx` | Barras simples, una serie. |
-| GB-102 | Barras horizontales | `components/charts/gb-102-barras-horizontales.tsx` | Ranking, etiquetas largas a la izquierda. |
-| GB-103 | Barras agrupadas | `components/charts/gb-103-barras-agrupadas.tsx` | Comparativa de 2 series (ej. meta vs real) + leyenda. |
-| GT-301 | Torta básica | `components/charts/gt-301-torta-basica.tsx` | Distribución simple con leyenda lateral. |
-| GT-302 | Dona · valor central | `components/charts/gt-302-dona-valor-central.tsx` | Un solo indicador tipo "% de avance". |
-| GT-303 | Dona · leyenda | `components/charts/gt-303-dona-leyenda.tsx` | Multi-categoría, colores de estado (ok/warn/down). |
-| GA-401 | Área simple | `components/charts/ga-401-area-simple.tsx` | Relleno sólido semi-transparente, sin gradiente. |
-| GA-402 | Área apilada | `components/charts/ga-402-area-apilada.tsx` | 2 series acumuladas. |
+## Cómo se usa el laboratorio
 
-## KPIs — `/ui-kit/kpis`
+- **Galería** de la sección: muestras por familia, filtros por origen (exploración o plantilla
+  actual) y por librería.
+- **Comparador**: una muestra con todas las variantes de una dimensión lado a lado. Cada sección
+  compara lo suyo: gráficos (superficie, paleta, letra, curva, animación), KPIs (cifra, acento),
+  tablas (encabezado, bordes, zebra, densidad) y botones (forma, mayúsculas, relleno, peso).
+  «Usar en todo el laboratorio» fija esa variante.
+- **Panel «Tema»**: arriba lo global (paleta, letra, superficie, radio, modo, animación,
+  densidad) y abajo lo de la sección abierta. **«Exportar tema»** entrega los tokens CSS y la
+  combinación en JSON.
 
-Cada componente ya trae su propia `.card` — se inserta directo en un grid, sin envoltorio adicional.
+## Contrato de una muestra
 
-**Fila alineada:** el grid que contiene los KPIs lleva `.kpi-fila` y cada tarjeta `.kpi-card`
-(título / valor / pie como hijos directos). Con subgrid, si un título ocupa dos líneas, todas las
-tarjetas de la fila lo acompañan y los valores quedan a la misma altura. KP-101 ya lo trae.
+- Tokens: `lib/lab-graficos/tema.ts` (`TokensLab`: colores, secuencial, divergente, estado,
+  fuente, superficie, animación, `boton`, `tabla`, `kpi`…). Una muestra no hardcodea colores,
+  letra ni radios: todo sale de `useTokens()`.
+- Helpers por librería: `lib/lab-graficos/estilos.ts` (ECharts, Nivo) y el envoltorio
+  `components/lab-graficos/echart.tsx`.
+- Tipo y secciones: `components/lab-graficos/tipos.ts` (`GraficoLab`, `SECCIONES`).
+- Cada familia vive en `components/lab-graficos/graficos/<familia>/` y se registra en su
+  `index.ts` (id kebab-case único). `components/lab-graficos/catalogo.ts` las junta.
+- Datos sintéticos deterministas en `lib/lab-graficos/datos.ts`. Letras extra en
+  `app/fonts/lab/`, mapa de regiones en `public/lab/chile-regiones.json` y worker de MapLibre en
+  `public/lab/maplibre/`.
+- Librerías instaladas para el laboratorio: ECharts, Nivo, visx, motion y MapLibre.
 
-| Código | Nombre | Archivo | Descripción |
-|---|---|---|---|
-| KP-101 | Simple | `components/kpis/kp-101-simple.tsx` | Valor grande + variación (↑/↓) vs período anterior. |
-| KP-102 | Ícono + franja | `components/kpis/kp-102-icono-franja.tsx` | Franja de color superior + ícono, para categorizar. |
-| KP-103 | Gauge | `components/kpis/kp-103-gauge.tsx` | Arco semicircular de progreso, color según umbral. |
-| KP-104 | Comparativo | `components/kpis/kp-104-comparativo.tsx` | Actual vs meta con barra de progreso lineal. |
-| KP-105 | Sparkline | `components/kpis/kp-105-sparkline.tsx` | Valor + mini gráfico de tendencia embebido. |
+## Al definir el estándar
 
-## Tablas — `/ui-kit/tablas`
-
-| Código | Nombre | Archivo | Descripción |
-|---|---|---|---|
-| TB-101 | Zebra | `components/tables/tb-101-zebra.tsx` | Filas alternas, alineación numérica a la derecha. |
-| TB-102 | Ordenable | `components/tables/tb-102-ordenable.tsx` | Click en el encabezado alterna asc/desc, con ícono. |
-| TB-103 | Estados + paginación | `components/tables/tb-103-estados-paginacion.tsx` | Badges de estado (color inline) + paginación al pie. |
-
-## Botones — `/ui-kit/botones`
-
-Todo vive como clases utilitarias en `app/globals.css` (sección BUTTONS) — la vitrina en
-`app/(dashboard)/ui-kit/botones/page.tsx` solo combina esas clases, no hay componentes separados.
-
-| Código | Nombre | Clases | Descripción |
-|---|---|---|---|
-| BT-101 | Primario | `.btn-flesan .btn-flesan-primary` | CTA principal, único uso de fondo rojo de marca. |
-| BT-102 | Ghost | `.btn-flesan .btn-flesan-ghost` | Acción secundaria. |
-| BT-103 | Dark | `.btn-flesan .btn-flesan-dark` | Invertido, jerarquía alta sin ser el CTA rojo. |
-| BT-104 | Outline danger | `.btn-flesan .btn-flesan-outline-danger` | Confirmar acción destructiva. |
-| BT-105 | Outline success | `.btn-flesan .btn-flesan-outline-success` | Confirmar acción positiva. |
-| BT-106 | Solo ícono | `.btn-flesan .btn-flesan-icon` | Cuadrado, sin texto — siempre con `aria-label`. |
-| BT-107 | Ícono + texto | `.btn-flesan .btn-flesan-ghost` (+ ícono) | Ícono como refuerzo, no reemplaza el label. |
-| BT-108 | Pill | `.btn-flesan .btn-flesan-pill` | Esquinas redondeadas, uso puntual. |
-| BT-109 | Segmented / toggle | patrón inline (igual a `ThemeToggle`) | Selección exclusiva entre 2-3 opciones. |
-| BT-110 | Tamaños | `.btn-flesan-lg` / `.btn-flesan-sm` | Mismas variantes en otro tamaño. |
-| BT-111 | Deshabilitado | atributo `disabled` | Opacidad reducida, cursor not-allowed. |
+1. Pasar los tokens de «Exportar tema» al `@theme` de `app/globals.css`.
+2. Promover las muestras elegidas a componentes estándar (con código nuevo) en
+   `components/charts|kpis|tables|buttons/`, y documentarlos aquí.
+3. Borrar lo que no se eligió: muestras, letras de `app/fonts/lab/` y librerías sin uso.
 
 ## Infraestructura compartida
 
-- `lib/chart-geometry.ts` — helpers puros (`scaleLinear`, `buildLinePath`, `buildSmoothPath`,
-  `buildAreaPath`, `arcSlicePath`, `toSlices`, `polarToCartesian`, `CHART_COLORS`). Cualquier
-  gráfico nuevo debería apoyarse en esto antes de reinventar la geometría.
-- `components/ui-kit/gallery-item.tsx` — envoltorio título + código + card usado en las 4 vistas.
+- `lib/chart-geometry.ts` — helpers puros de geometría SVG, que usan las muestras «Plantilla actual».
 - `components/page-header.tsx` — encabezado de toda vista: `<PageHeader title description actions />`.
   Título en una línea, la descripción detrás de un ícono (i) y las acciones a la derecha. No
   reintroducir eyebrow + título grande + párrafo: empuja el contenido hacia abajo.
-- `components/section-tabs.tsx` — tabs de navegación secundaria (usado por el layout de `/ui-kit`,
-  reutilizable en cualquier sección con sub-vistas).
+- `components/section-tabs.tsx` — tabs de navegación secundaria (usado por el layout de `/ui-kit`;
+  toma la ruta que calza más largo, así las sub-rutas marcan su tab).
 - `--color-chart-1..5` y `--color-chart-grid` en `app/globals.css` (`@theme` + override `.dark`).
-
-## Agregar un objeto nuevo a la vitrina
-
-1. Componente en `components/charts|kpis|tables/<código-en-minúscula>-<slug>.tsx`.
-2. Súmalo a la página correspondiente en `app/(dashboard)/ui-kit/<vista>/page.tsx` envuelto en
-   `<GalleryItem code="..." title="..." description="...">`.
-3. Agrega la fila a la tabla correspondiente en este archivo.
-
-## Laboratorio de gráficos (exploración, no es catálogo)
-
-`/ui-kit/laboratorio-graficos` reúne ~55 gráficos de ejemplo (ECharts, Nivo, visx + motion,
-MapLibre y tablas HTML) para elegir el estándar de reportes. No tienen código de catálogo: cuando
-uno se elija, se promueve a `components/charts|kpis|tables/` con su código y se agrega arriba.
-
-- Vistas: Galería (por familia y librería), Comparador (un gráfico con todas las variantes de
-  superficie, paleta, letra, curva o animación) y En contexto (tablero de ejemplo).
-- Panel «Tema»: paleta, letra, superficie, radio, grosor, modo, animación, tooltip, curva,
-  grilla, etiquetas y densidad. «Exportar tema» entrega los tokens para el `@theme`.
-- Contrato de un gráfico: `lib/lab-graficos/tema.ts` (tokens), `lib/lab-graficos/estilos.ts`
-  (helpers ECharts/Nivo), `components/lab-graficos/tipos.ts` (`GraficoLab`). Cada familia vive en
-  `components/lab-graficos/graficos/<familia>/` con su `index.ts`.
-- Datos sintéticos en `lib/lab-graficos/datos.ts`. Letras extra en `app/fonts/lab/`, mapa de
-  regiones en `public/lab/chile-regiones.json` y worker de MapLibre en `public/lab/maplibre/`.
-- Lo que no se elija se borra al definir el estándar (carpetas `lab-graficos`, fuentes y librerías).
