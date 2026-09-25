@@ -150,7 +150,7 @@ export function Sidebar() {
           <div
             className={cn(
               "flex border-b border-border pb-2",
-              collapsed ? "flex-col items-center gap-1.5 w-full" : "gap-2 pl-0.5",
+              collapsed ? "flex-col items-center gap-1.5 w-full" : "justify-center gap-3",
             )}
           >
             {SAP_WORKZONE_URL && (
