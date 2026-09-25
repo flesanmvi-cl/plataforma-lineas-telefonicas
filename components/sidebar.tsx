@@ -96,55 +96,32 @@ export function Sidebar() {
         collapsed ? "w-16" : "w-60",
       )}
     >
-      {/* Encabezado: logo + nombre + colapsar (su borde calza con el de la barra superior), y bajo
-          el título los accesos a los portales */}
-      <div className={cn((SAP_WORKZONE_URL || PORTAL_CIA_URL) && "border-b border-border")}>
-        <div className={cn("flex items-center h-14 border-b border-border", collapsed ? "justify-center px-2 gap-1.5" : "gap-3 px-5")}>
-          <CiaLogo className="w-5 h-5 shrink-0 text-flesan-red dark:text-white" />
-          {!collapsed && (
-            // TODO: reemplazar por el nombre real de la plataforma.
-            <span className="font-display text-sm font-bold italic uppercase tracking-[0.04em] text-text leading-none whitespace-nowrap flex-1">
-              Nombre <span className="text-flesan-red">Plataforma</span>
-            </span>
-          )}
-          <button
-            type="button"
-            onClick={toggleCollapsed}
-            title={collapsed ? "Expandir menú" : "Colapsar menú"}
-            className="flex items-center justify-center w-6 h-6 shrink-0 border border-border-strong text-muted hover:text-text hover:border-text cursor-pointer"
-          >
-            {collapsed ? (
-              <ChevronRight className="w-[0.8125rem] h-[0.8125rem]" />
-            ) : (
-              <ChevronLeft className="w-[0.8125rem] h-[0.8125rem]" />
-            )}
-          </button>
-        </div>
-        {(SAP_WORKZONE_URL || PORTAL_CIA_URL) && (
-          <div className={cn("flex gap-1.5 py-3", collapsed ? "flex-col items-center px-2" : "px-4")}>
-            {SAP_WORKZONE_URL && (
-              <AccesoDirecto
-                href={SAP_WORKZONE_URL}
-                label="WZ"
-                nombre="SAP Workzone"
-                collapsed={collapsed}
-              >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src="/sap-logo.svg" alt="" className="h-4 w-auto shrink-0" />
-              </AccesoDirecto>
-            )}
-            {PORTAL_CIA_URL && (
-              <AccesoDirecto
-                href={PORTAL_CIA_URL}
-                label="CIA"
-                nombre="Portal CIA"
-                collapsed={collapsed}
-              >
-                <CiaLogo className="w-4 h-4 shrink-0 text-flesan-red dark:text-white" />
-              </AccesoDirecto>
-            )}
-          </div>
+      {/* Encabezado: logo + nombre + colapsar (su borde calza con el de la barra superior) */}
+      <div
+        className={cn(
+          "flex items-center h-14 border-b border-border",
+          collapsed ? "justify-center px-2 gap-1.5" : "gap-3 px-5",
         )}
+      >
+        <CiaLogo className="w-5 h-5 shrink-0 text-flesan-red dark:text-white" />
+        {!collapsed && (
+          // TODO: reemplazar por el nombre real de la plataforma.
+          <span className="font-display text-sm font-bold italic uppercase tracking-[0.04em] text-text leading-none whitespace-nowrap flex-1">
+            Nombre <span className="text-flesan-red">Plataforma</span>
+          </span>
+        )}
+        <button
+          type="button"
+          onClick={toggleCollapsed}
+          title={collapsed ? "Expandir menú" : "Colapsar menú"}
+          className="flex items-center justify-center w-6 h-6 shrink-0 border border-border-strong text-muted hover:text-text hover:border-text cursor-pointer"
+        >
+          {collapsed ? (
+            <ChevronRight className="w-[0.8125rem] h-[0.8125rem]" />
+          ) : (
+            <ChevronLeft className="w-[0.8125rem] h-[0.8125rem]" />
+          )}
+        </button>
       </div>
 
       {/* Navegación: enlace directo, o menú flotante si el ítem tiene subpaneles */}
@@ -166,7 +143,7 @@ export function Sidebar() {
         )}
       </nav>
 
-      {/* Pie: configuración (solo admin) y usuario; el tema vive en el menú del usuario */}
+      {/* Pie: configuración (solo admin), usuario y portales; el tema vive en el menú del usuario */}
       <div className={cn("border-t border-border flex flex-col gap-2 py-3", collapsed ? "px-2 items-center" : "px-3")}>
         {admin && (
           <Link
@@ -182,14 +159,35 @@ export function Sidebar() {
         <div className="w-full">
           <UserCard name={user?.name} email={user?.email} image={user?.image} role={user?.role} colapsado={collapsed} />
         </div>
+        {/* Portales del grupo, bajo el nombre del usuario (alineados con el nombre) */}
+        {(SAP_WORKZONE_URL || PORTAL_CIA_URL) && (
+          <div
+            className={cn(
+              "flex border-t border-border pt-2",
+              collapsed ? "flex-col items-center gap-1.5 w-full" : "gap-2 pl-[2.625rem]",
+            )}
+          >
+            {SAP_WORKZONE_URL && (
+              <AccesoDirecto href={SAP_WORKZONE_URL} label="WZ" nombre="SAP Workzone" collapsed={collapsed}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src="/sap-logo.svg" alt="" className="h-5 w-auto shrink-0" />
+              </AccesoDirecto>
+            )}
+            {PORTAL_CIA_URL && (
+              <AccesoDirecto href={PORTAL_CIA_URL} label="CIA" nombre="Portal CIA" collapsed={collapsed}>
+                <CiaLogo className="w-5 h-5 shrink-0 text-flesan-red dark:text-white" />
+              </AccesoDirecto>
+            )}
+          </div>
+        )}
       </div>
     </aside>
   );
 }
 
-// Acceso directo a un portal externo: ícono con la sigla abajo, bajo el título; el
-// nombre completo aparece en un globo al pasar el mouse o con foco de teclado. Colapsado, solo
-// el ícono. Abre en otra pestaña.
+// Acceso directo a un portal externo: solo el ícono, bajo el título; el
+// nombre completo aparece en un globo al pasar el mouse o con foco de teclado. Abre en otra
+// pestaña. `label` es la sigla: solo se usa para el id del globo.
 function AccesoDirecto({
   href,
   label,
@@ -205,7 +203,7 @@ function AccesoDirecto({
 }) {
   const idGlobo = `portal-${label.toLowerCase()}`;
   return (
-    <span className={cn("group relative flex", !collapsed && "flex-1")}>
+    <span className="group relative flex">
       <a
         href={href}
         target="_blank"
@@ -213,19 +211,19 @@ function AccesoDirecto({
         aria-label={`Abrir ${nombre} en otra pestaña`}
         aria-describedby={idGlobo}
         className={cn(
-          "flex flex-col items-center justify-center gap-1 py-1.5 rounded-flesan-sm font-label text-xs font-bold tracking-[0.08em] uppercase text-muted hover:text-text hover:bg-bg transition-colors whitespace-nowrap",
-          collapsed ? "w-8" : "flex-1",
+          "flex items-center justify-center rounded-flesan-sm hover:bg-bg transition-colors",
+          collapsed ? "w-8 h-8" : "w-10 h-9",
         )}
       >
         {children}
-        {!collapsed && label}
       </a>
       <span
         id={idGlobo}
         role="tooltip"
         className={cn(
           "pointer-events-none absolute z-50 whitespace-nowrap rounded-flesan-sm bg-text text-bg px-2 py-1 text-xs opacity-0 transition-opacity group-hover:opacity-100 group-focus-within:opacity-100",
-          collapsed ? "left-full top-1/2 -translate-y-1/2 ml-2" : "top-full left-1/2 -translate-x-1/2 mt-1.5",
+          // El globo va a la derecha del ícono: abajo se sale de la pantalla y arriba tapa el rol.
+          "left-full top-1/2 -translate-y-1/2 ml-2",
         )}
       >
         {nombre}
