@@ -213,7 +213,7 @@ function AccesoDirecto({
         aria-label={`Abrir ${nombre} en otra pestaña`}
         aria-describedby={idGlobo}
         className={cn(
-          "flex flex-col items-center justify-center gap-1 py-1.5 rounded-flesan-sm font-label text-xs tracking-[0.08em] uppercase text-muted hover:text-text hover:bg-bg transition-colors whitespace-nowrap",
+          "flex flex-col items-center justify-center gap-1 py-1.5 rounded-flesan-sm font-label text-xs font-bold tracking-[0.08em] uppercase text-muted hover:text-text hover:bg-bg transition-colors whitespace-nowrap",
           collapsed ? "w-8" : "flex-1",
         )}
       >
