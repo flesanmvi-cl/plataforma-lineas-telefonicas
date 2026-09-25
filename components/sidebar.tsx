@@ -143,28 +143,14 @@ export function Sidebar() {
         )}
       </nav>
 
-      {/* Pie: configuración (solo admin), usuario y portales; el tema vive en el menú del usuario */}
+      {/* Pie: portales, configuración (solo admin) y usuario; el tema vive en el menú del usuario */}
       <div className={cn("border-t border-border flex flex-col gap-2 py-3", collapsed ? "px-2 items-center" : "px-3")}>
-        {admin && (
-          <Link
-            href={NAV_CONFIG.href}
-            title={collapsed ? NAV_CONFIG.label : undefined}
-            aria-current={configActiva ? "page" : undefined}
-            className={claseItem(configActiva, collapsed)}
-          >
-            <ConfigIcon className={cn("w-4 h-4 shrink-0", configActiva && "text-flesan-red")} />
-            {!collapsed && NAV_CONFIG.label}
-          </Link>
-        )}
-        <div className="w-full">
-          <UserCard name={user?.name} email={user?.email} image={user?.image} role={user?.role} colapsado={collapsed} />
-        </div>
-        {/* Portales del grupo, bajo el nombre del usuario (alineados con el nombre) */}
+        {/* Portales del grupo, arriba de Configuración; una línea los separa del resto del pie */}
         {(SAP_WORKZONE_URL || PORTAL_CIA_URL) && (
           <div
             className={cn(
-              "flex border-t border-border pt-2",
-              collapsed ? "flex-col items-center gap-1.5 w-full" : "gap-2 pl-[2.625rem]",
+              "flex border-b border-border pb-2",
+              collapsed ? "flex-col items-center gap-1.5 w-full" : "gap-2 pl-0.5",
             )}
           >
             {SAP_WORKZONE_URL && (
@@ -180,12 +166,26 @@ export function Sidebar() {
             )}
           </div>
         )}
+        {admin && (
+          <Link
+            href={NAV_CONFIG.href}
+            title={collapsed ? NAV_CONFIG.label : undefined}
+            aria-current={configActiva ? "page" : undefined}
+            className={claseItem(configActiva, collapsed)}
+          >
+            <ConfigIcon className={cn("w-4 h-4 shrink-0", configActiva && "text-flesan-red")} />
+            {!collapsed && NAV_CONFIG.label}
+          </Link>
+        )}
+        <div className="w-full">
+          <UserCard name={user?.name} email={user?.email} image={user?.image} role={user?.role} colapsado={collapsed} />
+        </div>
       </div>
     </aside>
   );
 }
 
-// Acceso directo a un portal externo: solo el ícono, bajo el título; el
+// Acceso directo a un portal externo: solo el ícono, en el pie del sidebar; el
 // nombre completo aparece en un globo al pasar el mouse o con foco de teclado. Abre en otra
 // pestaña. `label` es la sigla: solo se usa para el id del globo.
 function AccesoDirecto({
