@@ -37,6 +37,8 @@ import {
   type FilaCosto,
   type Periodo,
 } from "./datos-costos";
+import { BotonExcel } from "@/components/boton-excel";
+import { descargarExcel } from "@/lib/exportar/excel";
 import { AvisoEjemplo, Bloque, ChipFiltro, estiloRotulo, Segmentado, type OpcionSegmentado } from "./piezas";
 
 const PERIODOS: OpcionSegmentado<Periodo>[] = [
@@ -175,7 +177,43 @@ export function ReporteCostos() {
             )}
           </Bloque>
 
-          <Bloque titulo={`Detalle por ${NIVELES[nivel].toLowerCase()}`} detalle={`${filas.length} filas`}>
+          <Bloque
+            titulo={`Detalle por ${NIVELES[nivel].toLowerCase()}`}
+            detalle={`${filas.length} filas`}
+            acciones={
+              filas.length > 0 && (
+                <BotonExcel
+                  onDescargar={() =>
+                    descargarExcel(
+                      [
+                        {
+                          nombre: `Detalle por ${NIVELES[nivel].toLowerCase()}`,
+                          filas,
+                          columnas: [
+                            { titulo: NIVELES[nivel], valor: (f) => f.nombre, ancho: 30 },
+                            { titulo: "Presupuesto (M$)", valor: (f) => Math.round(f.presupuesto), tipo: "numero" },
+                            { titulo: "Costo real (M$)", valor: (f) => Math.round(f.costo), tipo: "numero" },
+                            { titulo: "Desviación", valor: (f) => desviacion(f) / 100, tipo: "porcentaje" },
+                            { titulo: "Avance", valor: (f) => f.avance / 100, tipo: "porcentaje" },
+                          ],
+                        },
+                      ],
+                      {
+                        archivo: `Costos por obra - ${[NIVELES[nivel], ...etiquetas].join(" - ")}`,
+                        filtros: {
+                          Período: PERIODOS.find((p) => p.id === periodo)?.texto ?? periodo,
+                          "Líneas de negocio": lineas.length ? lineas.join(", ") : "Todas",
+                          Región: region || "Todas",
+                          Estados: estados.length ? estados.join(", ") : "Todos",
+                          Nivel: [NIVELES[nivel], ...etiquetas].join(" › "),
+                        },
+                      },
+                    )
+                  }
+                />
+              )
+            }
+          >
             {filas.length ? <TablaCostos filas={filas} nivel={nivel} onBajar={bajar} /> : <SinResultados />}
           </Bloque>
         </div>
