@@ -682,7 +682,7 @@ textarea.dens-control {
    ============================================================ */
 .burbuja-portales {
   /* Mitad CIA (rojo) y mitad SAP (azul), cortadas en diagonal por la barra del monograma */
-  background: linear-gradient(105deg, var(--color-flesan-red) 50%, #0a6ed1 50%);
+  background: linear-gradient(130deg, var(--color-flesan-red) 50%, #0a6ed1 50%);
   border: 1.5px solid rgba(255, 255, 255, 0.35);
   animation: latido-portales 3s ease-in-out infinite;
 }

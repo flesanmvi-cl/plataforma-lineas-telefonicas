@@ -7,9 +7,9 @@ import { CiaLogo } from "@/components/cia-logo";
 import { PORTAL_CIA_URL, SAP_WORKZONE_URL } from "@/lib/nav";
 
 const CLAVE = "cia-burbuja-portales";
-// Píldora centrada en el sidebar: cabe también en el sidebar colapsado (w-16).
-const ANCHO = 56;
-const ALTO = 34;
+// Círculo centrado en el sidebar: cabe también en el sidebar colapsado (w-16).
+const ANCHO = 48;
+const ALTO = 48;
 const UMBRAL_ARRASTRE = 4;
 
 interface Estado {
@@ -155,7 +155,7 @@ export function BurbujaPortales() {
         title="Portales · arrastra para mover"
         className={cn(
           // «Latido»: borde rojo→azul y halo que respira (estilos en globals.css).
-          "burbuja-portales pointer-events-auto relative grid grid-cols-2 place-items-center rounded-full overflow-hidden touch-none select-none",
+          "burbuja-portales pointer-events-auto relative rounded-full overflow-hidden touch-none select-none",
           arrastrando ? "cursor-grabbing" : "cursor-pointer",
         )}
         style={{ width: ANCHO, height: ALTO }}
@@ -226,16 +226,16 @@ export function BurbujaPortales() {
 function Monograma() {
   return (
     <>
-      <CiaLogo className="w-4 h-4 text-white translate-x-0.5" />
+      <CiaLogo className="absolute left-[9px] top-[9px] w-4 h-4 text-white" />
       {/* Logo SAP en blanco sobre su mitad azul */}
-      <svg width="22" height="11" viewBox="0 0 400 198" aria-hidden className="translate-x-[3px]">
+      <svg width="22" height="11" viewBox="0 0 400 198" aria-hidden className="absolute right-[6px] bottom-[11px]">
         <path d="M0 198V0h400L202 198z" fill="#fff" />
         <text x="32" y="142" fill="#0a6ed1" fontFamily="Arial, Helvetica, sans-serif" fontWeight="700" fontSize="128" letterSpacing="-4">
           SAP
         </text>
       </svg>
       {/* Barra del corte: la misma diagonal del fondo */}
-      <span className="absolute -inset-y-1 left-1/2 w-[1.5px] -translate-x-1/2 rotate-[15deg] bg-white/85" aria-hidden />
+      <span className="absolute -inset-y-1 left-1/2 w-[1.5px] -translate-x-1/2 rotate-[40deg] bg-white/85" aria-hidden />
     </>
   );
 }
