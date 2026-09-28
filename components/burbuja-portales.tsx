@@ -142,7 +142,7 @@ export function BurbujaPortales() {
         title="Portales · arrastra para mover"
         className={cn(
           // «Latido»: borde rojo→azul y halo que respira (estilos en globals.css).
-          "burbuja-portales flex items-center justify-center gap-0.5 rounded-full touch-none select-none",
+          "burbuja-portales relative grid grid-cols-2 place-items-center rounded-full overflow-hidden touch-none select-none",
           arrastrando ? "cursor-grabbing" : "cursor-pointer",
         )}
         style={{ width: ANCHO, height: ALTO }}
@@ -209,25 +209,20 @@ export function BurbujaPortales() {
   );
 }
 
-// Símbolo CIA / SAP: los dos mundos separados por la barra itálica de marca.
+// Símbolo CIA / SAP: cada logo en su mitad de color, separados por el corte diagonal.
 function Monograma() {
   return (
     <>
-      <CiaLogo className="w-4 h-4 text-flesan-red shrink-0" />
-      <span className="font-display text-[0.9375rem] font-extrabold italic leading-none text-white/85 -translate-y-px">/</span>
-      {/* Logo SAP: trapecio azul con la sigla en blanco, legible a este tamaño */}
-      <svg width="26" height="13" viewBox="0 0 400 198" aria-hidden className="shrink-0">
-        <defs>
-          <linearGradient id="sap-burbuja" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0" stopColor="#00aeef" />
-            <stop offset="1" stopColor="#0066b3" />
-          </linearGradient>
-        </defs>
-        <path d="M0 198V0h400L202 198z" fill="url(#sap-burbuja)" />
-        <text x="32" y="142" fill="#fff" fontFamily="Arial, Helvetica, sans-serif" fontWeight="700" fontSize="128" letterSpacing="-4">
+      <CiaLogo className="w-4 h-4 text-white translate-x-0.5" />
+      {/* Logo SAP en blanco sobre su mitad azul */}
+      <svg width="22" height="11" viewBox="0 0 400 198" aria-hidden className="translate-x-[3px]">
+        <path d="M0 198V0h400L202 198z" fill="#fff" />
+        <text x="32" y="142" fill="#0a6ed1" fontFamily="Arial, Helvetica, sans-serif" fontWeight="700" fontSize="128" letterSpacing="-4">
           SAP
         </text>
       </svg>
+      {/* Barra del corte: la misma diagonal del fondo */}
+      <span className="absolute -inset-y-1 left-1/2 w-[1.5px] -translate-x-1/2 rotate-[15deg] bg-white/85" aria-hidden />
     </>
   );
 }

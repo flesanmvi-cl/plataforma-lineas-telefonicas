@@ -677,14 +677,13 @@ textarea.dens-control {
 
 /* ============================================================
    BURBUJA DE PORTALES (CIA / SAP)
-   Borde en degradado rojo→azul y un halo que respira del rojo al azul, como el mapa del
+   Mitad roja CIA y mitad azul SAP, con un halo que respira del rojo al azul, como el mapa del
    ecosistema del Portal CIA. Sin movimiento si el usuario pide menos animación.
    ============================================================ */
 .burbuja-portales {
-  background:
-    linear-gradient(#0f0f0f, #0f0f0f) padding-box,
-    linear-gradient(135deg, var(--color-flesan-red), #00aeef) border-box;
-  border: 2px solid transparent;
+  /* Mitad CIA (rojo) y mitad SAP (azul), cortadas en diagonal por la barra del monograma */
+  background: linear-gradient(105deg, var(--color-flesan-red) 50%, #0a6ed1 50%);
+  border: 1.5px solid rgba(255, 255, 255, 0.35);
   animation: latido-portales 3s ease-in-out infinite;
 }
 .burbuja-portales:hover {
