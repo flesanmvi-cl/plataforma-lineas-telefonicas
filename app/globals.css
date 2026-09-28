@@ -684,18 +684,16 @@ textarea.dens-control {
 }
 
 /* ============================================================
-   MEDIA LUNA DE PORTALES (CIA / SAP)
-   Asoma por dentro del borde derecho del sidebar con el corte diagonal rojo CIA / azul SAP; al
-   pasar el mouse se desliza como píldora. El desplegable usa el panel del ecosistema.
+   LENGÜETA DE PORTALES (CIA / SAP)
+   Asoma por dentro del borde derecho del sidebar: mitad roja CIA arriba y mitad azul SAP abajo.
+   Crece al pasar el mouse. El desplegable usa el panel del ecosistema del Portal CIA.
    ============================================================ */
 .lengueta-portales {
-  /* El degradado mide lo que la píldora abierta: en reposo asoma el lado CIA con la punta azul
-     del corte; al abrirse queda CIA a la izquierda del corte y SAP a la derecha. */
-  background: linear-gradient(115deg, var(--color-flesan-red-dark) 38%, #0b5299 38%) left center / 4.75rem 100%
-    no-repeat;
+  background: linear-gradient(180deg, var(--color-flesan-red-dark) 50%, #0b5299 50%);
   transition:
-    width 0.2s cubic-bezier(0.22, 1, 0.36, 1),
-    box-shadow 0.2s ease;
+    width 0.18s ease,
+    height 0.18s ease,
+    box-shadow 0.18s ease;
 }
 .lengueta-portales:hover,
 .lengueta-portales[aria-expanded="true"] {
