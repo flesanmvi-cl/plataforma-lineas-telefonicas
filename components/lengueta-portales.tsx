@@ -7,7 +7,7 @@ import { CiaLogo } from "@/components/cia-logo";
 import { PORTAL_CIA_URL, SAP_WORKZONE_URL } from "@/lib/nav";
 
 /**
- * Lengüeta de portales: asoma por dentro del borde derecho del sidebar, justo arriba del pie
+ * Lengüeta de portales: asoma desde el borde izquierdo del sidebar, justo arriba del pie
  * (configuración y usuario). Mitad roja CIA arriba y mitad azul SAP abajo, con los logos
  * legibles en reposo. Al presionarla despliega los accesos a Portal CIA y SAP
  * Work Zone, afuera del sidebar.
@@ -42,7 +42,7 @@ export function LenguetaPortales() {
         aria-label="Portales del grupo: Portal CIA y SAP Work Zone"
         title="Portal CIA · SAP Work Zone"
         className={cn(
-          "lengueta-portales absolute right-0 bottom-3 flex flex-col items-center justify-evenly rounded-l-xl cursor-pointer",
+          "lengueta-portales absolute left-0 bottom-3 flex flex-col items-center justify-evenly rounded-r-xl cursor-pointer",
           "w-10 h-20",
         )}
       >

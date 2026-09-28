@@ -3,6 +3,7 @@
 import { useEffect, useId, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import { Check, MonitorUp, X } from "lucide-react";
+import { cn } from "@/lib/cn";
 import { migasDe } from "@/lib/nav";
 import { usePresentaciones } from "@/components/presentaciones/contexto";
 import { useVistaActual } from "@/components/presentaciones/vista-actual";
@@ -104,11 +105,15 @@ export function BotonAgregarVista() {
         onClick={() => (abierto ? setAbierto(false) : abrir())}
         aria-haspopup="dialog"
         aria-expanded={abierto}
-        className="flex items-center gap-1.5 h-8 px-2.5 rounded-flesan-sm bg-text text-bg font-label text-[0.6875rem] font-semibold tracking-[0.08em] uppercase cursor-pointer hover:opacity-90"
+        aria-label="Agregar a presentación"
+        title="Agregar a presentación"
+        // Solo ícono, igual que el botón de pantalla completa.
+        className={cn(
+          "flex items-center justify-center w-8 h-8 shrink-0 rounded-flesan-sm text-muted hover:text-text hover:bg-bg cursor-pointer transition-colors",
+          abierto && "text-text bg-bg",
+        )}
       >
-        <MonitorUp className="w-3.5 h-3.5" />
-        <span className="hidden lg:inline">Agregar a presentación</span>
-        <span className="lg:hidden">Agregar</span>
+        <MonitorUp className="w-4 h-4" />
       </button>
 
       {abierto && (
