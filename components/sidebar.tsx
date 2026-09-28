@@ -17,7 +17,7 @@ import { esAdmin } from "@/lib/roles";
 import { useUsuarioActual } from "@/components/user-context";
 import { CiaLogo } from "@/components/cia-logo";
 import { UserCard } from "@/components/user-menu";
-import { BurbujaPortales } from "@/components/burbuja-portales";
+import { LenguetaPortales } from "@/components/lengueta-portales";
 
 const COLLAPSE_KEY = "sidebar-collapsed";
 
@@ -97,7 +97,6 @@ export function Sidebar() {
     >
       {/* Encabezado: logo + nombre (su borde calza con el de la barra superior) */}
       <div
-        data-sidebar-encabezado
         className={cn(
           "flex items-center h-14 border-b border-border",
           collapsed ? "justify-center px-2" : "gap-3 px-5",
@@ -131,8 +130,11 @@ export function Sidebar() {
         )}
       </nav>
 
+      {/* Portales del grupo: lengüeta que asoma por el borde, justo arriba del pie */}
+      <LenguetaPortales />
+
       {/* Pie: configuración (solo admin), colapsar y usuario; el tema vive en el menú del usuario */}
-      <div data-sidebar-pie className={cn("border-t border-border flex flex-col gap-2 py-3", collapsed ? "px-2 items-center" : "px-3")}>
+      <div className={cn("border-t border-border flex flex-col gap-2 py-3", collapsed ? "px-2 items-center" : "px-3")}>
         {/* Configuración (solo admin) y, a su lado, el botón para colapsar el menú */}
         <div className={cn("flex items-center gap-2", collapsed ? "flex-col" : "w-full")}>
           {admin && (
@@ -163,8 +165,6 @@ export function Sidebar() {
           <UserCard name={user?.name} email={user?.email} image={user?.image} role={user?.role} colapsado={collapsed} />
         </div>
       </div>
-      {/* Portales del grupo: burbuja centrada, que se mueve y se oculta */}
-      <BurbujaPortales />
     </aside>
   );
 }
