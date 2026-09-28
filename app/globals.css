@@ -686,18 +686,19 @@ textarea.dens-control {
 /* ============================================================
    LENGÜETA DE PORTALES (CIA / SAP)
    Asoma por dentro del borde derecho del sidebar: mitad roja CIA arriba y mitad azul SAP abajo.
-   Crece al pasar el mouse. El desplegable usa el panel del ecosistema del Portal CIA.
+   Al pasar el mouse toma sombra. El desplegable usa el panel del ecosistema del Portal CIA.
    ============================================================ */
 .lengueta-portales {
   background: linear-gradient(180deg, var(--color-flesan-red-dark) 50%, #0b5299 50%);
   transition:
-    width 0.18s ease,
-    height 0.18s ease,
-    box-shadow 0.18s ease;
+    box-shadow 0.18s ease,
+    filter 0.18s ease;
 }
 .lengueta-portales:hover,
+.lengueta-portales:focus-visible,
 .lengueta-portales[aria-expanded="true"] {
   box-shadow: -4px 6px 14px -8px rgba(0, 0, 0, 0.45);
+  filter: brightness(1.12);
 }
 .panel-portales {
   background:

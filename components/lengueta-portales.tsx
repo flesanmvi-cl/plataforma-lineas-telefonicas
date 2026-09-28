@@ -8,8 +8,8 @@ import { PORTAL_CIA_URL, SAP_WORKZONE_URL } from "@/lib/nav";
 
 /**
  * Lengüeta de portales: asoma por dentro del borde derecho del sidebar, justo arriba del pie
- * (configuración y usuario). Mitad roja CIA arriba y mitad azul SAP abajo; al pasar el mouse
- * crece y los logos se leen completos. Al presionarla despliega los accesos a Portal CIA y SAP
+ * (configuración y usuario). Mitad roja CIA arriba y mitad azul SAP abajo, con los logos
+ * legibles en reposo. Al presionarla despliega los accesos a Portal CIA y SAP
  * Work Zone, afuera del sidebar.
  */
 export function LenguetaPortales() {
@@ -42,26 +42,13 @@ export function LenguetaPortales() {
         aria-label="Portales del grupo: Portal CIA y SAP Work Zone"
         title="Portal CIA · SAP Work Zone"
         className={cn(
-          "lengueta-portales group absolute right-0 bottom-3 flex flex-col items-center justify-evenly rounded-l-xl cursor-pointer",
-          "w-6 h-[4.25rem] hover:w-10 hover:h-20 focus-visible:w-10 focus-visible:h-20",
-          abierta && "w-10 h-20",
+          "lengueta-portales absolute right-0 bottom-3 flex flex-col items-center justify-evenly rounded-l-xl cursor-pointer",
+          "w-10 h-20",
         )}
       >
-        <CiaLogo
-          className={cn(
-            "text-white transition-all w-4 h-4 group-hover:w-5 group-hover:h-5 group-focus-visible:w-5 group-focus-visible:h-5",
-            abierta && "w-5 h-5",
-          )}
-        />
-        {/* Logo SAP: trapecio blanco con la sigla, más grande cuando la lengüeta crece */}
-        <svg
-          viewBox="0 0 400 198"
-          aria-hidden
-          className={cn(
-            "transition-all w-5 h-2.5 group-hover:w-8 group-hover:h-4 group-focus-visible:w-8 group-focus-visible:h-4",
-            abierta && "w-8 h-4",
-          )}
-        >
+        <CiaLogo className="w-5 h-5 text-white" />
+        {/* Logo SAP: trapecio blanco con la sigla */}
+        <svg viewBox="0 0 400 198" aria-hidden className="w-8 h-4">
           <path d="M0 198V0h400L202 198z" fill="#fff" />
           <text x="32" y="142" fill="#0b5299" fontFamily="Arial, Helvetica, sans-serif" fontWeight="700" fontSize="128" letterSpacing="-4">
             SAP
