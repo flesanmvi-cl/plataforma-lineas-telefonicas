@@ -5,6 +5,7 @@ import type { Diapositiva, EstadoPresentaciones, Presentacion } from "@/lib/pres
 import { borrarImagen } from "@/lib/presentaciones/imagenes";
 
 const CLAVE = "cia-presentaciones-v1";
+const CLAVE_ACTIVAS = "cia-presentaciones-activas";
 const VACIO: EstadoPresentaciones = { presentaciones: [], activaId: null };
 
 function nuevoId() {
@@ -37,6 +38,9 @@ interface ValorPresentaciones {
   activa: Presentacion | null;
   panelAbierto: boolean;
   setPanelAbierto: (v: boolean) => void;
+  /** Interruptor del menú de usuario: apagado, no aparece «Agregar a presentación». */
+  habilitadas: boolean;
+  setHabilitadas: (v: boolean) => void;
   activar: (id: string) => void;
   crear: (nombre: string) => string;
   renombrar: (id: string, nombre: string) => void;
@@ -54,9 +58,13 @@ export function PresentacionesProvider({ children }: { children: ReactNode }) {
   const [estado, setEstado] = useState<EstadoPresentaciones>(VACIO);
   const [listo, setListo] = useState(false);
   const [panelAbierto, setPanelAbierto] = useState(false);
+  const [habilitadas, setHabilitadasState] = useState(true);
 
   useEffect(() => {
     setEstado(leer());
+    try {
+      setHabilitadasState(localStorage.getItem(CLAVE_ACTIVAS) !== "0");
+    } catch {}
     setListo(true);
     const alCambiar = (e: StorageEvent) => {
       if (e.key === CLAVE) setEstado(leer());
@@ -89,6 +97,14 @@ export function PresentacionesProvider({ children }: { children: ReactNode }) {
       activa,
       panelAbierto,
       setPanelAbierto,
+      habilitadas,
+      setHabilitadas: (v) => {
+        setHabilitadasState(v);
+        if (!v) setPanelAbierto(false);
+        try {
+          localStorage.setItem(CLAVE_ACTIVAS, v ? "1" : "0");
+        } catch {}
+      },
       activar: (id) => cambiar((e) => ({ ...e, activaId: id })),
       crear: (nombre) => {
         const id = nuevoId();
@@ -133,7 +149,7 @@ export function PresentacionesProvider({ children }: { children: ReactNode }) {
           return { ...p, diapositivas: lista };
         }),
     };
-  }, [estado, listo, panelAbierto, cambiar, conPresentacion]);
+  }, [estado, listo, panelAbierto, habilitadas, cambiar, conPresentacion]);
 
   return <Contexto.Provider value={valor}>{children}</Contexto.Provider>;
 }

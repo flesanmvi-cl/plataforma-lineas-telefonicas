@@ -6,7 +6,7 @@ import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { BotonPantallaCompleta } from "@/components/pantalla-completa";
-import { BotonAgregarVista, BotonPresentaciones } from "@/components/presentaciones/agregar-vista";
+import { BotonAgregarVista } from "@/components/presentaciones/agregar-vista";
 import { UserMenu } from "@/components/user-menu";
 import { useUsuarioActual } from "@/components/user-context";
 import { cn } from "@/lib/cn";
@@ -17,7 +17,7 @@ import { NAV_ITEMS, isNavActive, migasDe } from "@/lib/nav";
 const claseMiga = "font-label text-xs tracking-[0.08em] uppercase truncate";
 
 // Barra superior: la ruta de migas (Inicio › Sección › Subpanel › drilldown…) y, a la derecha,
-// las presentaciones (agregar la vista, ver y descargar) y la pantalla completa.
+// «Agregar a presentación» (se apaga desde el menú de usuario) y la pantalla completa.
 // Menú, configuración, tema y usuario viven en el sidebar. En móvil, donde el sidebar
 // se oculta, la barra vuelve a mostrar el menú, el tema y el usuario.
 export function TopBar() {
@@ -96,7 +96,6 @@ export function TopBar() {
 
       <div className="hidden md:flex items-center gap-2">
         <BotonAgregarVista />
-        <BotonPresentaciones />
         <BotonPantallaCompleta />
       </div>
 

@@ -2,8 +2,7 @@
 
 import { useEffect, useId, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
-import { Check, Layers, MonitorUp, X } from "lucide-react";
-import { cn } from "@/lib/cn";
+import { Check, MonitorUp, X } from "lucide-react";
 import { migasDe } from "@/lib/nav";
 import { usePresentaciones } from "@/components/presentaciones/contexto";
 import { useVistaActual } from "@/components/presentaciones/vista-actual";
@@ -28,7 +27,7 @@ function bloquesDeLaVista(): { id: string; titulo: string }[] {
 export function BotonAgregarVista() {
   const pathname = usePathname();
   const vista = useVistaActual();
-  const { presentaciones, activa, crear, agregar, actualizar, setPanelAbierto, listo } = usePresentaciones();
+  const { presentaciones, activa, crear, agregar, actualizar, setPanelAbierto, listo, habilitadas } = usePresentaciones();
   const [abierto, setAbierto] = useState(false);
   const [destino, setDestino] = useState<string>(NUEVA);
   const [nombreNueva, setNombreNueva] = useState("Mi presentación");
@@ -96,7 +95,7 @@ export function BotonAgregarVista() {
       .catch((e) => console.warn("[presentaciones] no se pudo generar la miniatura", e));
   }
 
-  if (!listo) return null;
+  if (!listo || !habilitadas) return null;
 
   return (
     <div ref={ref} className="relative">
@@ -146,7 +145,7 @@ export function BotonAgregarVista() {
                 <select id={`${id}-destino`} value={destino} onChange={(e) => setDestino(e.target.value)} className="field-input">
                   {presentaciones.map((p) => (
                     <option key={p.id} value={p.id}>
-                      {p.nombre} ({p.diapositivas.length})
+                      {p.nombre} · {p.diapositivas.length} diapositiva{p.diapositivas.length === 1 ? "" : "s"}
                     </option>
                   ))}
                   <option value={NUEVA}>Nueva presentación…</option>
@@ -209,29 +208,6 @@ export function BotonAgregarVista() {
         </div>
       )}
     </div>
-  );
-}
-
-/** Botón «Presentaciones (n)»: abre el panel lateral. */
-export function BotonPresentaciones() {
-  const { activa, panelAbierto, setPanelAbierto, listo } = usePresentaciones();
-  if (!listo) return null;
-  const n = activa?.diapositivas.length ?? 0;
-  return (
-    <button
-      type="button"
-      onClick={() => setPanelAbierto(!panelAbierto)}
-      aria-expanded={panelAbierto}
-      aria-controls="panel-presentaciones"
-      className={cn(
-        "flex items-center gap-1.5 h-8 px-2.5 rounded-flesan-sm border border-border-strong font-label text-[0.6875rem] font-semibold tracking-[0.08em] uppercase text-muted hover:text-text hover:border-text cursor-pointer",
-        panelAbierto && "text-text border-text",
-      )}
-    >
-      <Layers className="w-3.5 h-3.5" />
-      <span className="hidden lg:inline">Presentaciones</span>
-      {n > 0 && <span className="tabular rounded-full bg-flesan-red text-white px-1.5 text-[0.625rem] leading-4">{n}</span>}
-    </button>
   );
 }
 

@@ -40,8 +40,6 @@ export const NAV_ITEMS: NavItem[] = [
       { href: "/ui-kit/laboratorio/contexto", label: "En contexto", grupo: "Laboratorio" },
     ],
   },
-  // Presentaciones armadas desde las vistas (agregar desde la barra superior; se guardan en este navegador).
-  { href: "/presentaciones", label: "Presentaciones", icon: Presentation },
   {
     // Pantallas de prueba armadas solo con el estándar vigente (lib/lab-graficos/estandar.ts):
     // sirven para ver cómo queda una plataforma real con lo elegido.
@@ -57,6 +55,8 @@ export const NAV_ITEMS: NavItem[] = [
       { href: "/pruebas/formularios/tipo-3", label: "Formulario Tipo 3", grupo: "Formularios" },
     ],
   },
+  // Presentaciones armadas desde las vistas (se guardan en este navegador). Siempre al final.
+  { href: "/presentaciones", label: "Presentaciones", icon: Presentation },
 ];
 
 /** Configuración no va en el menú principal: vive en el pie del sidebar. Se declara aquí

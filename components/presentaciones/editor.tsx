@@ -87,7 +87,7 @@ export function EditorPresentaciones() {
         <select aria-label="Presentación" value={activa.id} onChange={(e) => activar(e.target.value)} className="field-input !w-auto">
           {presentaciones.map((p) => (
             <option key={p.id} value={p.id}>
-              {p.nombre} ({p.diapositivas.length})
+              {p.nombre} · {p.diapositivas.length} diapositiva{p.diapositivas.length === 1 ? "" : "s"}
             </option>
           ))}
         </select>
