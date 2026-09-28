@@ -7,7 +7,7 @@ import Link from "next/link";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { BotonPantallaCompleta } from "@/components/pantalla-completa";
 import { EstadoDatos } from "@/components/estado-datos";
-import { BotonAgregarVista } from "@/components/presentaciones/agregar-vista";
+import { BotonesBarraModulos } from "@/components/modulos";
 import { UserMenu } from "@/components/user-menu";
 import { useUsuarioActual } from "@/components/user-context";
 import { cn } from "@/lib/cn";
@@ -97,7 +97,7 @@ export function TopBar() {
 
       <div className="hidden md:flex items-center gap-2">
         <EstadoDatos />
-        <BotonAgregarVista />
+        <BotonesBarraModulos />
         <BotonPantallaCompleta />
       </div>
 

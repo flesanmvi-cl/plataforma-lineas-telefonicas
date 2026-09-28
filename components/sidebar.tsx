@@ -8,6 +8,7 @@ import { cn } from "@/lib/cn";
 import {
   NAV_CONFIG,
   NAV_ITEMS,
+  NOMBRE_PLATAFORMA,
   gruposDe,
   hijoActivo,
   isNavActive,
@@ -105,9 +106,9 @@ export function Sidebar() {
       >
         <CiaLogo className="w-6 h-6 shrink-0 text-flesan-red dark:text-white" />
         {!collapsed && (
-          // TODO: reemplazar por el nombre real de la plataforma.
+          // El nombre sale de lib/nav.ts (NOMBRE_PLATAFORMA): texto normal + palabra en rojo.
           <span className="font-display text-[1.1875rem] font-bold italic uppercase tracking-[0.04em] text-text leading-none whitespace-nowrap flex-1 min-w-0 truncate">
-            Nombre <span className="text-flesan-red">Plataforma</span>
+            {NOMBRE_PLATAFORMA.texto} <span className="text-flesan-red">{NOMBRE_PLATAFORMA.destacado}</span>
           </span>
         )}
       </div>

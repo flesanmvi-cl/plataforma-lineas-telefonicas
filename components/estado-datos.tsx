@@ -4,13 +4,23 @@ import { useEffect, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { RefreshCw } from "lucide-react";
 import { cn } from "@/lib/cn";
-import {
-  CADA_HORAS,
-  formatearCompleta,
-  formatearDia,
-  formatearHora,
-  obtenerEstadoDatos,
-} from "@/lib/estado-datos";
+import { CADA_HORAS, obtenerEstadoDatos } from "@/lib/estado-datos";
+
+const MESES = ["ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic"];
+
+function formatearHora(d: Date) {
+  return `${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}`;
+}
+
+/** «27 sep» */
+function formatearDia(d: Date) {
+  return `${d.getDate()} ${MESES[d.getMonth()]}`;
+}
+
+/** «27 sep 2026, 06:00» */
+function formatearCompleta(d: Date) {
+  return `${formatearDia(d)} ${d.getFullYear()}, ${formatearHora(d)}`;
+}
 
 const HORA_MS = 3_600_000;
 /** Cuánto dura el «recién» tras actualizar. */
@@ -23,9 +33,13 @@ const MINIMO_MS = 900;
  * «Atrasado» si pasó más de `CADA_HORAS` desde la última actualización, con el botón de
  * actualizar al costado. Atrasado, al pasar el mouse explica cuánto lleva y ofrece actualizar.
  */
+// SHELL · indicador de la barra superior (igual en todas las plataformas). La fuente de la fecha
+// y la frecuencia esperada son de cada plataforma: lib/estado-datos.ts.
 export function EstadoDatos() {
   const router = useRouter();
   const [actualizadoEn, setActualizadoEn] = useState<Date | null>(null);
+  // null: aún cargando; false: la plataforma no informa estado de datos (no se muestra nada).
+  const [disponible, setDisponible] = useState<boolean | null>(null);
   const [actualizando, setActualizando] = useState(false);
   const [recien, setRecien] = useState(false);
   const [, startTransition] = useTransition();
@@ -33,7 +47,10 @@ export function EstadoDatos() {
   const [ahora, setAhora] = useState(() => Date.now());
 
   useEffect(() => {
-    obtenerEstadoDatos().then((e) => setActualizadoEn(e.actualizadoEn));
+    obtenerEstadoDatos().then((e) => {
+      setDisponible(Boolean(e));
+      if (e) setActualizadoEn(e.actualizadoEn);
+    });
     const t = setInterval(() => setAhora(Date.now()), 60_000);
     return () => clearInterval(t);
   }, []);
@@ -52,12 +69,13 @@ export function EstadoDatos() {
     const estado = await obtenerEstadoDatos();
     await new Promise((r) => setTimeout(r, Math.max(0, MINIMO_MS - (Date.now() - inicio))));
     // En el mockup la fuente no cambia: se toma la hora de la actualización como nueva fecha.
-    setActualizadoEn(new Date(Math.max(estado.actualizadoEn.getTime(), Date.now())));
+    setActualizadoEn(new Date(Math.max(estado?.actualizadoEn.getTime() ?? 0, Date.now())));
     setAhora(Date.now());
     setRecien(true);
     setActualizando(false);
   }
 
+  if (disponible === false) return null;
   // Antes de montar no hay fecha (depende del reloj del navegador): se reserva el espacio.
   if (!actualizadoEn) return <div className="skeleton h-[1.875rem] w-32 rounded-full" aria-hidden />;
 

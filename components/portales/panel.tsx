@@ -4,7 +4,7 @@ import { useEffect, type ReactNode, type RefObject } from "react";
 import { ArrowUpRight, X } from "lucide-react";
 import { cn } from "@/lib/cn";
 import { CiaLogo } from "@/components/cia-logo";
-import { PORTAL_CIA_URL, SAP_WORKZONE_URL } from "@/lib/nav";
+import { PORTAL_CIA_URL, SAP_WORKZONE_URL } from "@/lib/nav-base";
 
 /** Hay al menos un portal configurado. */
 export const HAY_PORTALES = Boolean(PORTAL_CIA_URL || SAP_WORKZONE_URL);

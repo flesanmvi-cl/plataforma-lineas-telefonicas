@@ -3,7 +3,6 @@ import { AppShell } from "@/components/app-shell";
 import { BreadcrumbProvider } from "@/components/breadcrumb-context";
 import { UserProvider } from "@/components/user-context";
 import { SwrProvider } from "@/components/swr-provider";
-import { NavStyleProvider } from "@/components/nav-style-context";
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
   const session = await auth();
@@ -20,9 +19,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
     <UserProvider user={user}>
       <SwrProvider>
         <BreadcrumbProvider>
-          <NavStyleProvider>
-            <AppShell>{children}</AppShell>
-          </NavStyleProvider>
+          <AppShell>{children}</AppShell>
         </BreadcrumbProvider>
       </SwrProvider>
     </UserProvider>
