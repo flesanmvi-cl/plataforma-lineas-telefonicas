@@ -674,3 +674,54 @@ textarea.dens-control {
 [data-modo-bloque] [data-bloque-objetivo] {
   grid-column: 1 / -1 !important;
 }
+
+/* ============================================================
+   BURBUJA DE PORTALES (CIA / SAP)
+   Borde en degradado rojo→azul y un halo que respira del rojo al azul, como el mapa del
+   ecosistema del Portal CIA. Sin movimiento si el usuario pide menos animación.
+   ============================================================ */
+.burbuja-portales {
+  background:
+    linear-gradient(#0f0f0f, #0f0f0f) padding-box,
+    linear-gradient(135deg, var(--color-flesan-red), #00aeef) border-box;
+  border: 2px solid transparent;
+  animation: latido-portales 3s ease-in-out infinite;
+}
+.burbuja-portales:hover {
+  animation-duration: 1.6s;
+}
+@keyframes latido-portales {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(227, 6, 19, 0.45), 0 8px 20px -8px rgba(0, 0, 0, 0.6);
+  }
+  50% {
+    box-shadow: 0 0 0 8px rgba(0, 174, 239, 0), 0 0 22px 2px rgba(0, 174, 239, 0.45);
+  }
+}
+.panel-portales {
+  background:
+    radial-gradient(70% 90% at 12% 20%, rgba(227, 6, 19, 0.28), rgba(227, 6, 19, 0.05) 55%, transparent),
+    radial-gradient(70% 90% at 90% 85%, rgba(0, 174, 239, 0.22), rgba(0, 174, 239, 0.04) 55%, transparent),
+    #0a0a0a;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 30px 60px -20px rgba(0, 0, 0, 0.7);
+  animation: entrar-portales 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+@keyframes entrar-portales {
+  /* Solo X y escala en transform: el centrado vertical va en la propiedad translate. */
+  from {
+    opacity: 0;
+    transform: translateX(-8px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .burbuja-portales,
+  .panel-portales {
+    animation: none;
+  }
+}

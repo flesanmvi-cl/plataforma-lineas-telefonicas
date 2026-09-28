@@ -1,13 +1,13 @@
 "use client";
 
-import { useEffect, useRef, useState, type PointerEvent as EventoPuntero } from "react";
-import { ArrowUpRight, EyeOff, Grid3x3, X } from "lucide-react";
+import { useEffect, useLayoutEffect, useRef, useState, type PointerEvent as EventoPuntero } from "react";
+import { ArrowUpRight, EyeOff, X } from "lucide-react";
 import { cn } from "@/lib/cn";
 import { CiaLogo } from "@/components/cia-logo";
 import { PORTAL_CIA_URL, SAP_WORKZONE_URL } from "@/lib/nav";
 
 const CLAVE = "cia-burbuja-portales";
-const TAMANO = 40;
+const TAMANO = 44;
 const UMBRAL_ARRASTRE = 4;
 
 interface Estado {
@@ -27,6 +27,10 @@ export function BurbujaPortales() {
   const [abierta, setAbierta] = useState(false);
   const [arrastrando, setArrastrando] = useState(false);
   const raiz = useRef<HTMLDivElement>(null);
+  const panel = useRef<HTMLDivElement>(null);
+  // Desplazamiento vertical del desplegable respecto de la burbuja: centrado, pero sin salirse de la
+  // ventana cuando la burbuja está cerca del borde superior o inferior.
+  const [desfase, setDesfase] = useState(0);
   const arrastre = useRef<{ inicioY: number; yInicial: number; movio: boolean } | null>(null);
 
   useEffect(() => {
@@ -55,6 +59,15 @@ export function BurbujaPortales() {
       document.removeEventListener("keydown", alTeclear);
     };
   }, [abierta]);
+
+  useLayoutEffect(() => {
+    if (!abierta || !raiz.current || !panel.current) return;
+    const burbuja = raiz.current.getBoundingClientRect();
+    const alto = panel.current.offsetHeight;
+    const centrado = burbuja.top + TAMANO / 2 - alto / 2;
+    const acotado = Math.max(8, Math.min(centrado, window.innerHeight - alto - 8));
+    setDesfase(acotado - burbuja.top);
+  }, [abierta, estado.y]);
 
   // Límite vertical: dentro del sidebar (el padre posicionado).
   function acotar(y: number) {
@@ -96,8 +109,8 @@ export function BurbujaPortales() {
         onClick={() => guardar({ ...estado, oculta: false })}
         title="Mostrar portales"
         aria-label="Mostrar la burbuja de portales"
-        className="absolute -right-1.5 z-50 w-1.5 h-10 rounded-r-full bg-border-strong hover:bg-flesan-red transition-colors cursor-pointer"
-        style={{ top: estado.y }}
+        className="absolute -right-1.5 z-50 w-1.5 h-11 rounded-r-full cursor-pointer opacity-80 hover:opacity-100 transition-opacity"
+        style={{ top: estado.y, background: "linear-gradient(180deg, var(--color-flesan-red), #00aeef)" }}
       />
     );
   }
@@ -122,73 +135,117 @@ export function BurbujaPortales() {
         }}
         aria-haspopup="menu"
         aria-expanded={abierta}
-        aria-label="Portales del grupo (arrastra para mover)"
+        aria-label="Portales del grupo: Portal CIA y SAP (arrastra para mover)"
         title="Portales · arrastra para mover"
         className={cn(
-          "flex items-center justify-center rounded-full border border-border-strong bg-surface text-muted shadow-md hover:text-text hover:border-text transition-colors touch-none select-none",
-          arrastrando ? "cursor-grabbing shadow-lg" : "cursor-pointer",
-          abierta && "text-flesan-red border-flesan-red",
+          // «Latido»: borde rojo→azul y halo que respira (estilos en globals.css).
+          "burbuja-portales flex items-center justify-center gap-px rounded-full touch-none select-none",
+          arrastrando ? "cursor-grabbing" : "cursor-pointer",
         )}
         style={{ width: TAMANO, height: TAMANO }}
       >
-        <Grid3x3 className="w-4 h-4" />
+        <Monograma />
       </button>
 
       {abierta && (
         <div
+          ref={panel}
           role="menu"
           aria-label="Abrir portales"
-          className="absolute left-full top-1/2 -translate-y-1/2 ml-2 w-72 rounded-flesan border border-border bg-surface shadow-lg p-1.5 animate-fade-in"
+          className="panel-portales absolute left-full ml-3 w-80 rounded-2xl overflow-hidden text-white"
+          style={{ top: desfase }}
         >
-          <div className="flex items-center px-2.5 pt-1.5 pb-1">
-            <span className="font-label text-[0.625rem] font-semibold tracking-[0.14em] uppercase text-faint">Abrir portales</span>
-            <button type="button" onClick={() => setAbierta(false)} aria-label="Cerrar" className="ml-auto text-faint hover:text-text cursor-pointer">
-              <X className="w-3.5 h-3.5" />
+          <div className="flex items-center px-4 pt-3.5 pb-2">
+            <span className="font-label text-[0.6875rem] font-semibold tracking-[0.14em] uppercase text-white/60">Abrir portales</span>
+            <button type="button" onClick={() => setAbierta(false)} aria-label="Cerrar" className="ml-auto text-white/60 hover:text-white cursor-pointer">
+              <X className="w-4 h-4" />
             </button>
           </div>
-          {SAP_WORKZONE_URL && (
-            <Portal href={SAP_WORKZONE_URL} nombre="SAP Workzone" detalle="RR.HH. y trámites del grupo">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/sap-logo.svg" alt="" className="h-4 w-auto" />
-            </Portal>
-          )}
-          {PORTAL_CIA_URL && (
-            <Portal href={PORTAL_CIA_URL} nombre="Portal CIA" detalle="Todas las plataformas de la CIA">
-              <CiaLogo className="w-5 h-5 text-flesan-red dark:text-white" />
-            </Portal>
-          )}
-          <button
-            type="button"
-            onClick={() => {
-              setAbierta(false);
-              guardar({ ...estado, oculta: true });
-            }}
-            className="w-full flex items-center gap-2 mt-1 px-2.5 py-2 border-t border-border font-label text-[0.6875rem] tracking-[0.06em] uppercase text-muted hover:text-text cursor-pointer"
-          >
-            <EyeOff className="w-3.5 h-3.5" />
-            Ocultar burbuja
-          </button>
+          <div className="relative px-3 pb-3 flex flex-col gap-2.5">
+            {/* Línea punteada que une los dos mundos, como en el mapa del ecosistema */}
+            {PORTAL_CIA_URL && SAP_WORKZONE_URL && (
+              <span className="absolute left-[2.3rem] top-[3.4rem] h-7 border-l-2 border-dashed border-white/25" aria-hidden />
+            )}
+            {PORTAL_CIA_URL && (
+              <Portal href={PORTAL_CIA_URL} nombre="Portal CIA" detalle="Aplicativos y desafíos de la CIA" color="#ff3a3a">
+                <span className="w-11 h-11 rounded-xl flex items-center justify-center shrink-0 bg-[rgba(227,6,19,0.15)] ring-1 ring-inset ring-[rgba(227,6,19,0.5)]">
+                  <CiaLogo className="w-6 h-6 text-[#ff3a3a]" />
+                </span>
+              </Portal>
+            )}
+            {SAP_WORKZONE_URL && (
+              <Portal href={SAP_WORKZONE_URL} nombre="SAP Work Zone" detalle="Noticias, comunicaciones y trámites" color="#00aeef">
+                <span
+                  className="w-11 h-11 rounded-xl flex items-center justify-center shrink-0"
+                  style={{ background: "linear-gradient(180deg, #00aeef, #007cc5 52%, #0066b3)" }}
+                >
+                  <span className="text-[0.75rem] font-bold text-white" style={{ fontFamily: "Arial, sans-serif" }}>
+                    SAP
+                  </span>
+                </span>
+              </Portal>
+            )}
+          </div>
+          <div className="flex items-center gap-2 px-4 py-2.5 border-t border-white/10 text-xs text-white/55">
+            Arrastra la burbuja para moverla
+            <button
+              type="button"
+              onClick={() => {
+                setAbierta(false);
+                guardar({ ...estado, oculta: true });
+              }}
+              className="ml-auto flex items-center gap-1.5 font-label text-[0.6875rem] tracking-[0.08em] uppercase text-white/70 hover:text-white cursor-pointer"
+            >
+              <EyeOff className="w-3.5 h-3.5" />
+              Ocultar
+            </button>
+          </div>
         </div>
       )}
     </div>
   );
 }
 
-function Portal({ href, nombre, detalle, children }: { href: string; nombre: string; detalle: string; children: React.ReactNode }) {
+// Símbolo CIA / SAP: los dos mundos separados por la barra itálica de marca.
+function Monograma() {
+  return (
+    <>
+      <CiaLogo className="w-3.5 h-3.5 text-flesan-red" />
+      <span className="font-display text-[0.9375rem] font-extrabold italic leading-none text-white/85 -translate-y-px">/</span>
+      <svg width="16" height="8" viewBox="0 0 400 198" aria-hidden>
+        <path d="M0 198V0h400L202 198z" fill="#00aeef" />
+      </svg>
+    </>
+  );
+}
+
+function Portal({
+  href,
+  nombre,
+  detalle,
+  color,
+  children,
+}: {
+  href: string;
+  nombre: string;
+  detalle: string;
+  color: string;
+  children: React.ReactNode;
+}) {
   return (
     <a
       href={href}
       target="_blank"
       rel="noopener noreferrer"
       role="menuitem"
-      className="flex items-center gap-3 px-2.5 py-2 rounded-flesan-sm hover:bg-bg transition-colors"
+      className="relative flex items-center gap-3.5 p-3 rounded-xl bg-white/[0.04] border border-white/[0.08] hover:bg-white/[0.08] hover:translate-x-0.5 transition-all"
     >
-      <span className="w-9 h-9 rounded-flesan-sm border border-border bg-surface flex items-center justify-center shrink-0">{children}</span>
+      {children}
       <span className="flex flex-col min-w-0">
-        <span className="text-sm font-semibold text-text">{nombre}</span>
-        <span className="text-xs text-muted truncate">{detalle}</span>
+        <span className="text-[0.9375rem] font-semibold">{nombre}</span>
+        <span className="text-xs text-white/60">{detalle}</span>
       </span>
-      <ArrowUpRight className="w-3.5 h-3.5 ml-auto text-faint shrink-0" />
+      <ArrowUpRight className="w-4 h-4 ml-auto shrink-0" style={{ color }} />
     </a>
   );
 }
