@@ -103,10 +103,10 @@ export function Sidebar() {
           collapsed ? "justify-center px-2" : "gap-3 px-5",
         )}
       >
-        <CiaLogo className="w-5 h-5 shrink-0 text-flesan-red dark:text-white" />
+        <CiaLogo className="w-6 h-6 shrink-0 text-flesan-red dark:text-white" />
         {!collapsed && (
           // TODO: reemplazar por el nombre real de la plataforma.
-          <span className="font-display text-sm font-bold italic uppercase tracking-[0.04em] text-text leading-none whitespace-nowrap flex-1">
+          <span className="font-display text-[1.1875rem] font-bold italic uppercase tracking-[0.04em] text-text leading-none whitespace-nowrap flex-1 min-w-0 truncate">
             Nombre <span className="text-flesan-red">Plataforma</span>
           </span>
         )}
