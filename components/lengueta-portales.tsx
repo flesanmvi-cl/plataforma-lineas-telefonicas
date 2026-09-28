@@ -42,24 +42,24 @@ export function LenguetaPortales() {
         aria-label="Portales del grupo: Portal CIA y SAP Work Zone"
         title="Portal CIA · SAP Work Zone"
         className={cn(
-          "lengueta-portales group absolute right-0 bottom-3 flex flex-col items-center justify-evenly rounded-l-[9px] cursor-pointer",
-          "w-3.5 h-[3.375rem] hover:w-8 hover:h-[4.125rem] focus-visible:w-8 focus-visible:h-[4.125rem]",
-          abierta && "w-8 h-[4.125rem]",
+          "lengueta-portales group absolute right-0 bottom-3 flex flex-col items-center justify-evenly rounded-l-xl cursor-pointer",
+          "w-6 h-[4.25rem] hover:w-10 hover:h-20 focus-visible:w-10 focus-visible:h-20",
+          abierta && "w-10 h-20",
         )}
       >
         <CiaLogo
           className={cn(
-            "text-white transition-all w-[9px] h-[9px] group-hover:w-3.5 group-hover:h-3.5 group-focus-visible:w-3.5 group-focus-visible:h-3.5",
-            abierta && "w-3.5 h-3.5",
+            "text-white transition-all w-4 h-4 group-hover:w-5 group-hover:h-5 group-focus-visible:w-5 group-focus-visible:h-5",
+            abierta && "w-5 h-5",
           )}
         />
-        {/* Logo SAP: trapecio blanco; la sigla se lee cuando la lengüeta crece */}
+        {/* Logo SAP: trapecio blanco con la sigla, más grande cuando la lengüeta crece */}
         <svg
           viewBox="0 0 400 198"
           aria-hidden
           className={cn(
-            "transition-all w-2.5 h-[5px] group-hover:w-[22px] group-hover:h-[11px] group-focus-visible:w-[22px] group-focus-visible:h-[11px]",
-            abierta && "w-[22px] h-[11px]",
+            "transition-all w-5 h-2.5 group-hover:w-8 group-hover:h-4 group-focus-visible:w-8 group-focus-visible:h-4",
+            abierta && "w-8 h-4",
           )}
         >
           <path d="M0 198V0h400L202 198z" fill="#fff" />
