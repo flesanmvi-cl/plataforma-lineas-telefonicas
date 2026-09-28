@@ -747,34 +747,84 @@ textarea.dens-control {
 }
 
 /* ============================================================
-   LENGÜETA DE PORTALES (CIA / SAP)
-   Asoma desde el borde izquierdo del sidebar: mitad roja CIA arriba y mitad azul SAP abajo.
-   Al pasar el mouse toma sombra. El desplegable usa el panel del ecosistema del Portal CIA.
+   ACCESO A PORTALES (CIA / SAP) — components/portales/acceso.tsx
+   Cuatro estilos que el usuario elige en «Personalizar»: lengüeta, media luna, cinta y burbuja.
+   Todos en tonos pastel (fondo suave, color de marca solo en los logos) y con el mismo panel.
    ============================================================ */
-/* Tonos pastel para no competir con la plataforma: fondo suave y el color de marca en el logo */
-.lengueta-portales {
-  --lengueta-fondo-cia: #fbe3e4;
-  --lengueta-fondo-sap: #e1ecf8;
-  --lengueta-cia: #c8232c;
-  --lengueta-sap: #2f6fb5;
-  --lengueta-sap-texto: #ffffff;
-  background: linear-gradient(180deg, var(--lengueta-fondo-cia) 50%, var(--lengueta-fondo-sap) 50%);
+.acceso-portales {
+  --portales-fondo-cia: #fbe3e4;
+  --portales-fondo-sap: #e1ecf8;
+  --portales-cia: #c8232c;
+  --portales-sap: #2f6fb5;
+  --portales-sap-texto: #ffffff;
   transition:
     box-shadow 0.18s ease,
-    filter 0.18s ease;
+    filter 0.18s ease,
+    width 0.2s cubic-bezier(0.22, 1, 0.36, 1);
 }
-.dark .lengueta-portales {
-  --lengueta-fondo-cia: #3a2225;
-  --lengueta-fondo-sap: #1f2c3d;
-  --lengueta-cia: #f08a8f;
-  --lengueta-sap: #8db8e8;
-  --lengueta-sap-texto: #1f2c3d;
+.dark .acceso-portales {
+  --portales-fondo-cia: #3a2225;
+  --portales-fondo-sap: #1f2c3d;
+  --portales-cia: #f08a8f;
+  --portales-sap: #8db8e8;
+  --portales-sap-texto: #1f2c3d;
 }
-.lengueta-portales:hover,
-.lengueta-portales:focus-visible,
-.lengueta-portales[aria-expanded="true"] {
+.acceso-portales:hover,
+.acceso-portales:focus-visible,
+.acceso-portales[aria-expanded="true"] {
   box-shadow: 4px 6px 14px -8px rgba(0, 0, 0, 0.45);
   filter: brightness(0.97) saturate(1.15);
+}
+/* Lengüeta: mitad CIA arriba, SAP abajo */
+.lengueta-portales {
+  background: linear-gradient(180deg, var(--portales-fondo-cia) 50%, var(--portales-fondo-sap) 50%);
+}
+/* Media luna: el degradado mide lo que la píldora abierta; en reposo asoma el lado CIA */
+.media-luna-portales {
+  background: linear-gradient(115deg, var(--portales-fondo-cia) 39%, var(--portales-fondo-sap) 39%) left center /
+    5.25rem 100% no-repeat;
+}
+/* Cinta: línea de color en el borde y rótulo que se vuelve cinta al pasar el mouse */
+.cinta-portales,
+.cinta-portales:hover,
+.cinta-portales:focus-visible,
+.cinta-portales[aria-expanded="true"] {
+  box-shadow: none;
+  filter: none;
+}
+.cinta-portales-linea {
+  background: linear-gradient(180deg, var(--portales-cia) 50%, var(--portales-sap) 50%);
+}
+.cinta-portales-rotulo {
+  width: 1.25rem;
+  transition:
+    width 0.2s ease,
+    background 0.2s ease;
+}
+.cinta-portales:hover .cinta-portales-rotulo,
+.cinta-portales:focus-visible .cinta-portales-rotulo,
+.cinta-portales.is-abierta .cinta-portales-rotulo {
+  width: 1.625rem;
+  background: linear-gradient(180deg, var(--portales-fondo-cia) 50%, var(--portales-fondo-sap) 50%);
+  box-shadow: 4px 6px 14px -8px rgba(0, 0, 0, 0.35);
+}
+/* Burbuja: corte diagonal CIA / SAP y un halo que respira */
+.burbuja-portales {
+  background: linear-gradient(130deg, var(--portales-fondo-cia) 50%, var(--portales-fondo-sap) 50%);
+  border: 1px solid var(--color-border-strong);
+  animation: latido-portales 3s ease-in-out infinite;
+}
+.burbuja-portales:hover {
+  animation-duration: 1.6s;
+}
+@keyframes latido-portales {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(200, 35, 44, 0.25);
+  }
+  50% {
+    box-shadow: 0 0 0 7px rgba(47, 111, 181, 0), 0 0 16px 1px rgba(47, 111, 181, 0.3);
+  }
 }
 .panel-portales {
   background:
@@ -797,7 +847,8 @@ textarea.dens-control {
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .lengueta-portales,
+  .acceso-portales,
+  .cinta-portales-rotulo,
   .panel-portales,
   .estado-datos-punto {
     animation: none;

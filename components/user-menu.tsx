@@ -1,11 +1,12 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { ChevronsUpDown, LogOut } from "lucide-react";
+import { ChevronRight, ChevronsUpDown, LogOut, SlidersHorizontal } from "lucide-react";
 import { cerrarSesion } from "@/lib/auth-actions";
 import { etiquetaRol, type Rol } from "@/lib/roles";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { usePresentaciones } from "@/components/presentaciones/contexto";
+import { PanelPersonalizar } from "@/components/personalizar";
 
 interface UserMenuProps {
   name?: string | null;
@@ -104,8 +105,18 @@ function Avatar({ name, email, image, className }: Pick<UserMenuProps, "name" | 
  * arriba el menú con el correo, el tema claro/oscuro y Cerrar sesión. `colapsado` deja solo la foto.
  */
 export function UserCard({ name, email, image, role, colapsado = false }: UserMenuProps & { colapsado?: boolean }) {
-  const [open, setOpen] = useState(false);
+  const [open, setOpenBase] = useState(false);
+  // Panel «Personalizar», al costado del menú; se cierra junto con él.
+  const [personalizar, setPersonalizar] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
+
+  function setOpen(v: boolean | ((prev: boolean) => boolean)) {
+    setOpenBase((prev) => {
+      const siguiente = typeof v === "function" ? v(prev) : v;
+      if (!siguiente) setPersonalizar(false);
+      return siguiente;
+    });
+  }
 
   useEffect(() => {
     if (!open) return;
@@ -167,6 +178,20 @@ export function UserCard({ name, email, image, role, colapsado = false }: UserMe
             </span>
           </div>
           <InterruptorPresentaciones />
+          <button
+            type="button"
+            role="menuitem"
+            aria-haspopup="dialog"
+            aria-expanded={personalizar}
+            onClick={() => setPersonalizar((v) => !v)}
+            className={`w-full flex items-center gap-3 px-4 py-2.5 border-b border-border font-label text-xs tracking-[0.08em] uppercase cursor-pointer hover:bg-bg ${
+              personalizar ? "text-text bg-bg" : "text-muted hover:text-text"
+            }`}
+          >
+            <SlidersHorizontal className="w-[0.9375rem] h-[0.9375rem] shrink-0" />
+            Personalizar
+            <ChevronRight className="w-3.5 h-3.5 ml-auto" />
+          </button>
           <form action={cerrarSesion}>
             <button
               type="submit"
@@ -178,6 +203,9 @@ export function UserCard({ name, email, image, role, colapsado = false }: UserMe
             </button>
           </form>
         </div>
+      )}
+      {open && personalizar && (
+        <PanelPersonalizar onCerrar={() => setPersonalizar(false)} className="absolute left-full bottom-0 ml-3 z-50" />
       )}
     </div>
   );
