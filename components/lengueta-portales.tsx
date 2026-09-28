@@ -46,11 +46,11 @@ export function LenguetaPortales() {
           "w-10 h-20",
         )}
       >
-        <CiaLogo className="w-5 h-5 text-white" />
-        {/* Logo SAP: trapecio blanco con la sigla */}
+        <CiaLogo className="w-5 h-5 text-(--lengueta-cia)" />
+        {/* Logo SAP: trapecio con la sigla, en el azul de la mitad SAP */}
         <svg viewBox="0 0 400 198" aria-hidden className="w-8 h-4">
-          <path d="M0 198V0h400L202 198z" fill="#fff" />
-          <text x="32" y="142" fill="#0b5299" fontFamily="Arial, Helvetica, sans-serif" fontWeight="700" fontSize="128" letterSpacing="-4">
+          <path d="M0 198V0h400L202 198z" className="fill-(--lengueta-sap)" />
+          <text x="32" y="142" className="fill-(--lengueta-sap-texto)" fontFamily="Arial, Helvetica, sans-serif" fontWeight="700" fontSize="128" letterSpacing="-4">
             SAP
           </text>
         </svg>

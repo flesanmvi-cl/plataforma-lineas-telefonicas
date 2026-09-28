@@ -688,17 +688,30 @@ textarea.dens-control {
    Asoma por dentro del borde derecho del sidebar: mitad roja CIA arriba y mitad azul SAP abajo.
    Al pasar el mouse toma sombra. El desplegable usa el panel del ecosistema del Portal CIA.
    ============================================================ */
+/* Tonos pastel para no competir con la plataforma: fondo suave y el color de marca en el logo */
 .lengueta-portales {
-  background: linear-gradient(180deg, var(--color-flesan-red-dark) 50%, #0b5299 50%);
+  --lengueta-fondo-cia: #fbe3e4;
+  --lengueta-fondo-sap: #e1ecf8;
+  --lengueta-cia: #c8232c;
+  --lengueta-sap: #2f6fb5;
+  --lengueta-sap-texto: #ffffff;
+  background: linear-gradient(180deg, var(--lengueta-fondo-cia) 50%, var(--lengueta-fondo-sap) 50%);
   transition:
     box-shadow 0.18s ease,
     filter 0.18s ease;
+}
+.dark .lengueta-portales {
+  --lengueta-fondo-cia: #3a2225;
+  --lengueta-fondo-sap: #1f2c3d;
+  --lengueta-cia: #f08a8f;
+  --lengueta-sap: #8db8e8;
+  --lengueta-sap-texto: #1f2c3d;
 }
 .lengueta-portales:hover,
 .lengueta-portales:focus-visible,
 .lengueta-portales[aria-expanded="true"] {
   box-shadow: -4px 6px 14px -8px rgba(0, 0, 0, 0.45);
-  filter: brightness(1.12);
+  filter: brightness(0.97) saturate(1.15);
 }
 .panel-portales {
   background:
