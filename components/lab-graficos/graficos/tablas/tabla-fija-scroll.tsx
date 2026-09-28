@@ -3,7 +3,9 @@
 import { useMemo, useState, type CSSProperties } from "react";
 import { useTokens } from "@/components/lab-graficos/tema-context";
 import type { PropsGraficoLab } from "@/components/lab-graficos/tipos";
+import { BotonExcel } from "@/components/boton-excel";
 import { azar, formato, MESES } from "@/lib/lab-graficos/datos";
+import { descargarExcel, type ColumnaExcel } from "@/lib/exportar/excel";
 import {
   estiloCelda,
   estiloCeldaNum,
@@ -42,9 +44,28 @@ export function TablaFijaScroll({ alto }: PropsGraficoLab) {
     background: fondoEncabezado(t),
   };
 
+  // Excel con todas las filas y columnas (también las que quedan fuera del scroll).
+  const descargar = () => {
+    type Fila = (typeof filas)[number];
+    const columnas: ColumnaExcel<Fila>[] = [
+      { titulo: "Obra", valor: (f) => f.obra, ancho: 24 },
+      { titulo: "Código", valor: (f) => f.codigo, ancho: 11 },
+      { titulo: "Región", valor: (f) => f.region, ancho: 14 },
+      ...MESES.map((m, j): ColumnaExcel<Fila> => ({ titulo: m, valor: (f) => f.meses[j], tipo: "numero", ancho: 9 })),
+      { titulo: "Total", valor: (f) => f.total, tipo: "numero" },
+    ];
+    return descargarExcel([{ nombre: "Gasto mensual", filas, columnas }], {
+      archivo: "Gasto mensual por obra",
+      filtros: { Unidad: "Millones de pesos" },
+    });
+  };
+
   return (
     <div style={{ ...estiloContenedor(t, alto), overflow: "hidden", display: "flex", flexDirection: "column" }}>
-      <div style={{ flex: 1, overflow: "auto" }} tabIndex={0} aria-label="Tabla con scroll en ambos ejes">
+      <div style={{ display: "flex", justifyContent: "flex-end", paddingBottom: 6 }}>
+        <BotonExcel onDescargar={descargar} />
+      </div>
+      <div style={{ flex: 1, minHeight: 0, overflow: "auto" }} tabIndex={0} aria-label="Tabla con scroll en ambos ejes">
         <table style={{ ...estiloTabla(), width: "max-content", minWidth: "100%" }}>
           <caption style={ocultoVisual}>Gasto mensual por obra, en millones de pesos</caption>
           <thead>

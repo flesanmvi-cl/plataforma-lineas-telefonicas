@@ -4,7 +4,9 @@ import { useMemo, useRef, useState, type CSSProperties, type KeyboardEvent } fro
 import { Pencil, RotateCcw } from "lucide-react";
 import { useTokens } from "@/components/lab-graficos/tema-context";
 import type { PropsGraficoLab } from "@/components/lab-graficos/tipos";
+import { BotonExcel } from "@/components/boton-excel";
 import { formato } from "@/lib/lab-graficos/datos";
+import { descargarExcel } from "@/lib/exportar/excel";
 import { conAlfa } from "@/lib/lab-graficos/tema";
 import {
   ESTADOS,
@@ -96,6 +98,33 @@ export function TablaEdicionCelda({ alto }: PropsGraficoLab) {
 
   const editando = (id: string, campo: Campo) => edicion?.id === id && edicion.campo === campo;
 
+  // Excel con los valores vigentes (los editados incluidos) y qué celdas se cambiaron.
+  const descargar = () =>
+    descargarExcel(
+      [
+        {
+          nombre: "Costo proyectado",
+          filas: datos,
+          columnas: [
+            { titulo: "Obra", valor: (d) => d.obra, ancho: 24 },
+            { titulo: "Presupuesto (M$)", valor: (d) => d.presupuesto, tipo: "numero" },
+            { titulo: "Costo proyectado (M$)", valor: (d) => valores[d.id].proyectado, tipo: "numero" },
+            { titulo: "Desvío", valor: (d) => (valores[d.id].proyectado - d.presupuesto) / d.presupuesto, tipo: "porcentaje" },
+            { titulo: "Estado", valor: (d) => valores[d.id].estado, ancho: 12 },
+            {
+              titulo: "Editado",
+              valor: (d) =>
+                [cambiada(d.id, "proyectado") && "Costo proyectado", cambiada(d.id, "estado") && "Estado"].filter(Boolean).join(", ") || null,
+            },
+          ],
+        },
+      ],
+      {
+        archivo: nCambios ? "Costo proyectado por obra - con cambios" : "Costo proyectado por obra",
+        filtros: { "Celdas editadas": nCambios ? String(nCambios) : "Ninguna" },
+      },
+    );
+
   return (
     <div style={{ ...estiloContenedor(t, alto), overflow: "hidden", display: "flex", flexDirection: "column" }}>
       <div style={{ display: "flex", alignItems: "center", gap: 8, paddingBottom: 6, fontSize: t.tamano.eje, color: t.textoSuave }}>
@@ -114,8 +143,9 @@ export function TablaEdicionCelda({ alto }: PropsGraficoLab) {
           <RotateCcw size={13} aria-hidden />
           Deshacer
         </button>
+        <BotonExcel onDescargar={descargar} />
       </div>
-      <div style={{ flex: 1, overflow: "auto" }}>
+      <div style={{ flex: 1, minHeight: 0, overflow: "auto" }}>
         <table style={estiloTabla()}>
           <caption style={ocultoVisual}>Costo proyectado y estado por obra, editables</caption>
           <thead>

@@ -80,6 +80,16 @@ export function registrosObras(n = 24, semilla = 101): Registro[] {
   });
 }
 
+/** Fecha ISO a Date en medianoche UTC, para exportar a Excel sin que se corra el día. */
+export function fechaExcel(iso: string) {
+  return new Date(`${iso}T00:00:00Z`);
+}
+
+/** Orden vigente como texto para la hoja «Filtros» del Excel. */
+export function textoOrden(columna: string, dir: "asc" | "desc") {
+  return `${columna} (${dir === "asc" ? "ascendente" : "descendente"})`;
+}
+
 /** Fecha ISO a formato corto es-CL (dd-mm-aaaa), sin depender de la zona horaria. */
 export function fechaCorta(iso: string) {
   const [a, m, d] = iso.split("-");

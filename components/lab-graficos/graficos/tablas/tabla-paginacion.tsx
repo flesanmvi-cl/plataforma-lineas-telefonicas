@@ -4,7 +4,9 @@ import { useId, useMemo, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useTokens } from "@/components/lab-graficos/tema-context";
 import type { PropsGraficoLab } from "@/components/lab-graficos/tipos";
+import { BotonExcel } from "@/components/boton-excel";
 import { formato } from "@/lib/lab-graficos/datos";
+import { descargarExcel } from "@/lib/exportar/excel";
 import {
   estiloBotonTabla,
   estiloCampo,
@@ -16,7 +18,7 @@ import {
   fondoFila,
   ocultoVisual,
 } from "./comun";
-import { fechaCorta, registrosObras } from "./datos-tablas";
+import { fechaCorta, fechaExcel, registrosObras } from "./datos-tablas";
 import { InsigniaEstado } from "./insignia-estado";
 
 const TAMANOS = [5, 10, 20];
@@ -59,9 +61,38 @@ export function TablaPaginacion({ alto }: PropsGraficoLab) {
 
   const boton = (activo = false) => ({ ...estiloBotonTabla(t, activo), padding: "0 8px" });
 
+  // Excel con todas las filas, no solo la página: la paginación es para leer en pantalla.
+  const descargar = () =>
+    descargarExcel(
+      [
+        {
+          nombre: "Obras",
+          filas: datos,
+          columnas: [
+            { titulo: "N.º", valor: (d) => datos.indexOf(d) + 1, tipo: "numero", ancho: 6 },
+            { titulo: "Obra", valor: (d) => d.obra, ancho: 24 },
+            { titulo: "Región", valor: (d) => d.region, ancho: 14 },
+            { titulo: "Estado", valor: (d) => d.estado, ancho: 12 },
+            { titulo: "Término", valor: (d) => fechaExcel(d.termino), tipo: "fecha" },
+            { titulo: "Presupuesto (M$)", valor: (d) => d.presupuesto, tipo: "numero" },
+          ],
+        },
+      ],
+      {
+        archivo: "Obras",
+        filtros: {
+          "Página en pantalla": `${pagina + 1} de ${paginas} (${porPagina} filas por página)`,
+          Exportado: `Todas las filas (${total})`,
+        },
+      },
+    );
+
   return (
     <div style={{ ...estiloContenedor(t, alto), overflow: "hidden", display: "flex", flexDirection: "column" }}>
-      <div style={{ flex: 1, overflow: "auto" }}>
+      <div style={{ display: "flex", justifyContent: "flex-end", paddingBottom: 6 }}>
+        <BotonExcel onDescargar={descargar} />
+      </div>
+      <div style={{ flex: 1, minHeight: 0, overflow: "auto" }}>
         <table style={estiloTabla()}>
           <caption style={ocultoVisual}>
             Obras, página {pagina + 1} de {paginas}

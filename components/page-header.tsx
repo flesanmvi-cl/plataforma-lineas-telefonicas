@@ -19,7 +19,7 @@ interface PageHeaderProps {
 
 export function PageHeader({ title, description, actions, className }: PageHeaderProps) {
   return (
-    <div className={cn("flex flex-wrap items-center gap-x-4 gap-y-2 mb-6", className)}>
+    <div data-page-header className={cn("flex flex-wrap items-center gap-x-4 gap-y-2 mb-6", className)}>
       <div className="flex items-center gap-2 min-w-0">
         <h1 className="display-title text-2xl sm:text-3xl text-text">{title}</h1>
         {description && <InfoPopover label={`Acerca de ${title}`}>{description}</InfoPopover>}

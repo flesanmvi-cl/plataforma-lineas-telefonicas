@@ -3,7 +3,9 @@
 import type { CSSProperties } from "react";
 import { useTokens } from "@/components/lab-graficos/tema-context";
 import type { PropsGraficoLab } from "@/components/lab-graficos/tipos";
+import { BotonExcel } from "@/components/boton-excel";
 import { formato } from "@/lib/lab-graficos/datos";
+import { descargarExcel } from "@/lib/exportar/excel";
 import type { TokensLab } from "@/lib/lab-graficos/tema";
 import { estiloCelda, estiloContenedor, estiloEncabezado, estiloTabla, ocultoVisual } from "./comun";
 
@@ -39,34 +41,55 @@ export function PlantillaZebra({ alto }: PropsGraficoLab) {
     borderBottom: "none",
   });
 
+  const descargar = () =>
+    descargarExcel(
+      [
+        {
+          nombre: "Avance por obra",
+          filas: DATOS_PLANTILLA,
+          columnas: [
+            { titulo: "Obra", valor: (d) => d.nombre },
+            { titulo: "Región", valor: (d) => d.region, ancho: 16 },
+            { titulo: "Avance", valor: (d) => d.avance / 100, tipo: "porcentaje" },
+          ],
+        },
+      ],
+      { archivo: "Avance por obra" },
+    );
+
   return (
-    <div style={estiloContenedor(t, alto)}>
-      <div style={tarjetaPlantilla(t)}>
-        <table style={estiloTabla()}>
-          <caption style={ocultoVisual}>Avance por obra</caption>
-          <thead>
-            <tr>
-              <th scope="col" style={enc(0)}>
-                Obra
-              </th>
-              <th scope="col" style={enc(1)}>
-                Región
-              </th>
-              <th scope="col" style={{ ...enc(2), textAlign: "right" }}>
-                Avance
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {DATOS_PLANTILLA.map((d, i) => (
-              <tr key={d.nombre} style={{ background: i % 2 === 1 ? zebra : "transparent" }}>
-                <td style={celda(0)}>{d.nombre}</td>
-                <td style={{ ...celda(1), color: t.textoSuave }}>{d.region}</td>
-                <td style={{ ...celda(2), textAlign: "right" }}>{formato.porcentaje(d.avance)}</td>
+    <div style={{ ...estiloContenedor(t, alto), overflow: "hidden", display: "flex", flexDirection: "column" }}>
+      <div style={{ display: "flex", justifyContent: "flex-end", paddingBottom: 6 }}>
+        <BotonExcel onDescargar={descargar} />
+      </div>
+      <div style={{ flex: 1, minHeight: 0, overflow: "auto" }}>
+        <div style={tarjetaPlantilla(t)}>
+          <table style={estiloTabla()}>
+            <caption style={ocultoVisual}>Avance por obra</caption>
+            <thead>
+              <tr>
+                <th scope="col" style={enc(0)}>
+                  Obra
+                </th>
+                <th scope="col" style={enc(1)}>
+                  Región
+                </th>
+                <th scope="col" style={{ ...enc(2), textAlign: "right" }}>
+                  Avance
+                </th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {DATOS_PLANTILLA.map((d, i) => (
+                <tr key={d.nombre} style={{ background: i % 2 === 1 ? zebra : "transparent" }}>
+                  <td style={celda(0)}>{d.nombre}</td>
+                  <td style={{ ...celda(1), color: t.textoSuave }}>{d.region}</td>
+                  <td style={{ ...celda(2), textAlign: "right" }}>{formato.porcentaje(d.avance)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );

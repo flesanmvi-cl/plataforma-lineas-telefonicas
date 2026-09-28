@@ -1,6 +1,8 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { useFiltrosUrl } from "@/components/presentaciones/use-filtros-url";
+import { usePublicarVista } from "@/components/presentaciones/vista-actual";
 import type { EChartsOption } from "echarts";
 import { ArrowLeft, ChevronRight, Download, Share2, X } from "lucide-react";
 import { cn } from "@/lib/cn";
@@ -61,13 +63,29 @@ function colorDesviacion(t: TokensLab, d: number) {
 // Reporte Tipo 2 · analítico con drilldown: filtros a la izquierda y, a la derecha, un gráfico de
 // costo contra presupuesto que baja de Línea → Obra → Partida al hacer clic. Los niveles se
 // publican en la barra superior (BreadcrumbContext) y la tabla de detalle sigue al nivel.
+type Cambio<V> = V | ((prev: V) => V);
+const aplicar = <V,>(v: Cambio<V>, prev: V) => (typeof v === "function" ? (v as (p: V) => V)(prev) : v);
+
 export function ReporteCostos() {
-  const [periodo, setPeriodo] = useState<Periodo>("anio");
-  const [lineas, setLineas] = useState<string[]>([]);
-  const [region, setRegion] = useState("");
-  const [estados, setEstados] = useState<Estado[]>([]);
-  /** Ruta del drilldown: [línea, id de obra]. Vacía = todas las líneas. */
-  const [ruta, setRuta] = useState<string[]>([]);
+  // Filtros y nivel del drilldown en la URL: «Agregar a presentación» guarda la vista tal cual
+  // y al abrir esa URL se reconstruye (ver useFiltrosUrl).
+  const [f, setF] = useFiltrosUrl({
+    periodo: "anio",
+    lineas: [] as string[],
+    region: "",
+    estados: [] as string[],
+    /** Ruta del drilldown: [línea, id de obra]. Vacía = todas las líneas. */
+    ruta: [] as string[],
+  });
+  const periodo = f.periodo as Periodo;
+  const { lineas, region, ruta } = f;
+  const estados = f.estados as Estado[];
+  const setPeriodo = (v: Periodo) => setF({ periodo: v });
+  const setLineas = (v: Cambio<string[]>) => setF({ lineas: aplicar(v, lineas) });
+  const setRegion = (v: string) => setF({ region: v });
+  const setEstados = (v: Cambio<Estado[]>) => setF({ estados: aplicar(v, estados) });
+  // Estable (se usa en efectos y callbacks): aplica el cambio sobre el valor vigente.
+  const setRuta = useCallback((v: Cambio<string[]>) => setF((prev) => ({ ruta: aplicar(v, prev.ruta) })), [setF]);
 
   const factor = FACTOR_PERIODO[periodo];
   // Obras que pasan región y estado (la línea se filtra aparte para contar por línea).
@@ -89,6 +107,15 @@ export function ReporteCostos() {
   }, [obras, lineaAbierta, obraAbierta, factor]);
 
   const etiquetas = [lineaAbierta, obraAbierta?.obra].filter((x): x is string => Boolean(x));
+
+  // Texto legible de lo que se está mirando, para el título y pie de la diapositiva.
+  usePublicarVista("Costos por obra", [
+    PERIODOS.find((p) => p.id === periodo)?.texto ?? periodo,
+    ...(lineas.length ? [lineas.join(", ")] : []),
+    ...(region ? [region] : []),
+    ...(estados.length ? [estados.join(", ")] : []),
+    ...etiquetas,
+  ]);
   const claveMigas = etiquetas.join("›");
 
   // Niveles del drilldown en la barra superior: «Todas las líneas» vuelve a la raíz.
@@ -99,7 +126,7 @@ export function ReporteCostos() {
       return;
     }
     setState({ items: [RAIZ, ...claveMigas.split("›")], onNavigate: (i) => setRuta((r) => r.slice(0, i)) });
-  }, [claveMigas, setState]);
+  }, [claveMigas, setState, setRuta]);
   useEffect(() => () => setState(null), [setState]);
 
   const bajar = useCallback(
@@ -107,7 +134,7 @@ export function ReporteCostos() {
       if (nivel === 0) setRuta([f.id]);
       else if (nivel === 1 && lineaAbierta) setRuta([lineaAbierta, f.id]);
     },
-    [nivel, lineaAbierta],
+    [nivel, lineaAbierta, setRuta],
   );
 
   const alternar = <T,>(lista: T[], valor: T) => (lista.includes(valor) ? lista.filter((x) => x !== valor) : [...lista, valor]);

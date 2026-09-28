@@ -3,9 +3,12 @@
 import { useMemo, useState } from "react";
 import { useTokens } from "@/components/lab-graficos/tema-context";
 import type { PropsGraficoLab } from "@/components/lab-graficos/tipos";
+import { BotonExcel } from "@/components/boton-excel";
 import { formato, MESES, OBRAS, serieMensual } from "@/lib/lab-graficos/datos";
+import { descargarExcel, type ColumnaExcel } from "@/lib/exportar/excel";
 import { conAlfa } from "@/lib/lab-graficos/tema";
 import { altoFila, colorEnEscala, estiloContenedor, ocultoVisual, textoSobre } from "./comun";
+import { textoOrden } from "./datos-tablas";
 import { EncabezadoOrdenable, type Direccion } from "./encabezado-ordenable";
 
 /** Columna de orden: índice de mes (0-11) o «prom» para el promedio anual. */
@@ -76,9 +79,28 @@ export function TablaHeatmap({ alto }: PropsGraficoLab) {
 
   const encabezadoMes = { padding: "0 2px", height: fila, minWidth: 38 };
 
+  // Excel con los números del heatmap (sin colores), en el orden vigente.
+  const descargar = () => {
+    type Fila = (typeof ordenadas)[number];
+    const columnas: ColumnaExcel<Fila>[] = [
+      { titulo: "Obra", valor: (f) => f.obra, ancho: 24 },
+      ...MESES.map((m, j): ColumnaExcel<Fila> => ({ titulo: m, valor: (f) => f.valores[j], tipo: "numero", ancho: 8 })),
+      // Sin tipo (formato General) para que se vea el decimal, como en pantalla.
+      { titulo: "Promedio", valor: (f) => Math.round(f.prom * 10) / 10, ancho: 12 },
+    ];
+    const nombreCol = orden.col === "obra" ? "Obra" : orden.col === "prom" ? "Promedio" : MESES[orden.col];
+    return descargarExcel([{ nombre: "Índice mensual", filas: ordenadas, columnas }], {
+      archivo: "Índice mensual por obra",
+      filtros: { Orden: textoOrden(nombreCol, orden.dir) },
+    });
+  };
+
   return (
     <div style={{ ...estiloContenedor(t, alto), overflow: "hidden", display: "flex", flexDirection: "column" }} onMouseLeave={() => setFoco(null)}>
-      <div style={{ flex: 1, overflow: "auto" }}>
+      <div style={{ display: "flex", justifyContent: "flex-end", paddingBottom: 6 }}>
+        <BotonExcel onDescargar={descargar} />
+      </div>
+      <div style={{ flex: 1, minHeight: 0, overflow: "auto" }}>
         <table style={{ width: "100%", borderCollapse: "separate", borderSpacing: 3 }}>
           <caption style={ocultoVisual}>
             Índice mensual por obra

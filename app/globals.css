@@ -650,3 +650,27 @@ textarea.dens-control {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* ============================================================
+   MODO DIAPOSITIVA (presentaciones: ?diapositiva=1)
+   El marco pone su propio título; se ocultan el encabezado de la vista y lo marcado como
+   no imprimible. Con un solo bloque (data-bloque), se oculta todo lo que no sea ese bloque
+   o su camino, y el bloque ocupa todo el ancho.
+   ============================================================ */
+[data-diapositiva-marco] [data-page-header],
+[data-diapositiva-marco] [data-no-diapositiva] {
+  display: none !important;
+}
+[data-modo-bloque]
+  [data-diapositiva-contenido]
+  *:not([data-camino-bloque]):not([data-bloque-objetivo]):not([data-bloque-objetivo] *) {
+  display: none !important;
+}
+[data-modo-bloque] [data-camino-bloque] {
+  grid-template-columns: minmax(0, 1fr) !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+[data-modo-bloque] [data-bloque-objetivo] {
+  grid-column: 1 / -1 !important;
+}

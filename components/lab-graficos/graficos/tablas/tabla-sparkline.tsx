@@ -4,9 +4,12 @@ import { useMemo, useState } from "react";
 import { ArrowDownRight, ArrowUpRight, Minus } from "lucide-react";
 import { useTokens } from "@/components/lab-graficos/tema-context";
 import type { PropsGraficoLab } from "@/components/lab-graficos/tipos";
+import { BotonExcel } from "@/components/boton-excel";
 import { formato, LINEAS, MESES, OBRAS, serieMensual } from "@/lib/lab-graficos/datos";
+import { descargarExcel, type ColumnaExcel } from "@/lib/exportar/excel";
 import { conAlfa, type TokensLab } from "@/lib/lab-graficos/tema";
 import { altoFila, estiloCelda, estiloContenedor, estiloEncabezado, estiloTabla, fondoFila, ocultoVisual } from "./comun";
+import { textoOrden } from "./datos-tablas";
 import { EncabezadoOrdenable, type Direccion } from "./encabezado-ordenable";
 import { Sparkline } from "./sparkline";
 
@@ -77,80 +80,103 @@ export function TablaSparkline({ alto }: PropsGraficoLab) {
   const celda = (col: number) => estiloCelda(t, { col });
   const color = t.colores.find((c) => c !== t.acento) ?? t.textoSuave;
 
+  // Excel en el orden vigente: la sparkline sale como una columna por mes con sus valores.
+  const descargar = () => {
+    type Fila = (typeof ordenadas)[number];
+    const columnas: ColumnaExcel<Fila>[] = [
+      { titulo: "Obra", valor: (f) => f.obra, ancho: 24 },
+      { titulo: "Línea", valor: (f) => f.linea },
+      ...MESES.map((m, j): ColumnaExcel<Fila> => ({ titulo: m, valor: (f) => Math.round(f.valores[j]), tipo: "numero", ancho: 9 })),
+      { titulo: "Último", valor: (f) => Math.round(f.ultimo), tipo: "numero" },
+      { titulo: "vs mes ant.", valor: (f) => f.mensual / 100, tipo: "porcentaje" },
+      { titulo: "vs enero", valor: (f) => f.anual / 100, tipo: "porcentaje" },
+    ];
+    const nombres: Record<Columna, string> = { obra: "Obra", ultimo: "Último", mensual: "vs mes ant.", anual: "vs enero" };
+    return descargarExcel([{ nombre: "Producción mensual", filas: ordenadas, columnas }], {
+      archivo: "Producción mensual por obra",
+      filtros: { Orden: textoOrden(nombres[orden.col], orden.dir), Unidad: "Millones de pesos" },
+    });
+  };
+
   return (
-    <div style={estiloContenedor(t, alto)}>
-      <table style={estiloTabla()}>
-        <caption style={ocultoVisual}>
-          Producción mensual por obra con tendencia y variación
-        </caption>
-        <thead>
-          <tr>
-            <EncabezadoOrdenable t={t} etiqueta="Obra" activo={orden.col === "obra"} direccion={orden.dir} onOrdenar={() => ordenar("obra")} />
-            <th scope="col" style={{ ...estiloEncabezado(t, { col: 1 }), width: "34%" }}>
-              Tendencia {MESES[0]}–{MESES[MESES.length - 1]}
-            </th>
-            <EncabezadoOrdenable
-              t={t}
-              etiqueta="Último"
-              col={2}
-              alinear="right"
-              activo={orden.col === "ultimo"}
-              direccion={orden.dir}
-              onOrdenar={() => ordenar("ultimo")}
-            />
-            <EncabezadoOrdenable
-              t={t}
-              etiqueta="vs mes ant."
-              col={3}
-              alinear="right"
-              activo={orden.col === "mensual"}
-              direccion={orden.dir}
-              onOrdenar={() => ordenar("mensual")}
-            />
-            <EncabezadoOrdenable
-              t={t}
-              etiqueta="vs enero"
-              col={4}
-              alinear="right"
-              activo={orden.col === "anual"}
-              direccion={orden.dir}
-              onOrdenar={() => ordenar("anual")}
-            />
-          </tr>
-        </thead>
-        <tbody>
-          {ordenadas.map((f, i) => (
-            <tr
-              key={f.obra}
-              onMouseEnter={() => setActiva(f.obra)}
-              onMouseLeave={() => setActiva(null)}
-              style={{ background: fondoFila(t, i, activa === f.obra) }}
-            >
-              <td style={celda(0)}>
-                <div style={{ fontWeight: 600, lineHeight: 1.2 }}>{f.obra}</div>
-                {t.tema.densidad === "comoda" && <div style={{ fontSize: t.tamano.eje, color: t.textoSuave, lineHeight: 1.2 }}>{f.linea}</div>}
-              </td>
-              <td style={{ ...celda(1), paddingTop: 4, paddingBottom: 4 }}>
-                <Sparkline
-                  t={t}
-                  valores={f.valores}
-                  etiquetas={MESES}
-                  alto={altoFila(t) - 12}
-                  color={f.anual < 0 ? t.acento : color}
-                  formatear={(n) => formato.millones(n)}
-                />
-              </td>
-              <td style={{ ...celda(2), textAlign: "right", fontWeight: 700 }}>{formato.millones(f.ultimo)}</td>
-              <td style={{ ...celda(3), textAlign: "right" }}>
-                <ChipDelta t={t} valor={f.mensual} />
-              </td>
-              <td style={{ ...celda(4), textAlign: "right" }}>
-                <ChipDelta t={t} valor={f.anual} />
-              </td>
+    <div style={{ ...estiloContenedor(t, alto), overflow: "hidden", display: "flex", flexDirection: "column" }}>
+      <div style={{ display: "flex", justifyContent: "flex-end", paddingBottom: 6 }}>
+        <BotonExcel onDescargar={descargar} />
+      </div>
+      <div style={{ flex: 1, minHeight: 0, overflow: "auto" }}>
+        <table style={estiloTabla()}>
+          <caption style={ocultoVisual}>
+            Producción mensual por obra con tendencia y variación
+          </caption>
+          <thead>
+            <tr>
+              <EncabezadoOrdenable t={t} etiqueta="Obra" activo={orden.col === "obra"} direccion={orden.dir} onOrdenar={() => ordenar("obra")} />
+              <th scope="col" style={{ ...estiloEncabezado(t, { col: 1 }), width: "34%" }}>
+                Tendencia {MESES[0]}–{MESES[MESES.length - 1]}
+              </th>
+              <EncabezadoOrdenable
+                t={t}
+                etiqueta="Último"
+                col={2}
+                alinear="right"
+                activo={orden.col === "ultimo"}
+                direccion={orden.dir}
+                onOrdenar={() => ordenar("ultimo")}
+              />
+              <EncabezadoOrdenable
+                t={t}
+                etiqueta="vs mes ant."
+                col={3}
+                alinear="right"
+                activo={orden.col === "mensual"}
+                direccion={orden.dir}
+                onOrdenar={() => ordenar("mensual")}
+              />
+              <EncabezadoOrdenable
+                t={t}
+                etiqueta="vs enero"
+                col={4}
+                alinear="right"
+                activo={orden.col === "anual"}
+                direccion={orden.dir}
+                onOrdenar={() => ordenar("anual")}
+              />
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {ordenadas.map((f, i) => (
+              <tr
+                key={f.obra}
+                onMouseEnter={() => setActiva(f.obra)}
+                onMouseLeave={() => setActiva(null)}
+                style={{ background: fondoFila(t, i, activa === f.obra) }}
+              >
+                <td style={celda(0)}>
+                  <div style={{ fontWeight: 600, lineHeight: 1.2 }}>{f.obra}</div>
+                  {t.tema.densidad === "comoda" && <div style={{ fontSize: t.tamano.eje, color: t.textoSuave, lineHeight: 1.2 }}>{f.linea}</div>}
+                </td>
+                <td style={{ ...celda(1), paddingTop: 4, paddingBottom: 4 }}>
+                  <Sparkline
+                    t={t}
+                    valores={f.valores}
+                    etiquetas={MESES}
+                    alto={altoFila(t) - 12}
+                    color={f.anual < 0 ? t.acento : color}
+                    formatear={(n) => formato.millones(n)}
+                  />
+                </td>
+                <td style={{ ...celda(2), textAlign: "right", fontWeight: 700 }}>{formato.millones(f.ultimo)}</td>
+                <td style={{ ...celda(3), textAlign: "right" }}>
+                  <ChipDelta t={t} valor={f.mensual} />
+                </td>
+                <td style={{ ...celda(4), textAlign: "right" }}>
+                  <ChipDelta t={t} valor={f.anual} />
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
       <p style={{ margin: "8px 10px 0", fontSize: t.tamano.eje, color: t.textoSuave }}>
         Producción mensual en millones (sintético) · en acento las obras que caen en el año
       </p>

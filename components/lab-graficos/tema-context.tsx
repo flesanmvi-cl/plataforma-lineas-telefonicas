@@ -99,11 +99,16 @@ export function LabTemaFijo({ tema, children }: { tema: TemaLab; children: React
   }, []);
 
   const oscuro = montado && resolvedTheme === "dark";
+  // Al capturar una diapositiva (?diapositiva=1) no hay animaciones: se ve el estado final.
+  const temaEfectivo = useMemo(
+    () => (montado && window.location.search.includes("diapositiva=") ? { ...tema, animacion: "sin" as const } : tema),
+    [tema, montado],
+  );
   const tokens = useMemo(
-    () => calcularTokens(tema, oscuro, montado ? resolverFuente(tema.fuente) : "sans-serif"),
+    () => calcularTokens(temaEfectivo, oscuro, montado ? resolverFuente(temaEfectivo.fuente) : "sans-serif"),
     // fuentesListas fuerza el recálculo cuando terminan de cargar las letras.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [tema, oscuro, fuentesListas, montado],
+    [temaEfectivo, oscuro, fuentesListas, montado],
   );
   const noEditable = () => {};
 

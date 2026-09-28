@@ -4,7 +4,16 @@ import { Sidebar } from "@/components/sidebar";
 import { TopBar } from "@/components/topbar";
 import { TopNav } from "@/components/top-nav";
 import { useNavStyle, type NavStyle } from "@/components/nav-style-context";
+import { useEffect, useState } from "react";
 import { PantallaCompletaProvider, usePantallaCompleta } from "@/components/pantalla-completa";
+import { PresentacionesProvider } from "@/components/presentaciones/contexto";
+import { VistaActualProvider } from "@/components/presentaciones/vista-actual";
+import { PanelPresentaciones } from "@/components/presentaciones/panel";
+import {
+  leerParametrosDiapositiva,
+  MarcoDiapositiva,
+  type ParametrosDiapositiva,
+} from "@/components/presentaciones/marco-diapositiva";
 
 // Por ahora la plantilla usa solo el riel lateral: el selector (NavStyleToggle) está
 // oculto y la nav superior (TopNav) queda en pausa. Para reactivar la elección, vuelve
@@ -16,7 +25,11 @@ const NAV_STYLE_FIJO: NavStyle | null = "sidebar";
 export function AppShell({ children }: { children: React.ReactNode }) {
   return (
     <PantallaCompletaProvider>
-      <Marco>{children}</Marco>
+      <PresentacionesProvider>
+        <VistaActualProvider>
+          <Marco>{children}</Marco>
+        </VistaActualProvider>
+      </PresentacionesProvider>
     </PantallaCompletaProvider>
   );
 }
@@ -26,6 +39,12 @@ function Marco({ children }: { children: React.ReactNode }) {
   // En pantalla completa (reportería) se oculta el sidebar; la barra superior queda con la
   // ruta y el botón para salir.
   const { activa: pantallaCompleta } = usePantallaCompleta();
+  // Modo diapositiva (?diapositiva=1): la vista se dibuja sola en un marco 16:9 para capturarla
+  // al armar el PDF o el PowerPoint. Se lee al montar (en el servidor no hay URL de búsqueda).
+  const [diapositiva, setDiapositiva] = useState<ParametrosDiapositiva | null>(null);
+  useEffect(() => setDiapositiva(leerParametrosDiapositiva(window.location.search)), []);
+
+  if (diapositiva) return <MarcoDiapositiva p={diapositiva}>{children}</MarcoDiapositiva>;
   const navStyle = NAV_STYLE_FIJO ?? preferido;
 
   if (navStyle === "topnav") {
@@ -44,6 +63,7 @@ function Marco({ children }: { children: React.ReactNode }) {
         <TopBar />
         <main className="flex-1 min-w-0 overflow-y-auto">{children}</main>
       </div>
+      <PanelPresentaciones />
     </div>
   );
 }

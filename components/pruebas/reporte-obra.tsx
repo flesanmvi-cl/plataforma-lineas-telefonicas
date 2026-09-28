@@ -3,6 +3,7 @@
 import { useState, type ReactNode } from "react";
 import { ClipboardPlus, Download, Share2 } from "lucide-react";
 import { PageHeader } from "@/components/page-header";
+import { usePublicarVista } from "@/components/presentaciones/vista-actual";
 import { useTokens } from "@/components/lab-graficos/tema-context";
 import { BotonLab } from "@/components/lab-graficos/graficos/botones/boton-lab";
 import { GanttObra } from "@/components/lab-graficos/graficos/tiempo/gantt-obra";
@@ -23,6 +24,8 @@ import {
 import { InsigniaEstado } from "@/components/lab-graficos/graficos/tablas/insignia-estado";
 import { formato, TAREAS } from "@/lib/lab-graficos/datos";
 import { conAlfa, type TokensLab } from "@/lib/lab-graficos/tema";
+import { BotonExcel } from "@/components/boton-excel";
+import { descargarExcel } from "@/lib/exportar/excel";
 import { AvisoEjemplo, Bloque } from "./piezas";
 
 // Mismo corte que el Gantt y la línea de hitos del laboratorio (día 100 desde el inicio).
@@ -38,6 +41,11 @@ const FACTOR_COSTO = [1.02, 0.97, 1.08, 1.04, 1.1, 1, 1];
 function fecha(dia: number) {
   const d = new Date(INICIO_OBRA + dia * 86400000);
   return `${String(d.getUTCDate()).padStart(2, "0")}-${String(d.getUTCMonth() + 1).padStart(2, "0")}-${d.getUTCFullYear()}`;
+}
+
+/** Día de obra como fecha (medianoche UTC, para que Excel muestre el mismo día). */
+function fechaDia(dia: number) {
+  return new Date(INICIO_OBRA + dia * 86400000);
 }
 
 /** Avance esperado a la fecha de corte según el programa lineal de la tarea. */
@@ -74,6 +82,7 @@ const pesos = (n: number) => `$ ${formato.millones(n)}`;
 // Reporte Tipo 3 · seguimiento de una obra: ficha con estado, mandante, plazo y avance; Gantt,
 // curva S, hitos, ubicación y tabla de partidas. Obra, mandante y administrador son ficticios.
 export function ReporteObra() {
+  usePublicarVista("Obra Centro · seguimiento", [`Corte ${fecha(HOY)}`]);
   return (
     <div className="animate-fade-in page-shell py-6 lg:py-8">
       <PageHeader
@@ -108,7 +117,12 @@ export function ReporteObra() {
           <LineaHitos alto={300} />
         </Bloque>
 
-        <Bloque titulo="Partidas" detalle={`${PARTIDAS.length} partidas · corte ${fecha(HOY)}`} className="xl:col-span-7">
+        <Bloque
+          titulo="Partidas"
+          detalle={`${PARTIDAS.length} partidas · corte ${fecha(HOY)}`}
+          acciones={<BotonExcel onDescargar={descargarPartidas} />}
+          className="xl:col-span-7"
+        >
           <TablaPartidas />
         </Bloque>
         <Bloque titulo="Ubicación" detalle="Obras del grupo en el país" className="xl:col-span-5">
@@ -250,6 +264,34 @@ function InsigniaPartida({ t, estado }: { t: TokensLab; estado: EstadoPartida })
       <span aria-hidden style={{ width: 6, height: 6, borderRadius: 999, background: estado === "Terminada" ? t.texto : "transparent", boxShadow: `inset 0 0 0 1.5px ${t.textoSuave}` }} />
       {estado}
     </span>
+  );
+}
+
+/** Excel de la tabla de partidas: todas las filas (no tiene filtros ni orden) y el total de la obra. */
+function descargarPartidas() {
+  return descargarExcel(
+    [
+      {
+        nombre: "Partidas",
+        filas: PARTIDAS,
+        columnas: [
+          { titulo: "Partida", valor: (p) => p.tarea, ancho: 30 },
+          { titulo: "Fase", valor: (p) => p.fase, ancho: 20 },
+          { titulo: "Inicio", valor: (p) => fechaDia(p.inicio), tipo: "fecha" },
+          { titulo: "Término", valor: (p) => fechaDia(p.inicio + p.duracion), tipo: "fecha" },
+          { titulo: "Presupuesto (M$)", valor: (p) => p.presupuesto, tipo: "numero" },
+          { titulo: "Costo a la fecha (M$)", valor: (p) => p.costo, tipo: "numero" },
+          { titulo: "Avance", valor: (p) => p.avance / 100, tipo: "porcentaje" },
+          { titulo: "Esperado", valor: (p) => p.esperado / 100, tipo: "porcentaje" },
+          { titulo: "Estado", valor: (p) => p.estado, ancho: 14 },
+        ],
+        totales: ["Total obra", null, null, null, PRESUPUESTO_TOTAL, COSTO_TOTAL, AVANCE_REAL / 100, AVANCE_PROGRAMADO / 100, ESTADO_OBRA],
+      },
+    ],
+    {
+      archivo: "Partidas - Obra Centro",
+      filtros: { Obra: "OB-2031 · Obra Centro", Corte: fecha(HOY) },
+    },
   );
 }
 

@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useFiltrosUrl } from "@/components/presentaciones/use-filtros-url";
+import { usePublicarVista } from "@/components/presentaciones/vista-actual";
 import { Download, Share2 } from "lucide-react";
 import { PageHeader } from "@/components/page-header";
 import { useTokens } from "@/components/lab-graficos/tema-context";
@@ -33,8 +34,12 @@ const CORTE: Record<Periodo, string> = {
 // muestras traen datos fijos.
 export function ReporteEjecutivo() {
   const t = useTokens();
-  const [periodo, setPeriodo] = useState<Periodo>("mes");
+  // El período vive en la URL para que «Agregar a presentación» lo guarde con la vista.
+  const [filtros, setFiltros] = useFiltrosUrl({ periodo: "mes" });
+  const periodo = filtros.periodo as Periodo;
+  const setPeriodo = (v: Periodo) => setFiltros({ periodo: v });
   const corte = CORTE[periodo];
+  usePublicarVista("Resumen de gestión", [corte]);
 
   return (
     <div className="animate-fade-in page-shell py-6 lg:py-8">

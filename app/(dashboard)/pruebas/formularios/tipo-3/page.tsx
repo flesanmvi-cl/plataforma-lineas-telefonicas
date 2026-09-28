@@ -5,6 +5,8 @@ import { AnimatePresence, motion } from "motion/react";
 import { Download, FileText, Plus, Send, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { PageHeader } from "@/components/page-header";
+import { BotonExcel } from "@/components/boton-excel";
+import { descargarExcel } from "@/lib/exportar/excel";
 import { useTokens } from "@/components/lab-graficos/tema-context";
 import { BotonLab } from "@/components/lab-graficos/graficos/botones/boton-lab";
 import { Aviso, BarraProgreso, EstadoVacio, Insignia, estiloTarjeta } from "@/components/lab-graficos/graficos/base/componentes";
@@ -64,6 +66,8 @@ const LINEAS_INICIALES: Linea[] = [
 ];
 
 const subtotal = (l: Linea) => (l.cantidad ?? 0) * (l.precio ?? 0);
+/** aaaa-mm-dd a dd-mm-aaaa (vacío si no hay fecha). */
+const diaCl = (iso: string | null | undefined) => (iso ? iso.split("-").reverse().join("-") : "sin fecha");
 
 export default function FormularioTipo3() {
   const t = useTokens();
@@ -124,6 +128,46 @@ export default function FormularioTipo3() {
       description: l.partida || "Sin partida",
       action: { label: "Deshacer", onClick: () => setLineas((ls) => [...ls.slice(0, n), l, ...ls.slice(n)]) },
     });
+  }
+
+  // Excel de las líneas tal como están (con lo editado), y neto, IVA y total al pie.
+  function descargarLineas() {
+    type FilaEp = { n: number | null; partida: string; unidad: string | null; cantidad: number | null; precio: number | null; subtotal: number };
+    const filas: FilaEp[] = [
+      ...lineas.map((l, n) => ({ n: n + 1, partida: l.partida, unidad: l.unidad, cantidad: l.cantidad, precio: l.precio, subtotal: subtotal(l) })),
+      { n: null, partida: "Neto", unidad: null, cantidad: null, precio: null, subtotal: neto },
+      { n: null, partida: "IVA (19 %)", unidad: null, cantidad: null, precio: null, subtotal: iva },
+    ];
+    const etiqueta = (lista: { valor: string; etiqueta: string }[], v: string | null) => lista.find((o) => o.valor === v)?.etiqueta ?? "Sin elegir";
+    return descargarExcel(
+      [
+        {
+          nombre: "Líneas EP-0012",
+          filas,
+          columnas: [
+            { titulo: "#", valor: (f) => f.n, tipo: "numero", ancho: 5 },
+            { titulo: "Partida", valor: (f) => f.partida, ancho: 36 },
+            { titulo: "Unidad", valor: (f) => f.unidad, ancho: 9 },
+            // Sin tipo (General) para que la cantidad conserve sus decimales.
+            { titulo: "Cantidad", valor: (f) => f.cantidad, ancho: 12 },
+            { titulo: "Precio unitario", valor: (f) => f.precio, tipo: "monto", ancho: 16 },
+            { titulo: "Subtotal", valor: (f) => f.subtotal, tipo: "monto", ancho: 18 },
+          ],
+          totales: [null, "Total", null, null, null, total],
+        },
+      ],
+      {
+        archivo: `Estado de pago EP-0012 - ${etiqueta(OBRAS, enc.obra)}`,
+        filtros: {
+          "Estado de pago": "EP-0012",
+          Obra: etiqueta(OBRAS, enc.obra),
+          Subcontratista: etiqueta(PROVEEDORES, enc.subcontratista),
+          Periodo: `${diaCl(enc.periodo.desde)} a ${diaCl(enc.periodo.hasta)}`,
+          Retención: `${String(enc.retencion ?? 0).replace(".", ",")} %`,
+          Estado: enviado ? "En revisión" : "Borrador",
+        },
+      },
+    );
   }
 
   function enviar() {
@@ -244,6 +288,7 @@ export default function FormularioTipo3() {
               </h2>
               <span style={{ fontFamily: t.fuente, fontSize: t.tamano.eje, color: t.textoSuave }}>{lineas.length} líneas</span>
               <span className="ml-auto" />
+              {lineas.length > 0 && <BotonExcel onDescargar={descargarLineas} />}
               <BotonLab id="ep-agregar" variante="contorno" tamano="sm" icono={Plus} onClick={agregar}>
                 Agregar línea
               </BotonLab>

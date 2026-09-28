@@ -3,8 +3,11 @@
 import { useState, type CSSProperties } from "react";
 import { useTokens } from "@/components/lab-graficos/tema-context";
 import type { PropsGraficoLab } from "@/components/lab-graficos/tipos";
+import { BotonExcel } from "@/components/boton-excel";
 import { formato } from "@/lib/lab-graficos/datos";
+import { descargarExcel } from "@/lib/exportar/excel";
 import { estiloCelda, estiloContenedor, estiloTabla, fondoFila, ocultoVisual } from "./comun";
+import { textoOrden } from "./datos-tablas";
 import { EncabezadoOrdenable } from "./encabezado-ordenable";
 import { DATOS_PLANTILLA, rellenoPlantilla, tarjetaPlantilla } from "./plantilla-zebra";
 
@@ -47,46 +50,71 @@ export function PlantillaOrdenable({ alto }: PropsGraficoLab) {
     ...(ultima ? { borderBottom: "none" } : null),
   });
 
+  // Excel en el orden vigente.
+  const descargar = () =>
+    descargarExcel(
+      [
+        {
+          nombre: "Avance por obra",
+          filas,
+          columnas: [
+            { titulo: "Obra", valor: (d) => d.nombre },
+            { titulo: "Región", valor: (d) => d.region, ancho: 16 },
+            { titulo: "Avance", valor: (d) => d.avance / 100, tipo: "porcentaje" },
+          ],
+        },
+      ],
+      {
+        archivo: "Avance por obra",
+        filtros: { Orden: textoOrden(COLUMNAS.find((c) => c.id === col)?.etiqueta ?? col, asc ? "asc" : "desc") },
+      },
+    );
+
   return (
-    <div style={estiloContenedor(t, alto)}>
-      <div style={tarjetaPlantilla(t)}>
-        <table style={estiloTabla()}>
-          <caption style={ocultoVisual}>Avance por obra, ordenable</caption>
-          <thead>
-            <tr>
-              {COLUMNAS.map((c, j) => (
-                <EncabezadoOrdenable
-                  key={c.id}
-                  t={t}
-                  col={j}
-                  etiqueta={c.etiqueta}
-                  alinear={c.alinear}
-                  activo={col === c.id}
-                  direccion={asc ? "asc" : "desc"}
-                  onOrdenar={() => ordenar(c.id)}
-                  estilo={enc}
-                />
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {filas.map((d, i) => {
-              const ultima = i === filas.length - 1;
-              return (
-                <tr
-                  key={d.nombre}
-                  onMouseEnter={() => setActiva(d.nombre)}
-                  onMouseLeave={() => setActiva(null)}
-                  style={{ background: fondoFila(t, i, activa === d.nombre) }}
-                >
-                  <td style={celda(0, ultima)}>{d.nombre}</td>
-                  <td style={{ ...celda(1, ultima), color: t.textoSuave }}>{d.region}</td>
-                  <td style={{ ...celda(2, ultima), textAlign: "right" }}>{formato.porcentaje(d.avance)}</td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
+    <div style={{ ...estiloContenedor(t, alto), overflow: "hidden", display: "flex", flexDirection: "column" }}>
+      <div style={{ display: "flex", justifyContent: "flex-end", paddingBottom: 6 }}>
+        <BotonExcel onDescargar={descargar} />
+      </div>
+      <div style={{ flex: 1, minHeight: 0, overflow: "auto" }}>
+        <div style={tarjetaPlantilla(t)}>
+          <table style={estiloTabla()}>
+            <caption style={ocultoVisual}>Avance por obra, ordenable</caption>
+            <thead>
+              <tr>
+                {COLUMNAS.map((c, j) => (
+                  <EncabezadoOrdenable
+                    key={c.id}
+                    t={t}
+                    col={j}
+                    etiqueta={c.etiqueta}
+                    alinear={c.alinear}
+                    activo={col === c.id}
+                    direccion={asc ? "asc" : "desc"}
+                    onOrdenar={() => ordenar(c.id)}
+                    estilo={enc}
+                  />
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {filas.map((d, i) => {
+                const ultima = i === filas.length - 1;
+                return (
+                  <tr
+                    key={d.nombre}
+                    onMouseEnter={() => setActiva(d.nombre)}
+                    onMouseLeave={() => setActiva(null)}
+                    style={{ background: fondoFila(t, i, activa === d.nombre) }}
+                  >
+                    <td style={celda(0, ultima)}>{d.nombre}</td>
+                    <td style={{ ...celda(1, ultima), color: t.textoSuave }}>{d.region}</td>
+                    <td style={{ ...celda(2, ultima), textAlign: "right" }}>{formato.porcentaje(d.avance)}</td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );

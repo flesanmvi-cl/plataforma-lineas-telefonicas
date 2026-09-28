@@ -5,7 +5,9 @@ import { AnimatePresence, motion } from "motion/react";
 import { Search, X } from "lucide-react";
 import { useTokens } from "@/components/lab-graficos/tema-context";
 import type { PropsGraficoLab } from "@/components/lab-graficos/tipos";
+import { BotonExcel } from "@/components/boton-excel";
 import { formato, LINEAS } from "@/lib/lab-graficos/datos";
+import { descargarExcel } from "@/lib/exportar/excel";
 import { conAlfa } from "@/lib/lab-graficos/tema";
 import {
   duracionCorta,
@@ -76,6 +78,34 @@ export function TablaFiltrosColumna({ alto }: PropsGraficoLab) {
   });
   const campo: CSSProperties = { ...estiloCampo(t), width: "100%", boxSizing: "border-box" };
 
+  // Excel con todas las filas que pasan los filtros.
+  const descargar = () =>
+    descargarExcel(
+      [
+        {
+          nombre: "Obras",
+          filas,
+          columnas: [
+            { titulo: "Obra", valor: (d) => d.obra, ancho: 24 },
+            { titulo: "Código", valor: (d) => d.codigo, ancho: 11 },
+            { titulo: "Línea", valor: (d) => d.linea, ancho: 16 },
+            { titulo: "Estado", valor: (d) => d.estado, ancho: 12 },
+            { titulo: "Avance", valor: (d) => d.avance / 100, tipo: "porcentaje" },
+            { titulo: "Presupuesto (M$)", valor: (d) => d.presupuesto, tipo: "numero" },
+          ],
+        },
+      ],
+      {
+        archivo: chips.length ? "Obras - filtradas" : "Obras",
+        filtros: {
+          "Búsqueda (obra o código)": filtros.texto.trim() || "Sin búsqueda",
+          Línea: filtros.linea || "Todas",
+          Estado: filtros.estado || "Todos",
+          Resultado: `${filas.length} de ${datos.length} obras`,
+        },
+      },
+    );
+
   return (
     <div style={{ ...estiloContenedor(t, alto), overflow: "hidden", display: "flex", flexDirection: "column" }}>
       {/* Chips de filtros activos */}
@@ -120,9 +150,12 @@ export function TablaFiltrosColumna({ alto }: PropsGraficoLab) {
             Limpiar
           </button>
         )}
+        <span style={{ marginLeft: "auto" }}>
+          <BotonExcel onDescargar={descargar} />
+        </span>
       </div>
 
-      <div style={{ flex: 1, overflow: "auto" }}>
+      <div style={{ flex: 1, minHeight: 0, overflow: "auto" }}>
         <table style={estiloTabla()}>
           <caption style={ocultoVisual}>Obras con filtros por columna</caption>
           <thead>

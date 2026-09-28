@@ -4,7 +4,9 @@ import { useCallback, useMemo, useState } from "react";
 import { Archive, Copy, Eye, MoreVertical, Pencil } from "lucide-react";
 import { useTokens } from "@/components/lab-graficos/tema-context";
 import type { PropsGraficoLab } from "@/components/lab-graficos/tipos";
+import { BotonExcel } from "@/components/boton-excel";
 import { formato } from "@/lib/lab-graficos/datos";
+import { descargarExcel } from "@/lib/exportar/excel";
 import { conAlfa } from "@/lib/lab-graficos/tema";
 import {
   colorEstado,
@@ -19,7 +21,7 @@ import {
   ocultoVisual,
   rellenoBarra,
 } from "./comun";
-import { fechaCorta, registrosObras, type Registro } from "./datos-tablas";
+import { fechaCorta, fechaExcel, registrosObras, type Registro } from "./datos-tablas";
 import { Avatar, InsigniaEstado } from "./insignia-estado";
 import { MenuFlotante, OpcionMenu } from "./menu-flotante";
 
@@ -51,6 +53,33 @@ export function TablaEstadosAcciones({ alto }: PropsGraficoLab) {
     }
   };
 
+  // Excel con las obras que siguen en la tabla (sin las archivadas).
+  const descargar = () =>
+    descargarExcel(
+      [
+        {
+          nombre: "Obras",
+          filas,
+          columnas: [
+            { titulo: "Obra", valor: (d) => d.obra, ancho: 24 },
+            { titulo: "Código", valor: (d) => d.codigo, ancho: 11 },
+            { titulo: "Responsable", valor: (d) => d.responsable },
+            { titulo: "Estado", valor: (d) => d.estado, ancho: 12 },
+            { titulo: "Avance", valor: (d) => d.avance / 100, tipo: "porcentaje" },
+            { titulo: "Meta", valor: (d) => d.meta / 100, tipo: "porcentaje" },
+            { titulo: "Término", valor: (d) => fechaExcel(d.termino), tipo: "fecha" },
+          ],
+        },
+      ],
+      {
+        archivo: "Obras por estado",
+        filtros: {
+          ...Object.fromEntries(conteo.map((c) => [c.estado, String(c.n)])),
+          Archivadas: archivadas.length ? `${archivadas.length} (no incluidas)` : "Ninguna",
+        },
+      },
+    );
+
   return (
     <div style={{ ...estiloContenedor(t, alto), overflow: "hidden", display: "flex", flexDirection: "column" }}>
       {/* Resumen por estado */}
@@ -78,9 +107,10 @@ export function TablaEstadosAcciones({ alto }: PropsGraficoLab) {
             </button>
           )}
         </span>
+        <BotonExcel onDescargar={descargar} />
       </div>
 
-      <div style={{ flex: 1, overflow: "auto" }}>
+      <div style={{ flex: 1, minHeight: 0, overflow: "auto" }}>
         <table style={estiloTabla()}>
           <caption style={ocultoVisual}>Obras con estado, responsable y acciones</caption>
           <thead>

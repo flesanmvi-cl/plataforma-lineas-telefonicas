@@ -5,7 +5,9 @@ import { AnimatePresence, motion } from "motion/react";
 import { ChevronRight } from "lucide-react";
 import { useTokens } from "@/components/lab-graficos/tema-context";
 import type { PropsGraficoLab } from "@/components/lab-graficos/tipos";
+import { BotonExcel } from "@/components/boton-excel";
 import { azar, formato, LINEAS } from "@/lib/lab-graficos/datos";
+import { descargarExcel } from "@/lib/exportar/excel";
 import { conAlfa, type TokensLab } from "@/lib/lab-graficos/tema";
 import {
   estiloBotonTabla,
@@ -92,6 +94,39 @@ export function TablaAgrupada({ alto }: PropsGraficoLab) {
     });
   const todosAbiertos = abiertos.size === grupos.length;
 
+  // Excel como se ve: una fila de subtotal por línea y, bajo ella, sus obras si el grupo está abierto.
+  const descargar = () => {
+    type FilaExcel = { tipo: "Subtotal" | "Obra"; linea: string; obra: string; presupuesto: number; costo: number; avance: number };
+    const filas: FilaExcel[] = grupos.flatMap((g) => [
+      { tipo: "Subtotal" as const, linea: g.linea, obra: "", ...g.total },
+      ...(abiertos.has(g.linea) ? g.obras.map((o) => ({ tipo: "Obra" as const, linea: g.linea, ...o, obra: o.nombre })) : []),
+    ]);
+    const desvio = (f: { presupuesto: number; costo: number }) => (f.costo - f.presupuesto) / f.presupuesto;
+    return descargarExcel(
+      [
+        {
+          nombre: "Por línea y obra",
+          filas,
+          columnas: [
+            { titulo: "Línea", valor: (f) => f.linea },
+            { titulo: "Obra", valor: (f) => (f.tipo === "Subtotal" ? "Subtotal" : f.obra), ancho: 24 },
+            { titulo: "Presupuesto (M$)", valor: (f) => f.presupuesto, tipo: "numero" },
+            { titulo: "Costo real (M$)", valor: (f) => f.costo, tipo: "numero" },
+            { titulo: "Desvío", valor: desvio, tipo: "porcentaje" },
+            { titulo: "Avance", valor: (f) => f.avance / 100, tipo: "porcentaje" },
+          ],
+          totales: ["Total general", null, general.presupuesto, general.costo, desvio(general), general.avance / 100],
+        },
+      ],
+      {
+        archivo: "Presupuesto y costo por línea de negocio",
+        filtros: {
+          "Grupos abiertos": todosAbiertos ? "Todos" : abiertos.size ? grupos.filter((g) => abiertos.has(g.linea)).map((g) => g.linea).join(", ") : "Ninguno (solo subtotales)",
+        },
+      },
+    );
+  };
+
   const celda = (col: number) => estiloCelda(t, { col });
   const num = (col: number) => ({ ...celda(col), textAlign: "right" as const });
   const segundos = t.animacion.duracion / 1000;
@@ -102,7 +137,8 @@ export function TablaAgrupada({ alto }: PropsGraficoLab) {
 
   return (
     <div style={{ ...estiloContenedor(t, alto), overflow: "hidden", display: "flex", flexDirection: "column" }}>
-      <div style={{ display: "flex", justifyContent: "flex-end", paddingBottom: 6 }}>
+      <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "center", gap: 8, paddingBottom: 6 }}>
+        <BotonExcel onDescargar={descargar} />
         <button
           type="button"
           onClick={() => setAbiertos(todosAbiertos ? new Set() : new Set(grupos.map((g) => g.linea)))}

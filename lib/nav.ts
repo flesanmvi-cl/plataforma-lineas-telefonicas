@@ -1,4 +1,4 @@
-import { FlaskConical, LayoutGrid, Palette, Settings, type LucideIcon } from "lucide-react";
+import { FlaskConical, LayoutGrid, Palette, Presentation, Settings, type LucideIcon } from "lucide-react";
 
 // Fuente única de navegación: Sidebar, TopBar (ruta de migas) y las tabs de sección
 // consumen estos arreglos para no mantener listas sincronizadas a mano.
@@ -40,6 +40,8 @@ export const NAV_ITEMS: NavItem[] = [
       { href: "/ui-kit/laboratorio/contexto", label: "En contexto", grupo: "Laboratorio" },
     ],
   },
+  // Presentaciones armadas desde las vistas (agregar desde la barra superior; se guardan en este navegador).
+  { href: "/presentaciones", label: "Presentaciones", icon: Presentation },
   {
     // Pantallas de prueba armadas solo con el estándar vigente (lib/lab-graficos/estandar.ts):
     // sirven para ver cómo queda una plataforma real con lo elegido.

@@ -28,6 +28,7 @@ export function BotonExcel({ onDescargar, className }: { onDescargar: () => Prom
   return (
     <button
       type="button"
+      data-no-diapositiva
       onClick={descargar}
       disabled={generando}
       title={error ? "No se pudo generar el Excel. Intenta de nuevo." : "Descargar lo que se ve en Excel"}

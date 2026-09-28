@@ -5,7 +5,9 @@ import { AnimatePresence, motion } from "motion/react";
 import { FileSearch } from "lucide-react";
 import { useTokens } from "@/components/lab-graficos/tema-context";
 import type { PropsGraficoLab } from "@/components/lab-graficos/tipos";
+import { BotonExcel } from "@/components/boton-excel";
 import { formato } from "@/lib/lab-graficos/datos";
+import { descargarExcel } from "@/lib/exportar/excel";
 import { conAlfa, type TokensLab } from "@/lib/lab-graficos/tema";
 import {
   duracionCorta,
@@ -62,24 +64,48 @@ export function TablaEstadosCarga({ alto }: PropsGraficoLab) {
 
   const anchos = ["70%", "55%", "80%", "62%", "74%", "50%", "66%", "58%"];
 
+  // Excel solo cuando hay datos: cargando o vacío no hay nada que bajar.
+  const descargar = () =>
+    descargarExcel(
+      [
+        {
+          nombre: "Obras",
+          filas: datos,
+          columnas: [
+            { titulo: "Obra", valor: (d) => d.obra, ancho: 24 },
+            { titulo: "Región", valor: (d) => d.region, ancho: 14 },
+            { titulo: "Estado", valor: (d) => d.estado, ancho: 12 },
+            { titulo: "Presupuesto (M$)", valor: (d) => d.presupuesto, tipo: "numero" },
+          ],
+        },
+      ],
+      { archivo: "Obras" },
+    );
+
   return (
     <div style={{ ...estiloContenedor(t, alto), overflow: "hidden", display: "flex", flexDirection: "column" }}>
-      <div role="radiogroup" aria-label="Estado de la tabla" style={{ display: "flex", gap: 4, paddingBottom: 6 }}>
-        {MODOS.map((m) => (
-          <button
-            key={m.id}
-            type="button"
-            role="radio"
-            aria-checked={modo === m.id}
-            onClick={() => setModo(m.id)}
-            style={estiloBotonTabla(t, modo === m.id)}
-          >
-            {m.nombre}
-          </button>
-        ))}
+      <div style={{ display: "flex", alignItems: "center", gap: 8, paddingBottom: 6 }}>
+        <div role="radiogroup" aria-label="Estado de la tabla" style={{ display: "flex", gap: 4 }}>
+          {MODOS.map((m) => (
+            <button
+              key={m.id}
+              type="button"
+              role="radio"
+              aria-checked={modo === m.id}
+              onClick={() => setModo(m.id)}
+              style={estiloBotonTabla(t, modo === m.id)}
+            >
+              {m.nombre}
+            </button>
+          ))}
+        </div>
+        {/* Oculto (sin mover el alto de la barra) mientras carga o está vacía */}
+        <span style={{ marginLeft: "auto", visibility: modo === "datos" ? "visible" : "hidden" }}>
+          <BotonExcel onDescargar={descargar} />
+        </span>
       </div>
 
-      <div style={{ flex: 1, overflow: "auto" }} aria-busy={modo === "cargando"}>
+      <div style={{ flex: 1, minHeight: 0, overflow: "auto" }} aria-busy={modo === "cargando"}>
         <table style={estiloTabla()}>
           <caption style={ocultoVisual}>Obras{modo === "cargando" ? " (cargando)" : modo === "vacio" ? " (sin resultados)" : ""}</caption>
           <thead>

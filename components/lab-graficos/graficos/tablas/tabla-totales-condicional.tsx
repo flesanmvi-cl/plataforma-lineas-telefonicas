@@ -4,7 +4,9 @@ import { useMemo, useState } from "react";
 import { ArrowDownRight, ArrowUpRight } from "lucide-react";
 import { useTokens } from "@/components/lab-graficos/tema-context";
 import type { PropsGraficoLab } from "@/components/lab-graficos/tipos";
+import { BotonExcel } from "@/components/boton-excel";
 import { azar, formato, MESES } from "@/lib/lab-graficos/datos";
+import { descargarExcel, type ColumnaExcel } from "@/lib/exportar/excel";
 import { conAlfa, type TokensLab } from "@/lib/lab-graficos/tema";
 import {
   estiloCelda,
@@ -70,9 +72,35 @@ export function TablaTotalesCondicional({ alto }: PropsGraficoLab) {
 
   const colTotal = N_MESES + 2;
 
+  // Excel con las cifras (sin el color condicional) y la fila de totales.
+  const descargar = () => {
+    type Fila = (typeof filas)[number];
+    const columnas: ColumnaExcel<Fila>[] = [
+      { titulo: "Obra", valor: (f) => f.obra, ancho: 24 },
+      { titulo: "Meta mes", valor: (f) => f.meta, tipo: "numero" },
+      ...MESES.slice(0, N_MESES).map((m, j): ColumnaExcel<Fila> => ({ titulo: m, valor: (f) => f.meses[j], tipo: "numero", ancho: 10 })),
+      { titulo: "Total", valor: (f) => f.total, tipo: "numero" },
+      { titulo: "Cumplimiento", valor: (f) => f.cumplimiento / 100, tipo: "porcentaje" },
+    ];
+    return descargarExcel(
+      [
+        {
+          nombre: "Producción contra meta",
+          filas,
+          columnas,
+          totales: ["Total", totales.meta, ...totales.meses, totales.total, totales.cumplimiento / 100],
+        },
+      ],
+      { archivo: "Producción contra meta por obra", filtros: { Unidad: "Millones de pesos" } },
+    );
+  };
+
   return (
     <div style={{ ...estiloContenedor(t, alto), overflow: "hidden", display: "flex", flexDirection: "column" }}>
-      <div style={{ flex: 1, overflow: "auto" }}>
+      <div style={{ display: "flex", justifyContent: "flex-end", paddingBottom: 6 }}>
+        <BotonExcel onDescargar={descargar} />
+      </div>
+      <div style={{ flex: 1, minHeight: 0, overflow: "auto" }}>
         <table style={estiloTabla()}>
           <caption style={ocultoVisual}>Producción mensual por obra contra meta, en millones de pesos, con totales</caption>
           <thead>

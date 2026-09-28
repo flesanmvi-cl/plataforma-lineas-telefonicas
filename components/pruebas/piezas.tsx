@@ -20,6 +20,15 @@ import { moverConFlechas } from "@/components/lab-graficos/graficos/controles/co
 // de filtro, controlados desde afuera. Todo color, letra y radio sale de los tokens del estándar.
 
 /** Tarjeta de tablero con título de bloque, detalle a la derecha y acciones opcionales. */
+function slug(texto: string) {
+  return texto
+    .normalize("NFD")
+    .replace(/[̀-ͯ]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
+}
+
 export function Bloque({
   titulo,
   detalle,
@@ -36,7 +45,13 @@ export function Bloque({
 }) {
   const t = useTokens();
   return (
-    <section className={cn("card flex flex-col gap-3 p-4 min-w-0", className)} style={{ borderRadius: t.radio, fontFamily: t.fuente }}>
+    <section
+      // data-bloque permite agregar solo este bloque a una presentación («Qué incluir»).
+      data-bloque={typeof titulo === "string" ? slug(titulo) : undefined}
+      data-bloque-titulo={typeof titulo === "string" ? titulo : undefined}
+      className={cn("card flex flex-col gap-3 p-4 min-w-0", className)}
+      style={{ borderRadius: t.radio, fontFamily: t.fuente }}
+    >
       <header className="flex flex-wrap items-center gap-x-3 gap-y-1 min-w-0">
         <h2 style={{ fontSize: 15, fontWeight: 600, lineHeight: 1.3, color: t.texto }}>{titulo}</h2>
         {detalle && <span style={{ fontSize: t.tamano.eje, color: t.textoSuave }}>{detalle}</span>}

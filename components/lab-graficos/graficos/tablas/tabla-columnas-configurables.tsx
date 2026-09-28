@@ -5,7 +5,9 @@ import { motion } from "motion/react";
 import { ArrowDown, ArrowUp, Columns3, GripVertical } from "lucide-react";
 import { useTokens } from "@/components/lab-graficos/tema-context";
 import type { PropsGraficoLab } from "@/components/lab-graficos/tipos";
+import { BotonExcel } from "@/components/boton-excel";
 import { formato } from "@/lib/lab-graficos/datos";
+import { descargarExcel, type ColumnaExcel } from "@/lib/exportar/excel";
 import type { TokensLab } from "@/lib/lab-graficos/tema";
 import {
   duracionCorta,
@@ -18,7 +20,7 @@ import {
   ocultoVisual,
 } from "./comun";
 import { Casilla } from "./casilla";
-import { fechaCorta, registrosObras, type Registro } from "./datos-tablas";
+import { fechaCorta, fechaExcel, registrosObras, type Registro } from "./datos-tablas";
 import { InsigniaEstado } from "./insignia-estado";
 import { MenuFlotante } from "./menu-flotante";
 
@@ -43,6 +45,19 @@ const COLUMNAS: DefColumna[] = [
   { id: "presupuesto", etiqueta: "Presupuesto", derecha: true, celda: (d) => formato.millones(d.presupuesto) },
   { id: "termino", etiqueta: "Término", derecha: true, celda: (d) => fechaCorta(d.termino) },
 ];
+
+/** Valor crudo de cada columna para el Excel (montos y porcentajes como número). */
+const EXCEL: Record<ColId, Omit<ColumnaExcel<Registro>, "titulo">> = {
+  obra: { valor: (d) => d.obra, ancho: 24 },
+  codigo: { valor: (d) => d.codigo, ancho: 11 },
+  linea: { valor: (d) => d.linea, ancho: 16 },
+  region: { valor: (d) => d.region, ancho: 14 },
+  responsable: { valor: (d) => d.responsable },
+  estado: { valor: (d) => d.estado, ancho: 12 },
+  avance: { valor: (d) => d.avance / 100, tipo: "porcentaje" },
+  presupuesto: { valor: (d) => d.presupuesto, tipo: "numero" },
+  termino: { valor: (d) => fechaExcel(d.termino), tipo: "fecha" },
+};
 
 const ORDEN_INICIAL: ColId[] = COLUMNAS.map((c) => c.id);
 const VISIBLES_INICIAL: ColId[] = ["obra", "linea", "estado", "avance", "presupuesto"];
@@ -80,6 +95,28 @@ export function TablaColumnasConfigurables({ alto }: PropsGraficoLab) {
   const segundos = duracionCorta(t);
   const botonIcono: CSSProperties = { ...estiloBotonTabla(t), minWidth: 0, width: 22, height: 22, padding: 0, border: "none" };
 
+  // Excel solo con las columnas visibles y en el orden en que se ven.
+  const descargar = () =>
+    descargarExcel(
+      [
+        {
+          nombre: "Obras",
+          filas: datos,
+          columnas: columnas.map((c) => ({
+            ...EXCEL[c.id],
+            titulo: c.id === "presupuesto" ? "Presupuesto (M$)" : c.etiqueta,
+          })),
+        },
+      ],
+      {
+        archivo: "Obras",
+        filtros: {
+          "Columnas visibles": columnas.map((c) => c.etiqueta).join(", "),
+          "Columnas ocultas": COLUMNAS.filter((c) => !visibles.has(c.id)).map((c) => c.etiqueta).join(", ") || "Ninguna",
+        },
+      },
+    );
+
   return (
     <div style={{ ...estiloContenedor(t, alto), overflow: "hidden", display: "flex", flexDirection: "column" }}>
       <div style={{ display: "flex", alignItems: "center", gap: 8, paddingBottom: 6, fontSize: t.tamano.eje, color: t.textoSuave }}>
@@ -97,6 +134,7 @@ export function TablaColumnasConfigurables({ alto }: PropsGraficoLab) {
           <Columns3 size={14} aria-hidden />
           Columnas
         </button>
+        <BotonExcel onDescargar={descargar} />
       </div>
 
       {ancla && (

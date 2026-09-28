@@ -5,7 +5,9 @@ import { AnimatePresence, motion } from "motion/react";
 import { CheckCheck, Download, X } from "lucide-react";
 import { useTokens } from "@/components/lab-graficos/tema-context";
 import type { PropsGraficoLab } from "@/components/lab-graficos/tipos";
+import { BotonExcel } from "@/components/boton-excel";
 import { formato } from "@/lib/lab-graficos/datos";
+import { descargarExcel } from "@/lib/exportar/excel";
 import { conAlfa } from "@/lib/lab-graficos/tema";
 import {
   duracionCorta,
@@ -19,7 +21,7 @@ import {
   ocultoVisual,
 } from "./comun";
 import { Casilla } from "./casilla";
-import { fechaCorta, registrosObras } from "./datos-tablas";
+import { fechaCorta, fechaExcel, registrosObras } from "./datos-tablas";
 
 // Estados de pago con selección por fila (checkbox real), «seleccionar todo» con estado
 // indeterminado y una barra de acciones masivas que aparece al marcar al menos una fila.
@@ -55,12 +57,41 @@ export function TablaSeleccionMasiva({ alto }: PropsGraficoLab) {
     setSeleccion(new Set());
   };
 
+  // Excel de estados de pago: el botón de arriba baja todos; «Exportar» de la barra, solo los marcados.
+  const exportar = (lista: typeof filas, alcance: string) =>
+    descargarExcel(
+      [
+        {
+          nombre: "Estados de pago",
+          filas: lista,
+          columnas: [
+            { titulo: "Estado de pago", valor: (f) => f.ep, ancho: 14 },
+            { titulo: "Obra", valor: (f) => f.obra, ancho: 24 },
+            { titulo: "Vence", valor: (f) => fechaExcel(f.termino), tipo: "fecha" },
+            { titulo: "Monto (M$)", valor: (f) => f.monto, tipo: "numero" },
+            { titulo: "Situación", valor: (f) => (aprobados.has(f.id) ? "Aprobado" : "Por revisar") },
+          ],
+          totales: ["Total", null, null, lista.reduce((a, f) => a + f.monto, 0), null],
+        },
+      ],
+      { archivo: `Estados de pago - ${alcance}`, filtros: { Alcance: alcance, Filas: String(lista.length) } },
+    );
+  const exportarSeleccion = () => {
+    exportar(
+      filas.filter((f) => seleccion.has(f.id)),
+      "Seleccionados",
+    ).catch((e) => console.error("[excel]", e));
+  };
+
   const segundos = duracionCorta(t);
   const celdaCasilla = { width: 36, paddingRight: 0, textAlign: "center" as const };
 
   return (
     <div style={{ ...estiloContenedor(t, alto), overflow: "hidden", display: "flex", flexDirection: "column", position: "relative" }}>
-      <div style={{ flex: 1, overflow: "auto" }}>
+      <div style={{ display: "flex", justifyContent: "flex-end", paddingBottom: 6 }}>
+        <BotonExcel onDescargar={() => exportar(filas, "Todos")} />
+      </div>
+      <div style={{ flex: 1, minHeight: 0, overflow: "auto" }}>
         <table style={estiloTabla()}>
           <caption style={ocultoVisual}>Estados de pago por obra, con selección múltiple</caption>
           <thead>
@@ -165,7 +196,7 @@ export function TablaSeleccionMasiva({ alto }: PropsGraficoLab) {
               <CheckCheck size={14} aria-hidden />
               Aprobar
             </button>
-            <button type="button" onClick={() => setSeleccion(new Set())} style={{ ...estiloBotonTabla(t), color: "inherit", borderColor: "currentColor" }}>
+            <button type="button" onClick={exportarSeleccion} style={{ ...estiloBotonTabla(t), color: "inherit", borderColor: "currentColor" }}>
               <Download size={14} aria-hidden />
               Exportar
             </button>
