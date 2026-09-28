@@ -7,10 +7,10 @@ import { CiaLogo } from "@/components/cia-logo";
 import { PORTAL_CIA_URL, SAP_WORKZONE_URL } from "@/lib/nav";
 
 /**
- * Lengüeta de portales: asoma por dentro del borde derecho del sidebar, justo arriba del pie
- * (configuración y usuario). Mitad roja CIA arriba y mitad azul SAP abajo; al pasar el mouse
- * crece y los logos se leen completos. Al presionarla despliega los accesos a Portal CIA y SAP
- * Work Zone, afuera del sidebar.
+ * Media luna de portales: asoma por dentro del borde derecho del sidebar, justo arriba del pie
+ * (configuración y usuario), con el corte diagonal rojo CIA / azul SAP. Al pasar el mouse se
+ * desliza hacia adentro y muestra «CIA / SAP». Al presionarla despliega los accesos a Portal CIA
+ * y SAP Work Zone, afuera del sidebar.
  */
 export function LenguetaPortales() {
   const [abierta, setAbierta] = useState(false);
@@ -32,7 +32,7 @@ export function LenguetaPortales() {
   if (!SAP_WORKZONE_URL && !PORTAL_CIA_URL) return null;
 
   return (
-    // Franja sin alto sobre el pie del sidebar: la lengüeta y el desplegable cuelgan de ella.
+    // Franja sin alto sobre el pie del sidebar: la media luna y el desplegable cuelgan de ella.
     <div ref={raiz} className="relative h-0 z-50">
       <button
         type="button"
@@ -42,26 +42,16 @@ export function LenguetaPortales() {
         aria-label="Portales del grupo: Portal CIA y SAP Work Zone"
         title="Portal CIA · SAP Work Zone"
         className={cn(
-          "lengueta-portales group absolute right-0 bottom-3 flex flex-col items-center justify-evenly rounded-l-[9px] cursor-pointer",
-          "w-3.5 h-[3.375rem] hover:w-8 hover:h-[4.125rem] focus-visible:w-8 focus-visible:h-[4.125rem]",
-          abierta && "w-8 h-[4.125rem]",
+          // Media luna: en reposo asoma solo el lado CIA; al pasar el mouse se desliza hacia adentro
+          // como píldora y aparece SAP (lo que no cabe queda recortado por overflow-hidden).
+          "lengueta-portales absolute right-0 bottom-3 flex items-center gap-1 pl-1.5 overflow-hidden rounded-l-full cursor-pointer",
+          "h-11 w-[1.625rem] hover:w-[4.75rem] focus-visible:w-[4.75rem]",
+          abierta && "w-[4.75rem]",
         )}
       >
-        <CiaLogo
-          className={cn(
-            "text-white transition-all w-[9px] h-[9px] group-hover:w-3.5 group-hover:h-3.5 group-focus-visible:w-3.5 group-focus-visible:h-3.5",
-            abierta && "w-3.5 h-3.5",
-          )}
-        />
-        {/* Logo SAP: trapecio blanco; la sigla se lee cuando la lengüeta crece */}
-        <svg
-          viewBox="0 0 400 198"
-          aria-hidden
-          className={cn(
-            "transition-all w-2.5 h-[5px] group-hover:w-[22px] group-hover:h-[11px] group-focus-visible:w-[22px] group-focus-visible:h-[11px]",
-            abierta && "w-[22px] h-[11px]",
-          )}
-        >
+        <CiaLogo className="w-4 h-4 shrink-0 text-white" />
+        <span className="font-display text-[0.9375rem] font-extrabold italic leading-none text-white/85 shrink-0">/</span>
+        <svg width="28" height="14" viewBox="0 0 400 198" aria-hidden className="shrink-0">
           <path d="M0 198V0h400L202 198z" fill="#fff" />
           <text x="32" y="142" fill="#0b5299" fontFamily="Arial, Helvetica, sans-serif" fontWeight="700" fontSize="128" letterSpacing="-4">
             SAP
