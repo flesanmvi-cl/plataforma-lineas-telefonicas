@@ -684,6 +684,69 @@ textarea.dens-control {
 }
 
 /* ============================================================
+   ESTADO DE LOS DATOS (barra superior)
+   Píldora con punto de frescura: verde «al día», ámbar «atrasado», gris latiendo mientras
+   actualiza. Los colores de estado solo marcan estado, nunca acento.
+   ============================================================ */
+.estado-datos {
+  --ed-ok: var(--color-status-ok);
+  --ed-ok-halo: rgba(22, 163, 74, 0.18);
+  --ed-atraso: #b45309;
+  --ed-atraso-fondo: #fdf3e3;
+  --ed-atraso-borde: #f3d6a8;
+}
+.dark .estado-datos {
+  --ed-ok: #4ade80;
+  --ed-ok-halo: rgba(74, 222, 128, 0.2);
+  --ed-atraso: #fbbf24;
+  --ed-atraso-fondo: rgba(251, 191, 36, 0.1);
+  --ed-atraso-borde: rgba(251, 191, 36, 0.35);
+}
+.estado-datos-pildora {
+  border-color: var(--color-border);
+  color: var(--color-text);
+  background: var(--color-surface);
+}
+.estado-datos-suave {
+  color: var(--color-muted);
+}
+.estado-datos-punto {
+  background: var(--ed-ok);
+  box-shadow: 0 0 0 3px var(--ed-ok-halo);
+}
+.estado-datos-punto.is-actualizando {
+  background: var(--color-faint);
+  box-shadow: none;
+  animation: estado-datos-late 1.2s ease-in-out infinite;
+}
+.estado-datos-boton {
+  border-color: var(--color-border);
+  color: var(--color-muted);
+}
+.estado-datos-boton:hover:not(:disabled) {
+  color: var(--color-text);
+  background: var(--color-surface-2);
+}
+.estado-datos.is-atrasado .estado-datos-pildora {
+  background: var(--ed-atraso-fondo);
+  border-color: var(--ed-atraso-borde);
+  color: var(--ed-atraso);
+}
+.estado-datos.is-atrasado .estado-datos-punto {
+  background: var(--ed-atraso);
+  box-shadow: 0 0 0 3px var(--ed-atraso-borde);
+}
+.estado-datos.is-atrasado .estado-datos-boton {
+  border-color: var(--ed-atraso-borde);
+  color: var(--ed-atraso);
+}
+@keyframes estado-datos-late {
+  50% {
+    opacity: 0.35;
+  }
+}
+
+/* ============================================================
    LENGÜETA DE PORTALES (CIA / SAP)
    Asoma por dentro del borde derecho del sidebar: mitad roja CIA arriba y mitad azul SAP abajo.
    Al pasar el mouse toma sombra. El desplegable usa el panel del ecosistema del Portal CIA.
@@ -735,7 +798,8 @@ textarea.dens-control {
 }
 @media (prefers-reduced-motion: reduce) {
   .lengueta-portales,
-  .panel-portales {
+  .panel-portales,
+  .estado-datos-punto {
     animation: none;
     transition: none;
   }

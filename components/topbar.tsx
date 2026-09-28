@@ -6,6 +6,7 @@ import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { BotonPantallaCompleta } from "@/components/pantalla-completa";
+import { EstadoDatos } from "@/components/estado-datos";
 import { BotonAgregarVista } from "@/components/presentaciones/agregar-vista";
 import { UserMenu } from "@/components/user-menu";
 import { useUsuarioActual } from "@/components/user-context";
@@ -95,6 +96,7 @@ export function TopBar() {
       <div className="flex-1" />
 
       <div className="hidden md:flex items-center gap-2">
+        <EstadoDatos />
         <BotonAgregarVista />
         <BotonPantallaCompleta />
       </div>
