@@ -257,21 +257,25 @@ interface ItemConSubpanelesProps {
   onCerrarLuego: () => void;
 }
 
-// Ítem con subpaneles: se abre al pasar el mouse o al presionarlo (táctil y teclado); se
-// cierra al salir, con Esc o con un clic fuera. Muestra un menú flotante al costado del
-// sidebar, agrupado por `grupo`.
+// Ítem con subpaneles: el clic lleva a la primera subopción. El menú flotante (al costado
+// del sidebar, agrupado por `grupo`) se abre al pasar el mouse o con foco de teclado y se
+// cierra al salir, con Esc o con un clic fuera.
 function ItemConSubpaneles({ item, pathname, collapsed, abierto, onAbrir, onCerrarLuego }: ItemConSubpanelesProps) {
   const active = isNavActive(pathname, item.href);
   const actual = hijoActivo(item, pathname);
   const IconCmp = item.icon;
   const idMenu = `subpaneles-${item.href.replace(/\W+/g, "-")}`;
+  const primera = item.children?.[0]?.href ?? item.href;
 
   return (
     <div className="relative" onMouseEnter={onAbrir} onMouseLeave={onCerrarLuego}>
-      <button
-        type="button"
-        onClick={onAbrir}
+      {/* Clic: va a la primera subopción. Mouse encima o foco de teclado: abre el menú flotante
+          (con Tab se entra a sus opciones, que vienen justo después en el orden de foco). */}
+      <Link
+        href={primera}
+        onFocus={onAbrir}
         title={collapsed ? item.label : undefined}
+        aria-haspopup="true"
         aria-expanded={abierto}
         aria-controls={idMenu}
         className={cn(claseItem(active, collapsed), abierto && !active && "bg-bg text-text")}
@@ -283,7 +287,7 @@ function ItemConSubpaneles({ item, pathname, collapsed, abierto, onAbrir, onCerr
             <ChevronRight className="w-3.5 h-3.5 ml-auto shrink-0 text-faint" />
           </>
         )}
-      </button>
+      </Link>
 
       {abierto && (
         // pl-3 transparente: puente para que el mouse cruce sin cerrar el menú.
