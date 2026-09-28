@@ -8,8 +8,6 @@ import { cn } from "@/lib/cn";
 import {
   NAV_CONFIG,
   NAV_ITEMS,
-  PORTAL_CIA_URL,
-  SAP_WORKZONE_URL,
   gruposDe,
   hijoActivo,
   isNavActive,
@@ -19,6 +17,7 @@ import { esAdmin } from "@/lib/roles";
 import { useUsuarioActual } from "@/components/user-context";
 import { CiaLogo } from "@/components/cia-logo";
 import { UserCard } from "@/components/user-menu";
+import { BurbujaPortales } from "@/components/burbuja-portales";
 
 const COLLAPSE_KEY = "sidebar-collapsed";
 
@@ -143,29 +142,8 @@ export function Sidebar() {
         )}
       </nav>
 
-      {/* Pie: portales, configuración (solo admin) y usuario; el tema vive en el menú del usuario */}
+      {/* Pie: configuración (solo admin) y usuario; el tema vive en el menú del usuario */}
       <div className={cn("border-t border-border flex flex-col gap-2 py-3", collapsed ? "px-2 items-center" : "px-3")}>
-        {/* Portales del grupo, arriba de Configuración; una línea los separa del resto del pie */}
-        {(SAP_WORKZONE_URL || PORTAL_CIA_URL) && (
-          <div
-            className={cn(
-              "flex border-b border-border pb-2",
-              collapsed ? "flex-col items-center gap-1.5 w-full" : "justify-center gap-3",
-            )}
-          >
-            {SAP_WORKZONE_URL && (
-              <AccesoDirecto href={SAP_WORKZONE_URL} label="WZ" nombre="SAP Workzone" collapsed={collapsed}>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src="/sap-logo.svg" alt="" className="h-5 w-auto shrink-0" />
-              </AccesoDirecto>
-            )}
-            {PORTAL_CIA_URL && (
-              <AccesoDirecto href={PORTAL_CIA_URL} label="CIA" nombre="Portal CIA" collapsed={collapsed}>
-                <CiaLogo className="w-5 h-5 shrink-0 text-flesan-red dark:text-white" />
-              </AccesoDirecto>
-            )}
-          </div>
-        )}
         {admin && (
           <Link
             href={NAV_CONFIG.href}
@@ -181,54 +159,9 @@ export function Sidebar() {
           <UserCard name={user?.name} email={user?.email} image={user?.image} role={user?.role} colapsado={collapsed} />
         </div>
       </div>
+      {/* Portales del grupo: burbuja pegada al borde, que se mueve y se oculta */}
+      <BurbujaPortales />
     </aside>
-  );
-}
-
-// Acceso directo a un portal externo: solo el ícono, en el pie del sidebar; el
-// nombre completo aparece en un globo al pasar el mouse o con foco de teclado. Abre en otra
-// pestaña. `label` es la sigla: solo se usa para el id del globo.
-function AccesoDirecto({
-  href,
-  label,
-  nombre,
-  collapsed,
-  children,
-}: {
-  href: string;
-  label: string;
-  nombre: string;
-  collapsed: boolean;
-  children: React.ReactNode;
-}) {
-  const idGlobo = `portal-${label.toLowerCase()}`;
-  return (
-    <span className="group relative flex">
-      <a
-        href={href}
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label={`Abrir ${nombre} en otra pestaña`}
-        aria-describedby={idGlobo}
-        className={cn(
-          "flex items-center justify-center rounded-flesan-sm hover:bg-bg transition-colors",
-          collapsed ? "w-8 h-8" : "w-10 h-9",
-        )}
-      >
-        {children}
-      </a>
-      <span
-        id={idGlobo}
-        role="tooltip"
-        className={cn(
-          "pointer-events-none absolute z-50 whitespace-nowrap rounded-flesan-sm bg-text text-bg px-2 py-1 text-xs opacity-0 transition-opacity group-hover:opacity-100 group-focus-within:opacity-100",
-          // El globo va a la derecha del ícono: abajo se sale de la pantalla y arriba tapa el rol.
-          "left-full top-1/2 -translate-y-1/2 ml-2",
-        )}
-      >
-        {nombre}
-      </span>
-    </span>
   );
 }
 
