@@ -661,6 +661,14 @@ textarea.dens-control {
 [data-diapositiva-marco] [data-no-diapositiva] {
   display: none !important;
 }
+/* Sin animaciones de entrada: la captura (html-to-image) clona la vista y la animación vuelve
+   a partir desde opacity 0, así que el contenido saldría en blanco. */
+[data-diapositiva-marco] *,
+[data-diapositiva-marco] *::before,
+[data-diapositiva-marco] *::after {
+  animation: none !important;
+  transition: none !important;
+}
 [data-modo-bloque]
   [data-diapositiva-contenido]
   *:not([data-camino-bloque]):not([data-bloque-objetivo]):not([data-bloque-objetivo] *) {

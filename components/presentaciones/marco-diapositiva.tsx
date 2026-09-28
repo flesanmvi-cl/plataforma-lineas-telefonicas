@@ -7,6 +7,8 @@ export const ALTO_DIAPOSITIVA = 900;
 const PADDING_X = 64;
 const ALTO_ENCABEZADO = 150;
 const ALTO_PIE = 56;
+/** Tope de espera a que la vista deje la pantalla de carga (el capturador espera 20 s en total). */
+const ESPERA_CARGA_MS = 15000;
 
 export interface ParametrosDiapositiva {
   titulo: string;
@@ -90,8 +92,14 @@ export function MarcoDiapositiva({ p, children }: { p: ParametrosDiapositiva; ch
     };
     const observador = new ResizeObserver(ajustar);
     observador.observe(caja);
-    // Listo: letras cargadas, gráficos iniciados y la escala ajustada.
+    // Listo: la vista ya reemplazó a la pantalla de carga (loading.tsx, aria-busy), letras
+    // cargadas, gráficos iniciados y la escala ajustada. Sin esperar la pantalla de carga, una
+    // vista que tarda en leer sus datos se capturaba en blanco.
     const marcarLista = async () => {
+      const inicio = Date.now();
+      while (vivo && caja.querySelector('[aria-busy="true"]') && Date.now() - inicio < ESPERA_CARGA_MS) {
+        await new Promise((r) => setTimeout(r, 200));
+      }
       await document.fonts?.ready;
       await new Promise((r) => setTimeout(r, 1800));
       ajustar();

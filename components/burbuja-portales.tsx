@@ -25,7 +25,9 @@ interface Estado {
  * navegador.
  */
 export function BurbujaPortales() {
-  const [estado, setEstado] = useState<Estado>({ y: 180, oculta: false });
+  // Parte abajo (acotar la deja justo sobre el pie del sidebar): con los 180px de antes tapaba
+  // el cuarto ítem del menú en plataformas con más secciones.
+  const [estado, setEstado] = useState<Estado>({ y: Number.MAX_SAFE_INTEGER, oculta: false });
   const [abierta, setAbierta] = useState(false);
   const [arrastrando, setArrastrando] = useState(false);
   const raiz = useRef<HTMLDivElement>(null);

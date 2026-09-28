@@ -69,9 +69,11 @@ function InfoPopover({ label, children }: { label: string; children: ReactNode }
         className={cn(
           "absolute left-0 top-full mt-2 z-30 w-[22rem] max-w-[calc(100vw-2rem)] card p-4 shadow-lg",
           "font-body text-sm text-muted leading-relaxed",
-          "invisible opacity-0 transition-opacity duration-150",
-          "group-hover:visible group-hover:opacity-100 group-has-[:focus-visible]:visible group-has-[:focus-visible]:opacity-100",
-          abierto && "visible opacity-100",
+          // hidden (no invisible): invisible igual ocupa espacio y, en móvil, el globo de 22rem
+          // desbordaba la página hacia la derecha (scroll horizontal).
+          "hidden animate-fade-in",
+          "group-hover:block group-has-[:focus-visible]:block",
+          abierto && "block",
         )}
       >
         {children}
