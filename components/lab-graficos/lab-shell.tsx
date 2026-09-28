@@ -90,7 +90,7 @@ function LabMarco({ children }: { children: ReactNode }) {
           <PanelTema seccion={seccion} />
         </div>
         <div className="min-w-0">{children}</div>
-        <aside className="hidden xl:block sticky top-32 max-h-[calc(100vh-9rem)] overflow-y-auto">
+        <aside className="hidden xl:block sticky top-20 max-h-[calc(100vh-9rem)] overflow-y-auto">
           <PanelTema seccion={seccion} />
         </aside>
       </div>

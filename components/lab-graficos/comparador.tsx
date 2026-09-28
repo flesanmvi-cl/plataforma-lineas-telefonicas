@@ -229,7 +229,7 @@ export function Comparador({ seccion }: { seccion: Seccion }) {
     <div className="grid grid-cols-1 lg:grid-cols-[15rem_minmax(0,1fr)] gap-6 items-start">
       <nav
         aria-label="Muestras"
-        className="lab-card p-3 flex flex-col gap-1 lg:sticky lg:top-32 lg:max-h-[calc(100vh-9rem)] overflow-y-auto"
+        className="lab-card p-3 flex flex-col gap-1 lg:sticky lg:top-20 lg:max-h-[calc(100vh-9rem)] overflow-y-auto"
       >
         <label className="flex items-center gap-2 h-8 px-2.5 mb-1 border border-border-strong rounded-flesan-sm text-faint">
           <Search className="w-3.5 h-3.5 shrink-0" />

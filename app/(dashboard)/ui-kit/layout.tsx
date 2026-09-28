@@ -22,7 +22,10 @@ export default function UiKitLayout({ children }: { children: React.ReactNode })
           }
         />
       </div>
-      <div className="sticky top-14 z-20 bg-bg/95 backdrop-blur supports-[backdrop-filter]:bg-bg/85 mt-4">
+      {/* Pestañas fijas al bajar. El scroll ocurre dentro de <main> (la barra superior queda
+          fuera), así que se pegan al borde superior (top-0) y con fondo sólido para que el
+          contenido no se vea pasar por detrás. */}
+      <div className="sticky top-0 z-20 bg-bg pt-4">
         <div className="page-shell">
           <SectionTabs tabs={TABS} />
         </div>
