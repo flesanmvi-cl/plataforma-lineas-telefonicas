@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronRight, ChevronsLeft, ChevronsRight } from "lucide-react";
 import { cn } from "@/lib/cn";
 import {
   NAV_CONFIG,
@@ -95,11 +95,12 @@ export function Sidebar() {
         collapsed ? "w-16" : "w-60",
       )}
     >
-      {/* Encabezado: logo + nombre + colapsar (su borde calza con el de la barra superior) */}
+      {/* Encabezado: logo + nombre (su borde calza con el de la barra superior) */}
       <div
+        data-sidebar-encabezado
         className={cn(
           "flex items-center h-14 border-b border-border",
-          collapsed ? "justify-center px-2 gap-1.5" : "gap-3 px-5",
+          collapsed ? "justify-center px-2" : "gap-3 px-5",
         )}
       >
         <CiaLogo className="w-5 h-5 shrink-0 text-flesan-red dark:text-white" />
@@ -109,18 +110,6 @@ export function Sidebar() {
             Nombre <span className="text-flesan-red">Plataforma</span>
           </span>
         )}
-        <button
-          type="button"
-          onClick={toggleCollapsed}
-          title={collapsed ? "Expandir menú" : "Colapsar menú"}
-          className="flex items-center justify-center w-6 h-6 shrink-0 border border-border-strong text-muted hover:text-text hover:border-text cursor-pointer"
-        >
-          {collapsed ? (
-            <ChevronRight className="w-[0.8125rem] h-[0.8125rem]" />
-          ) : (
-            <ChevronLeft className="w-[0.8125rem] h-[0.8125rem]" />
-          )}
-        </button>
       </div>
 
       {/* Navegación: enlace directo, o menú flotante si el ítem tiene subpaneles */}
@@ -142,24 +131,39 @@ export function Sidebar() {
         )}
       </nav>
 
-      {/* Pie: configuración (solo admin) y usuario; el tema vive en el menú del usuario */}
-      <div className={cn("border-t border-border flex flex-col gap-2 py-3", collapsed ? "px-2 items-center" : "px-3")}>
-        {admin && (
-          <Link
-            href={NAV_CONFIG.href}
-            title={collapsed ? NAV_CONFIG.label : undefined}
-            aria-current={configActiva ? "page" : undefined}
-            className={claseItem(configActiva, collapsed)}
+      {/* Pie: configuración (solo admin), colapsar y usuario; el tema vive en el menú del usuario */}
+      <div data-sidebar-pie className={cn("border-t border-border flex flex-col gap-2 py-3", collapsed ? "px-2 items-center" : "px-3")}>
+        {/* Configuración (solo admin) y, a su lado, el botón para colapsar el menú */}
+        <div className={cn("flex items-center gap-2", collapsed ? "flex-col" : "w-full")}>
+          {admin && (
+            <Link
+              href={NAV_CONFIG.href}
+              title={collapsed ? NAV_CONFIG.label : undefined}
+              aria-current={configActiva ? "page" : undefined}
+              className={cn(claseItem(configActiva, collapsed), !collapsed && "flex-1 min-w-0")}
+            >
+              <ConfigIcon className={cn("w-4 h-4 shrink-0", configActiva && "text-flesan-red")} />
+              {!collapsed && NAV_CONFIG.label}
+            </Link>
+          )}
+          <button
+            type="button"
+            onClick={toggleCollapsed}
+            title={collapsed ? "Expandir menú" : "Colapsar menú"}
+            aria-label={collapsed ? "Expandir menú" : "Colapsar menú"}
+            className={cn(
+              "flex items-center justify-center w-8 h-8 shrink-0 rounded-md border border-border text-muted hover:text-text hover:bg-surface-2 transition-colors cursor-pointer",
+              !collapsed && !admin && "ml-auto",
+            )}
           >
-            <ConfigIcon className={cn("w-4 h-4 shrink-0", configActiva && "text-flesan-red")} />
-            {!collapsed && NAV_CONFIG.label}
-          </Link>
-        )}
+            {collapsed ? <ChevronsRight className="w-4 h-4" /> : <ChevronsLeft className="w-4 h-4" />}
+          </button>
+        </div>
         <div className="w-full">
           <UserCard name={user?.name} email={user?.email} image={user?.image} role={user?.role} colapsado={collapsed} />
         </div>
       </div>
-      {/* Portales del grupo: burbuja pegada al borde, que se mueve y se oculta */}
+      {/* Portales del grupo: burbuja centrada, que se mueve y se oculta */}
       <BurbujaPortales />
     </aside>
   );

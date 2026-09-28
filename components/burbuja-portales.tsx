@@ -7,10 +7,9 @@ import { CiaLogo } from "@/components/cia-logo";
 import { PORTAL_CIA_URL, SAP_WORKZONE_URL } from "@/lib/nav";
 
 const CLAVE = "cia-burbuja-portales";
-// Píldora dentro del sidebar: cabe también en el sidebar colapsado (w-16).
+// Píldora centrada en el sidebar: cabe también en el sidebar colapsado (w-16).
 const ANCHO = 56;
 const ALTO = 34;
-const MARGEN = 4;
 const UMBRAL_ARRASTRE = 4;
 
 interface Estado {
@@ -39,8 +38,17 @@ export function BurbujaPortales() {
   useEffect(() => {
     try {
       const guardado = JSON.parse(localStorage.getItem(CLAVE) ?? "null");
-      if (guardado) setEstado((e) => ({ ...e, ...guardado }));
+      if (guardado) setEstado((e) => ({ ...e, ...guardado, y: acotar(guardado.y ?? e.y) }));
     } catch {}
+    // Si cambia el alto de la ventana o el pie del sidebar (al colapsarlo crece), la burbuja no
+    // debe quedar encima de configuración ni del usuario.
+    const reacomodar = () => setEstado((e) => ({ ...e, y: acotar(e.y) }));
+    const observador = new ResizeObserver(reacomodar);
+    const pie = document.querySelector("[data-sidebar-pie]");
+    const lateral = pie?.parentElement;
+    if (pie) observador.observe(pie);
+    if (lateral) observador.observe(lateral);
+    return () => observador.disconnect();
   }, []);
 
   function guardar(siguiente: Estado) {
@@ -72,10 +80,14 @@ export function BurbujaPortales() {
     setDesfase(acotado - burbuja.top);
   }, [abierta, estado.y]);
 
-  // Límite vertical: dentro del sidebar (el padre posicionado).
+  // Límite vertical: entre el encabezado y el pie del sidebar (configuración y usuario), para que
+  // la burbuja nunca tape esos controles.
   function acotar(y: number) {
-    const alto = raiz.current?.offsetParent?.clientHeight ?? window.innerHeight;
-    return Math.max(8, Math.min(y, alto - ALTO - 8));
+    const encabezado = document.querySelector<HTMLElement>("[data-sidebar-encabezado]");
+    const pie = document.querySelector<HTMLElement>("[data-sidebar-pie]");
+    const min = (encabezado ? encabezado.offsetTop + encabezado.offsetHeight : 0) + 16;
+    const max = (pie ? pie.offsetTop : window.innerHeight) - ALTO - 16;
+    return Math.max(min, Math.min(y, max));
   }
 
   function alPresionar(e: EventoPuntero<HTMLButtonElement>) {
@@ -119,7 +131,8 @@ export function BurbujaPortales() {
   }
 
   return (
-    <div ref={raiz} className="absolute z-50" style={{ top: estado.y, right: MARGEN }}>
+    // Franja del ancho del sidebar: centra la píldora y deja que el desplegable abra justo afuera.
+    <div ref={raiz} className="absolute inset-x-0 z-50 flex justify-center pointer-events-none" style={{ top: estado.y }}>
       <button
         type="button"
         onPointerDown={alPresionar}
@@ -142,7 +155,7 @@ export function BurbujaPortales() {
         title="Portales · arrastra para mover"
         className={cn(
           // «Latido»: borde rojo→azul y halo que respira (estilos en globals.css).
-          "burbuja-portales relative grid grid-cols-2 place-items-center rounded-full overflow-hidden touch-none select-none",
+          "burbuja-portales pointer-events-auto relative grid grid-cols-2 place-items-center rounded-full overflow-hidden touch-none select-none",
           arrastrando ? "cursor-grabbing" : "cursor-pointer",
         )}
         style={{ width: ANCHO, height: ALTO }}
@@ -155,7 +168,7 @@ export function BurbujaPortales() {
           ref={panel}
           role="menu"
           aria-label="Abrir portales"
-          className="panel-portales absolute left-full ml-3 w-80 rounded-2xl overflow-hidden text-white"
+          className="panel-portales pointer-events-auto absolute left-full ml-3 w-80 rounded-2xl overflow-hidden text-white"
           style={{ top: desfase }}
         >
           <div className="flex items-center px-4 pt-3.5 pb-2">
