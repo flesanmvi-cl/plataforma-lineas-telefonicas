@@ -107,7 +107,13 @@ export function Sidebar() {
         <CiaLogo className="w-6 h-6 shrink-0 text-flesan-red dark:text-white" />
         {!collapsed && (
           // El nombre sale de lib/nav.ts (NOMBRE_PLATAFORMA): texto normal + palabra en rojo.
-          <span className="font-display text-[1.1875rem] font-bold italic uppercase tracking-[0.04em] text-text leading-none whitespace-nowrap flex-1 min-w-0 truncate">
+          // Nombres largos bajan un punto para caber en el ancho del sidebar sin cortarse.
+          <span
+            className={cn(
+              "font-display font-bold italic uppercase tracking-[0.04em] text-text leading-none whitespace-nowrap flex-1 min-w-0 truncate",
+              `${NOMBRE_PLATAFORMA.texto} ${NOMBRE_PLATAFORMA.destacado}`.length > 18 ? "text-[0.9375rem]" : "text-[1.1875rem]",
+            )}
+          >
             {NOMBRE_PLATAFORMA.texto} <span className="text-flesan-red">{NOMBRE_PLATAFORMA.destacado}</span>
           </span>
         )}
