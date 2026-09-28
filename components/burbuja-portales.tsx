@@ -7,7 +7,10 @@ import { CiaLogo } from "@/components/cia-logo";
 import { PORTAL_CIA_URL, SAP_WORKZONE_URL } from "@/lib/nav";
 
 const CLAVE = "cia-burbuja-portales";
-const TAMANO = 44;
+// Píldora dentro del sidebar: cabe también en el sidebar colapsado (w-16).
+const ANCHO = 56;
+const ALTO = 34;
+const MARGEN = 4;
 const UMBRAL_ARRASTRE = 4;
 
 interface Estado {
@@ -64,7 +67,7 @@ export function BurbujaPortales() {
     if (!abierta || !raiz.current || !panel.current) return;
     const burbuja = raiz.current.getBoundingClientRect();
     const alto = panel.current.offsetHeight;
-    const centrado = burbuja.top + TAMANO / 2 - alto / 2;
+    const centrado = burbuja.top + ALTO / 2 - alto / 2;
     const acotado = Math.max(8, Math.min(centrado, window.innerHeight - alto - 8));
     setDesfase(acotado - burbuja.top);
   }, [abierta, estado.y]);
@@ -72,7 +75,7 @@ export function BurbujaPortales() {
   // Límite vertical: dentro del sidebar (el padre posicionado).
   function acotar(y: number) {
     const alto = raiz.current?.offsetParent?.clientHeight ?? window.innerHeight;
-    return Math.max(8, Math.min(y, alto - TAMANO - 8));
+    return Math.max(8, Math.min(y, alto - ALTO - 8));
   }
 
   function alPresionar(e: EventoPuntero<HTMLButtonElement>) {
@@ -109,14 +112,14 @@ export function BurbujaPortales() {
         onClick={() => guardar({ ...estado, oculta: false })}
         title="Mostrar portales"
         aria-label="Mostrar la burbuja de portales"
-        className="absolute -right-1.5 z-50 w-1.5 h-11 rounded-r-full cursor-pointer opacity-80 hover:opacity-100 transition-opacity"
+        className="absolute right-0 z-50 w-1.5 h-9 rounded-l-full cursor-pointer opacity-80 hover:opacity-100 transition-opacity"
         style={{ top: estado.y, background: "linear-gradient(180deg, var(--color-flesan-red), #00aeef)" }}
       />
     );
   }
 
   return (
-    <div ref={raiz} className="absolute z-50" style={{ top: estado.y, right: -TAMANO / 2 }}>
+    <div ref={raiz} className="absolute z-50" style={{ top: estado.y, right: MARGEN }}>
       <button
         type="button"
         onPointerDown={alPresionar}
@@ -139,10 +142,10 @@ export function BurbujaPortales() {
         title="Portales · arrastra para mover"
         className={cn(
           // «Latido»: borde rojo→azul y halo que respira (estilos en globals.css).
-          "burbuja-portales flex items-center justify-center gap-px rounded-full touch-none select-none",
+          "burbuja-portales flex items-center justify-center gap-0.5 rounded-full touch-none select-none",
           arrastrando ? "cursor-grabbing" : "cursor-pointer",
         )}
-        style={{ width: TAMANO, height: TAMANO }}
+        style={{ width: ANCHO, height: ALTO }}
       >
         <Monograma />
       </button>
@@ -210,10 +213,20 @@ export function BurbujaPortales() {
 function Monograma() {
   return (
     <>
-      <CiaLogo className="w-3.5 h-3.5 text-flesan-red" />
+      <CiaLogo className="w-4 h-4 text-flesan-red shrink-0" />
       <span className="font-display text-[0.9375rem] font-extrabold italic leading-none text-white/85 -translate-y-px">/</span>
-      <svg width="16" height="8" viewBox="0 0 400 198" aria-hidden>
-        <path d="M0 198V0h400L202 198z" fill="#00aeef" />
+      {/* Logo SAP: trapecio azul con la sigla en blanco, legible a este tamaño */}
+      <svg width="26" height="13" viewBox="0 0 400 198" aria-hidden className="shrink-0">
+        <defs>
+          <linearGradient id="sap-burbuja" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stopColor="#00aeef" />
+            <stop offset="1" stopColor="#0066b3" />
+          </linearGradient>
+        </defs>
+        <path d="M0 198V0h400L202 198z" fill="url(#sap-burbuja)" />
+        <text x="32" y="142" fill="#fff" fontFamily="Arial, Helvetica, sans-serif" fontWeight="700" fontSize="128" letterSpacing="-4">
+          SAP
+        </text>
       </svg>
     </>
   );
