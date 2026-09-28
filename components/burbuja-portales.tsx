@@ -230,7 +230,7 @@ function Monograma() {
       {/* Logo SAP en blanco sobre su mitad azul */}
       <svg width="22" height="11" viewBox="0 0 400 198" aria-hidden className="absolute right-[6px] bottom-[11px]">
         <path d="M0 198V0h400L202 198z" fill="#fff" />
-        <text x="32" y="142" fill="#0a6ed1" fontFamily="Arial, Helvetica, sans-serif" fontWeight="700" fontSize="128" letterSpacing="-4">
+        <text x="32" y="142" fill="#0b5299" fontFamily="Arial, Helvetica, sans-serif" fontWeight="700" fontSize="128" letterSpacing="-4">
           SAP
         </text>
       </svg>

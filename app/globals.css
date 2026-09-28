@@ -682,7 +682,7 @@ textarea.dens-control {
    ============================================================ */
 .burbuja-portales {
   /* Mitad CIA (rojo) y mitad SAP (azul), cortadas en diagonal por la barra del monograma */
-  background: linear-gradient(130deg, var(--color-flesan-red) 50%, #0a6ed1 50%);
+  background: linear-gradient(130deg, var(--color-flesan-red-dark) 50%, #0b5299 50%);
   border: 1.5px solid rgba(255, 255, 255, 0.35);
   animation: latido-portales 3s ease-in-out infinite;
 }
@@ -692,10 +692,10 @@ textarea.dens-control {
 @keyframes latido-portales {
   0%,
   100% {
-    box-shadow: 0 0 0 0 rgba(227, 6, 19, 0.45), 0 8px 20px -8px rgba(0, 0, 0, 0.6);
+    box-shadow: 0 0 0 0 rgba(179, 0, 0, 0.4), 0 8px 20px -8px rgba(0, 0, 0, 0.6);
   }
   50% {
-    box-shadow: 0 0 0 8px rgba(0, 174, 239, 0), 0 0 22px 2px rgba(0, 174, 239, 0.45);
+    box-shadow: 0 0 0 8px rgba(11, 82, 153, 0), 0 0 20px 2px rgba(11, 82, 153, 0.4);
   }
 }
 .panel-portales {
