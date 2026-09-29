@@ -35,7 +35,7 @@ Dependencias npm: `clsx`, `tailwind-merge`, `lucide-react`, `next-themes`.
 
 | Archivo | Qué define |
 |---|---|
-| `lib/nav.ts` | `NOMBRE_PLATAFORMA`, `NAV_ITEMS` (menú), `NAV_CONFIG` (Configuración, en el pie), `migasDe`. Reexporta `lib/nav-base.ts` |
+| `lib/nav.ts` | `NOMBRE_PLATAFORMA`, `NAV_ITEMS` (menú), `NAV_CONFIG` (Configuración, en el pie: con `adminOnly: true` solo la ven administradores; sin él, la ven todos y cada hijo puede ser `adminOnly`), `migasDe`. Reexporta `lib/nav-base.ts` |
 | `components/modulos.tsx` | Módulos opcionales enchufados al shell (ej. Presentaciones). Sin módulos: versión mínima abajo |
 | `lib/estado-datos.ts` | `obtenerEstadoDatos()` (fuente real de la fecha) y `CADA_HORAS`. Sin datos que refrescar: devolver `null` |
 | `app/globals.css` | `@import "tailwindcss"; @import "./shell.css";` y luego lo propio de la plataforma |
@@ -74,7 +74,8 @@ export function SuperposicionesModulos() {
 ## Módulos opcionales
 
 - **Presentaciones** (armar PDF / PowerPoint con vistas): `components/presentaciones/*`,
-  `lib/presentaciones/*`, `app/(dashboard)/presentaciones/page.tsx`, el bloque «MODO DIAPOSITIVA»
+  `lib/presentaciones/*`, `app/(dashboard)/configuracion/presentaciones/page.tsx` (se activa y
+  administra en Configuración, abierta a todos), el bloque «MODO DIAPOSITIVA»
   de `app/globals.css`, el ítem en `NAV_ITEMS` y la versión de `components/modulos.tsx` de este
   repo. Dependencias: `html-to-image`, `jspdf`, `pptxgenjs` (y el reemplazo de `node:` en
   `next.config.ts`). En revisión; por ahora no se instala en las plataformas.

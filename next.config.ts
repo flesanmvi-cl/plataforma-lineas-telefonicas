@@ -22,6 +22,8 @@ const nextConfig: NextConfig = {
     return [
       ...["graficos", "kpis", "tablas", "botones", "formularios"].map((s) => ({ source: `/ui-kit/${s}`, destination: `${lab}/${s}`, permanent: false })),
       { source: "/ui-kit/laboratorio-graficos", destination: `${lab}/graficos`, permanent: false },
+      // Presentaciones pasó a Configuración (abierta a todos los usuarios).
+      { source: "/presentaciones", destination: "/configuracion/presentaciones", permanent: false },
       { source: "/ui-kit/laboratorio-graficos/comparador", destination: `${lab}/graficos/comparador`, permanent: false },
       { source: "/ui-kit/laboratorio-graficos/contexto", destination: `${lab}/contexto`, permanent: false },
     ];

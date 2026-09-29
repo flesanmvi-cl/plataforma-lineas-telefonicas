@@ -156,7 +156,7 @@ export function PanelPresentaciones() {
           </p>
           {activa && (
             <Link
-              href={`/presentaciones?id=${activa.id}`}
+              href={`/configuracion/presentaciones?id=${activa.id}`}
               onClick={() => setPanelAbierto(false)}
               className="flex items-center justify-center gap-1.5 font-label text-[0.6875rem] tracking-[0.06em] uppercase text-muted hover:text-flesan-red"
             >

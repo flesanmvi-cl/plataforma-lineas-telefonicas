@@ -13,7 +13,8 @@ import { borrarImagen, guardarImagen, leerImagen } from "@/lib/presentaciones/im
 import type { Diapositiva, Presentacion } from "@/lib/presentaciones/tipos";
 
 /** Editor de presentaciones (/presentaciones?id=…): miniaturas, vista previa y detalle. */
-export function EditorPresentaciones() {
+/** `encabezadoExtra`: bloque bajo el título (en Configuración, el interruptor de activar/desactivar). */
+export function EditorPresentaciones({ encabezadoExtra }: { encabezadoExtra?: React.ReactNode } = {}) {
   const { listo, presentaciones, activa, activar, crear, renombrar, eliminar, actualizar, quitar, mover } = usePresentaciones();
   const { descargar, generando, texto, error } = useDescarga();
   const [seleccion, setSeleccion] = useState(0);
@@ -37,6 +38,7 @@ export function EditorPresentaciones() {
     return (
       <div className="page-shell py-6 lg:py-8">
         <PageHeader title="Mis presentaciones" />
+        {encabezadoExtra && <div className="mb-4">{encabezadoExtra}</div>}
         <div className="card p-10 flex flex-col items-center gap-4 text-center">
           <Presentation className="w-8 h-8 text-faint" />
           <p className="text-sm text-muted max-w-md">
@@ -77,6 +79,7 @@ export function EditorPresentaciones() {
           </>
         }
       />
+      {encabezadoExtra}
       {(texto || error) && (
         <p className={cn("text-xs", error ? "text-status-down" : "text-muted")} aria-live="polite">
           {error ?? texto}

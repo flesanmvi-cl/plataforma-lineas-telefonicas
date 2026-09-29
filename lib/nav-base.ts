@@ -10,6 +10,8 @@ export interface NavChild {
   /** Encabezado del grupo dentro del menú flotante (ej. "Vistas", "Detalle"). Los hijos
    * consecutivos con el mismo grupo quedan juntos; sin grupo, van al inicio sin encabezado. */
   grupo?: string;
+  /** Solo para administradores (ej. «Usuarios y roles» dentro de Configuración). */
+  adminOnly?: boolean;
 }
 
 export interface NavItem {

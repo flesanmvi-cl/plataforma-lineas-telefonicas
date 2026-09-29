@@ -2,21 +2,32 @@
 
 import { usePresentaciones } from "@/components/presentaciones/contexto";
 
-// Fila «Presentaciones» del menú de usuario: activa o desactiva «Agregar a presentación».
+/**
+ * Tarjeta para activar o desactivar Presentaciones (vive en Configuración › Presentaciones).
+ * Desactivadas, desaparece «Agregar a presentación» de la barra superior; las presentaciones ya
+ * armadas se conservan.
+ */
 export function InterruptorPresentaciones() {
   const { habilitadas, setHabilitadas } = usePresentaciones();
   return (
-    <div className="flex items-center gap-3 px-4 py-2 border-b border-border">
-      <span id="etiqueta-presentaciones" className="font-label text-xs tracking-[0.08em] uppercase text-muted">
-        Presentaciones
-      </span>
+    <div className="card dens-card flex items-center gap-4">
+      <div className="flex flex-col gap-0.5 min-w-0">
+        <span id="etiqueta-presentaciones" className="text-sm font-semibold text-text">
+          Presentaciones {habilitadas ? "activadas" : "desactivadas"}
+        </span>
+        <span className="text-xs text-muted">
+          {habilitadas
+            ? "Se muestra «Agregar a presentación» en la barra superior de cada vista."
+            : "«Agregar a presentación» está oculto. Tus presentaciones se conservan."}
+        </span>
+      </div>
       <button
         type="button"
         role="switch"
         aria-checked={habilitadas}
         aria-labelledby="etiqueta-presentaciones"
         onClick={() => setHabilitadas(!habilitadas)}
-        className={`ml-auto relative w-10 h-6 rounded-full transition-colors cursor-pointer ${
+        className={`ml-auto shrink-0 relative w-10 h-6 rounded-full transition-colors cursor-pointer ${
           habilitadas ? "bg-flesan-red" : "bg-border-strong"
         }`}
       >

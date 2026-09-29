@@ -87,6 +87,8 @@ export function Sidebar() {
   }
 
   const configActiva = isNavActive(pathname, NAV_CONFIG.href);
+  // Configuración se muestra a todos salvo que la plataforma la marque solo para administradores.
+  const verConfig = !NAV_CONFIG.adminOnly || admin;
   const ConfigIcon = NAV_CONFIG.icon;
 
   return (
@@ -142,11 +144,11 @@ export function Sidebar() {
       {/* Portales del grupo (CIA / SAP), en el estilo que el usuario eligió en «Personalizar» */}
       <AccesoPortales />
 
-      {/* Pie: configuración (solo admin), colapsar y usuario; el tema vive en el menú del usuario */}
+      {/* Pie: configuración, colapsar y usuario (el tema vive en la barra superior) */}
       <div data-sidebar-pie className={cn("border-t border-border flex flex-col gap-2 py-3", collapsed ? "px-2 items-center" : "px-3")}>
-        {/* Configuración (solo admin) y, a su lado, el botón para colapsar el menú */}
+        {/* Configuración y, a su lado, el botón para colapsar el menú */}
         <div className={cn("flex items-center gap-2", collapsed ? "flex-col" : "w-full")}>
-          {admin && (
+          {verConfig && (
             <Link
               href={NAV_CONFIG.href}
               title={collapsed ? NAV_CONFIG.label : undefined}
@@ -164,7 +166,7 @@ export function Sidebar() {
             aria-label={collapsed ? "Expandir menú" : "Colapsar menú"}
             className={cn(
               "flex items-center justify-center w-8 h-8 shrink-0 rounded-md border border-border text-muted hover:text-text hover:bg-surface-2 transition-colors cursor-pointer",
-              !collapsed && !admin && "ml-auto",
+              !collapsed && !verConfig && "ml-auto",
             )}
           >
             {collapsed ? <ChevronsRight className="w-4 h-4" /> : <ChevronsLeft className="w-4 h-4" />}

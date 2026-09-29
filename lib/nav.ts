@@ -1,4 +1,4 @@
-import { FlaskConical, LayoutGrid, Palette, Presentation, Settings } from "lucide-react";
+import { FlaskConical, LayoutGrid, Palette, Settings } from "lucide-react";
 import { crearMigas, type NavItem } from "@/lib/nav-base";
 
 export * from "@/lib/nav-base";
@@ -43,18 +43,20 @@ export const NAV_ITEMS: NavItem[] = [
       { href: "/pruebas/formularios/tipo-3", label: "Formulario Tipo 3", grupo: "Formularios" },
     ],
   },
-  // Presentaciones armadas desde las vistas (se guardan en este navegador). Siempre al final.
-  { href: "/presentaciones", label: "Presentaciones", icon: Presentation },
 ];
 
-/** Configuración no va en el menú principal: vive en el pie del sidebar. Se declara aquí
- * para que la ruta de migas la reconozca igual que al resto. */
+/** Configuración no va en el menú principal: vive en el pie del sidebar. Está abierta a todos y
+ * cada sección se muestra según el rol: «Usuarios y roles» siempre es solo de administradores
+ * (gate en app/(dashboard)/configuracion/usuarios/layout.tsx). En una plataforma donde toda la
+ * configuración es de administración, se marca `adminOnly: true` el ítem completo. */
 export const NAV_CONFIG: NavItem = {
   href: "/configuracion",
   label: "Configuración",
   icon: Settings,
-  adminOnly: true,
-  children: [{ href: "/configuracion/usuarios", label: "Usuarios" }],
+  children: [
+    { href: "/configuracion/usuarios", label: "Usuarios y roles", adminOnly: true },
+    { href: "/configuracion/presentaciones", label: "Presentaciones" },
+  ],
 };
 
 /** Ruta de migas según la URL: Inicio › Sección › Subpanel. */

@@ -5,7 +5,6 @@ import { PresentacionesProvider } from "@/components/presentaciones/contexto";
 import { VistaActualProvider } from "@/components/presentaciones/vista-actual";
 import { PanelPresentaciones } from "@/components/presentaciones/panel";
 import { BotonAgregarVista } from "@/components/presentaciones/agregar-vista";
-import { InterruptorPresentaciones } from "@/components/presentaciones/interruptor";
 import {
   leerParametrosDiapositiva,
   MarcoDiapositiva,
@@ -40,9 +39,10 @@ export function BotonesBarraModulos() {
   return <BotonAgregarVista />;
 }
 
-/** Filas extra del menú de usuario (entre Tema y Personalizar). */
+/** Filas extra del menú de usuario (antes de Personalizar). Presentaciones se activa desde
+ * Configuración › Presentaciones, así que aquí no agrega nada. */
 export function OpcionesUsuarioModulos() {
-  return <InterruptorPresentaciones />;
+  return null;
 }
 
 /** Paneles flotantes de los módulos (fuera del flujo del layout). */
