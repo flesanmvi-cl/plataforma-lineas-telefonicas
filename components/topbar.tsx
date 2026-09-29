@@ -4,7 +4,7 @@ import { Fragment } from "react";
 import { usePathname } from "next/navigation";
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
-import { ThemeToggle } from "@/components/theme-toggle";
+import { BotonTema, ThemeToggle } from "@/components/theme-toggle";
 import { BotonPantallaCompleta } from "@/components/pantalla-completa";
 import { EstadoDatos } from "@/components/estado-datos";
 import { BotonesBarraModulos } from "@/components/modulos";
@@ -99,6 +99,7 @@ export function TopBar() {
         <EstadoDatos />
         <BotonesBarraModulos />
         <BotonPantallaCompleta />
+        <BotonTema />
       </div>
 
       <div className="flex md:hidden items-center gap-3">

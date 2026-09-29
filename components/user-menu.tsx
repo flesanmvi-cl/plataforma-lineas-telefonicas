@@ -4,7 +4,6 @@ import { useEffect, useRef, useState } from "react";
 import { ChevronRight, ChevronsUpDown, LogOut, SlidersHorizontal } from "lucide-react";
 import { cerrarSesion } from "@/lib/auth-actions";
 import { etiquetaRol, type Rol } from "@/lib/roles";
-import { ThemeToggle } from "@/components/theme-toggle";
 import { OpcionesUsuarioModulos } from "@/components/modulos";
 import { PanelPersonalizar } from "@/components/personalizar";
 
@@ -102,7 +101,7 @@ function Avatar({ name, email, image, className }: Pick<UserMenuProps, "name" | 
 
 /**
  * Tarjeta de usuario del pie del sidebar: foto, nombre y rol. Al presionarla abre hacia
- * arriba el menú con el correo, el tema claro/oscuro y Cerrar sesión. `colapsado` deja solo la foto.
+ * arriba el menú con el correo, Personalizar y Cerrar sesión. `colapsado` deja solo la foto.
  */
 export function UserCard({ name, email, image, role, colapsado = false }: UserMenuProps & { colapsado?: boolean }) {
   const [open, setOpenBase] = useState(false);
@@ -170,12 +169,6 @@ export function UserCard({ name, email, image, role, colapsado = false }: UserMe
           <div className="px-4 py-3 border-b border-border">
             <p className="text-sm font-medium text-text truncate">{name || email}</p>
             {email && <p className="text-xs text-muted truncate">{email}</p>}
-          </div>
-          <div className="flex items-center gap-3 px-4 py-2 border-b border-border">
-            <span className="font-label text-xs tracking-[0.08em] uppercase text-muted">Tema</span>
-            <span className="ml-auto">
-              <ThemeToggle />
-            </span>
           </div>
           <OpcionesUsuarioModulos />
           <button
