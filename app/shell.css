@@ -101,6 +101,23 @@ html {
   font-size: clamp(14px, calc(8.5px + 0.5vw), 16px);
 }
 
+/* Tamaño elegido en «Mi personalización» (components/preferencias.ts): corre la misma escala
+   fluida un punto abajo o arriba. */
+html[data-texto="chico"] {
+  font-size: clamp(13px, calc(7.5px + 0.5vw), 15px);
+}
+html[data-texto="grande"] {
+  font-size: clamp(15px, calc(9.5px + 0.5vw), 17.5px);
+}
+/* «Reducir animaciones» en Mi personalización: equivale a prefers-reduced-motion. */
+html[data-reducir-animaciones] *,
+html[data-reducir-animaciones] *::before,
+html[data-reducir-animaciones] *::after {
+  animation-duration: 0.001ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.001ms !important;
+}
+
 /* Densidad: compacta por defecto en toda la plataforma (reportes, tablas, filtros).
    Para una pantalla de formulario largo, poner data-densidad="comoda" en su contenedor.
    Consumen estos tokens: .btn-flesan, .field-input, .dens-card, .dens-gap, .dens-control,

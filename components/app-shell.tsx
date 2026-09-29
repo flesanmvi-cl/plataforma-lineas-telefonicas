@@ -3,6 +3,7 @@
 import { Sidebar } from "@/components/sidebar";
 import { TopBar } from "@/components/topbar";
 import { PantallaCompletaProvider, usePantallaCompleta } from "@/components/pantalla-completa";
+import { AplicarPreferencias } from "@/components/preferencias";
 import { ModulosProvider, SuperposicionesModulos, useVistaEspecialModulos } from "@/components/modulos";
 
 // SHELL · marco del dashboard: sidebar, barra superior y contenido (igual en todas las plataformas).
@@ -11,6 +12,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   return (
     <PantallaCompletaProvider>
       <ModulosProvider>
+        <AplicarPreferencias />
         <Marco>{children}</Marco>
       </ModulosProvider>
     </PantallaCompletaProvider>

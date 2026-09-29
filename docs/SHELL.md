@@ -21,7 +21,8 @@ Versión vigente: **shell-v1** (etiqueta git `shell-v1` en este repo).
 | `components/theme-toggle.tsx` | Claro / oscuro |
 | `components/pantalla-completa.tsx` | Pantalla completa para reportería |
 | `components/estado-datos.tsx` | Indicador de frescura de los datos |
-| `components/personalizar.tsx` | Panel «Personalizar» del menú de usuario |
+| `components/personalizar.tsx`, `components/preferencias.ts` | «Mi personalización» (tema, tamaño, densidad, animaciones, portales) y cómo se aplican las preferencias |
+| `app/(dashboard)/configuracion/personalizacion/page.tsx` | Ruta de Mi personalización (abierta a todos) |
 | `components/portales/*` | Acceso a Portal CIA / SAP Work Zone (lengüeta, media luna, cinta, burbuja) |
 | `components/breadcrumb-context.tsx` | Niveles de drilldown en la ruta de migas |
 | `components/cia-logo.tsx` | Símbolo CIA |
@@ -69,6 +70,9 @@ export function OpcionesUsuarioModulos() {
 export function SuperposicionesModulos() {
   return null;
 }
+export function PersonalizacionModulos() {
+  return null;
+}
 ```
 
 ## Módulos opcionales
@@ -90,3 +94,27 @@ export function SuperposicionesModulos() {
 5. `app/globals.css`: dejar solo lo propio después de `@import "./shell.css"`.
 6. `app/(dashboard)/layout.tsx`: usar `<AppShell>`; borrar el sidebar/topbar viejos si quedaron sin uso.
 7. `npx tsc --noEmit`, lint y revisar en Chrome (claro, oscuro, sidebar colapsado).
+
+## Configuración (modelo del mockup, opción A)
+
+`/configuracion` es una grilla en dos grupos: **Para ti** (todos los usuarios) y **Administración
+de la plataforma** (solo administradores; cada sección además tiene su gate en su layout, como
+`configuracion/usuarios/layout.tsx`). «Personalizar» del menú de usuario lleva a
+`/configuracion/personalizacion`. Una plataforma que hoy bloquea toda `/configuracion` a no
+administradores debe mover ese gate a sus secciones de administración antes de sumar Mi
+personalización.
+
+### Plan de tablas (esquema `cia_<plataforma>` en QA; no creadas aún)
+
+| Tabla | Sección | Columnas |
+|---|---|---|
+| `usuarios` (ya existe en varias) | Usuarios y roles | `correo` PK, `nombre`, `rol`, `actualizado_en` |
+| `preferencias_usuario` | Mi personalización | `correo` PK, `preferencias` jsonb, `actualizado_en` |
+| `fuentes_datos` | Fuentes de datos | `clave` PK, `nombre`, `origen`, `cada_horas`, `activa` |
+| `cargas_datos` | Fuentes de datos (historial; alimenta el indicador de la barra) | `id`, `fuente` FK, `iniciada_en`, `terminada_en`, `estado`, `filas`, `detalle`, `disparada_por` |
+| `registro_actividad` | Registro de actividad | `id`, `ocurrido_en`, `correo`, `accion`, `entidad`, `entidad_id`, `detalle` jsonb (índices por fecha y correo; retención a acordar) |
+| `avisos` | Avisos | `id`, `mensaje`, `nivel`, `desde`, `hasta`, `creado_por`, `creado_en` |
+| `notificaciones` | Notificaciones y correos | `evento` PK, `descripcion`, `activo`, `destinatarios` text[], `asunto`, `plantilla`, `actualizado_por`, `actualizado_en` |
+
+Orden: `preferencias_usuario` + `avisos` → `fuentes_datos` + `cargas_datos` → `registro_actividad`
+→ `notificaciones`. El DDL se revisa y aprueba antes de ejecutarlo en QA (es productiva en la práctica).

@@ -54,8 +54,9 @@ export const NAV_CONFIG: NavItem = {
   label: "Configuración",
   icon: Settings,
   children: [
-    { href: "/configuracion/usuarios", label: "Usuarios y roles", adminOnly: true },
+    { href: "/configuracion/personalizacion", label: "Mi personalización" },
     { href: "/configuracion/presentaciones", label: "Presentaciones" },
+    { href: "/configuracion/usuarios", label: "Usuarios y roles", adminOnly: true },
   ],
 };
 
