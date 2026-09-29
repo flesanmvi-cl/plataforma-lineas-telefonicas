@@ -1,11 +1,10 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { ChevronRight, ChevronsUpDown, LogOut, SlidersHorizontal } from "lucide-react";
+import { ChevronsUpDown, LogOut } from "lucide-react";
 import { cerrarSesion } from "@/lib/auth-actions";
 import { etiquetaRol, type Rol } from "@/lib/roles";
 import { OpcionesUsuarioModulos } from "@/components/modulos";
-import Link from "next/link";
 
 interface UserMenuProps {
   name?: string | null;
@@ -101,7 +100,7 @@ function Avatar({ name, email, image, className }: Pick<UserMenuProps, "name" | 
 
 /**
  * Tarjeta de usuario del pie del sidebar: foto, nombre y rol. Al presionarla abre hacia
- * arriba el menú con el correo, Personalizar y Cerrar sesión. `colapsado` deja solo la foto.
+ * arriba el menú con el correo y Cerrar sesión (la personalización vive en Configuración). `colapsado` deja solo la foto.
  */
 export function UserCard({ name, email, image, role, colapsado = false }: UserMenuProps & { colapsado?: boolean }) {
   const [open, setOpen] = useState(false);
@@ -161,16 +160,6 @@ export function UserCard({ name, email, image, role, colapsado = false }: UserMe
             {email && <p className="text-xs text-muted truncate">{email}</p>}
           </div>
           <OpcionesUsuarioModulos />
-          <Link
-            href="/configuracion/personalizacion"
-            role="menuitem"
-            onClick={() => setOpen(false)}
-            className="w-full flex items-center gap-3 px-4 py-2.5 border-b border-border font-label text-xs tracking-[0.08em] uppercase text-muted hover:text-text hover:bg-bg cursor-pointer"
-          >
-            <SlidersHorizontal className="w-[0.9375rem] h-[0.9375rem] shrink-0" />
-            Personalizar
-            <ChevronRight className="w-3.5 h-3.5 ml-auto" />
-          </Link>
           <form action={cerrarSesion}>
             <button
               type="submit"
