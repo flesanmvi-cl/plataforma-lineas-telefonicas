@@ -34,7 +34,6 @@ declare module "next-auth" {
 
 async function resolverRol(email: string): Promise<Rol> {
   if (CIA_ADMINS.includes(email)) return "admin";
-  if (!process.env.DATABASE_URL) return "member";
   const { rol } = await resolverRolPersistido(email);
   return rol;
 }

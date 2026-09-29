@@ -1,15 +1,20 @@
-import { pool } from "@/lib/db";
+import { poolPlataforma, tablaPlataforma } from "@/lib/configuracion-db";
 import type { Rol } from "@/lib/roles";
 
 /**
  * Runtime Node únicamente — nunca importar desde un client component ni desde
  * auth.config.ts (edge, ver middleware.ts). Esquema en db/001_usuarios_roles.sql.
  *
- * Reemplaza "<slug>" por el nombre de esta plataforma antes de usar este patrón en
- * serio (mismo slug que `data-plataforma` en app/layout.tsx). Solo tiene efecto si
- * DATABASE_URL está configurado — ver auth.ts y docs/ARQUITECTURA.md.
+ * Tabla `usuarios` del esquema propio (DATABASE_URL_PLATAFORMA + ESQUEMA_PLATAFORMA). Sin
+ * base propia, todos entran como "member" salvo CIA_ADMIN_EMAILS — ver auth.ts.
  */
-const TABLA_USUARIOS = "flesan_procesos.cia_<slug>_usuarios";
+// Roles en el esquema propio de la plataforma (QA), nunca en la base transaccional.
+const TABLA_USUARIOS = tablaPlataforma("usuarios");
+
+function base() {
+  if (!poolPlataforma || !TABLA_USUARIOS) throw new Error("La plataforma no tiene base propia configurada.");
+  return { pool: poolPlataforma, tabla: TABLA_USUARIOS };
+}
 
 export interface UsuarioAsignado {
   correo: string;
@@ -25,8 +30,9 @@ export interface UsuarioAsignado {
  * usa la plataforma.
  */
 export async function resolverRol(correo: string): Promise<{ rol: Rol; nombre: string | null }> {
+  if (!poolPlataforma || !TABLA_USUARIOS) return { rol: "member", nombre: null };
   try {
-    const { rows } = await pool.query<{ rol: string; nombre: string | null }>(
+    const { rows } = await poolPlataforma.query<{ rol: string; nombre: string | null }>(
       `SELECT rol, nombre FROM ${TABLA_USUARIOS} WHERE correo = $1`,
       [correo],
     );
@@ -39,8 +45,9 @@ export async function resolverRol(correo: string): Promise<{ rol: Rol; nombre: s
 }
 
 export async function listarUsuariosAsignados(): Promise<UsuarioAsignado[]> {
+  const { pool, tabla } = base();
   const { rows } = await pool.query<{ correo: string; nombre: string | null; rol: string }>(
-    `SELECT correo, nombre, rol FROM ${TABLA_USUARIOS} ORDER BY nombre NULLS LAST, correo`,
+    `SELECT correo, nombre, rol FROM ${tabla} ORDER BY nombre NULLS LAST, correo`,
   );
   return rows.map((r) => ({
     correo: r.correo,
@@ -51,8 +58,9 @@ export async function listarUsuariosAsignados(): Promise<UsuarioAsignado[]> {
 
 export async function asignarUsuario(params: { correo: string; nombre: string | null; rol: Rol }): Promise<void> {
   const correo = params.correo.trim().toLowerCase();
+  const { pool, tabla } = base();
   await pool.query(
-    `INSERT INTO ${TABLA_USUARIOS} (correo, nombre, rol, updated_at)
+    `INSERT INTO ${tabla} (correo, nombre, rol, updated_at)
      VALUES ($1, $2, $3, now())
      ON CONFLICT (correo) DO UPDATE SET nombre = EXCLUDED.nombre, rol = EXCLUDED.rol, updated_at = now()`,
     [correo, params.nombre, params.rol],
@@ -62,5 +70,6 @@ export async function asignarUsuario(params: { correo: string; nombre: string | 
 /** Quita al usuario de la tabla administrada: vuelve a caer en el default (member)
  * en vez de quedar "sin rol". */
 export async function revocarUsuario(correo: string): Promise<void> {
-  await pool.query(`DELETE FROM ${TABLA_USUARIOS} WHERE correo = $1`, [correo.trim().toLowerCase()]);
+  const { pool, tabla } = base();
+  await pool.query(`DELETE FROM ${tabla} WHERE correo = $1`, [correo.trim().toLowerCase()]);
 }

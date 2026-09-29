@@ -1,14 +1,14 @@
--- Roles persistidos en BBDD para /configuracion/usuarios — solo necesario si esta
--- plataforma requiere más granularidad que el bootstrap por env (CIA_ADMIN_EMAILS).
--- Aplicar a mano contra la BBDD de DATABASE_URL (no hay herramienta de migraciones en
--- este proyecto) — ver docs/ARQUITECTURA.md. Reemplaza "<slug>" por el nombre de esta
--- plataforma (mismo slug en lib/usuarios-db.ts y app/api/configuracion/usuarios/*).
+-- Roles persistidos para /configuracion/usuarios (opcional): solo si la plataforma administra
+-- roles desde la UI en vez de solo CIA_ADMIN_EMAILS. Se aplica a mano, una vez, en el esquema
+-- propio de la plataforma en QA (DATABASE_URL_PLATAFORMA + ESQUEMA_PLATAFORMA), nunca en la base
+-- transaccional, que es solo lectura. Reemplaza «cia_<slug>» por ese esquema. QA es productiva en
+-- la práctica: revisar y aprobar antes de ejecutar.
 --
--- Filas ausentes en cia_<slug>_usuarios = usuario no administrado desde este panel:
--- entra como "member" (ver lib/usuarios-db.ts). CIA_ADMIN_EMAILS sigue siendo el
--- bootstrap de administrador, fijo por env y nunca editable desde esta tabla.
+-- Filas ausentes = usuario no administrado desde el panel: entra como "member" (ver
+-- lib/usuarios-db.ts). CIA_ADMIN_EMAILS sigue siendo el bootstrap de administrador, fijo por env
+-- y nunca editable desde esta tabla.
 
-CREATE TABLE IF NOT EXISTS flesan_procesos.cia_<slug>_usuarios (
+CREATE TABLE IF NOT EXISTS cia_<slug>.usuarios (
   correo      VARCHAR(255) PRIMARY KEY,
   nombre      TEXT,
   rol         VARCHAR(20) NOT NULL DEFAULT 'member'

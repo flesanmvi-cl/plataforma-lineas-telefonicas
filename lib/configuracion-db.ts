@@ -22,6 +22,14 @@ const pool: Pool | null = configuracionDisponible
   : null;
 if (pool && process.env.NODE_ENV !== "production") globalThis._pgPoolConfiguracion = pool;
 
+/** Pool de la base propia (QA, lectura y escritura). null si la plataforma no la tiene. */
+export const poolPlataforma = pool;
+
+/** Nombre calificado de una tabla del esquema propio (ej. cia_plataforma_x.usuarios), o null. */
+export function tablaPlataforma(nombre: string): string | null {
+  return ESQUEMA && /^[a-z_]+$/.test(nombre) ? `${ESQUEMA}.${nombre}` : null;
+}
+
 /** Código de Postgres para «la tabla no existe» (SQL aún no aplicado en esta plataforma). */
 const TABLA_NO_EXISTE = "42P01";
 function esTablaInexistente(e: unknown) {

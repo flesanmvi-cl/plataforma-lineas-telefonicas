@@ -63,10 +63,12 @@ después a las plataformas; lo propio de esta plantilla va en `lib/nav.ts`, `com
 
 ## Base de datos de una plataforma nueva
 
-Reglas en README.md, «Base de datos de la plataforma»: todo lo propio en un esquema `cia_<slug>`
-de la base de QA (nunca en `flesan`, solo lectura), variables `DATABASE_URL_PLATAFORMA` y
-`ESQUEMA_PLATAFORMA`, tablas obligatorias del estándar en `db/002_configuracion.sql`, y todo SQL
-se muestra y aprueba antes de ejecutarlo en QA. El mockup no tiene esquema propio.
+Reglas completas en README.md, «Base de datos de la plataforma». Lo esencial: **la base
+transaccional (`DATABASE_URL`, `lib/db.ts`) se usa solo para leer** (maestro de colaboradores,
+centros de gestión, movimientos…); **todo lo que se escribe va en el esquema propio `cia_<slug>`**
+de la base de QA (`DATABASE_URL_PLATAFORMA` + `ESQUEMA_PLATAFORMA`, `lib/configuracion-db.ts`).
+Tablas del estándar en `db/002_configuracion.sql` (y `db/001_usuarios_roles.sql` si hay roles
+administrados); todo SQL se muestra y aprueba antes de ejecutarlo en QA. El mockup no tiene esquema.
 
 ## Escala y densidad (default de la plantilla)
 

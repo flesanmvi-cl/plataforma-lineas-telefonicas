@@ -64,7 +64,7 @@ app/
       usuarios/, avisos/        ← solo admin (gate en su layout.tsx)
   api/
     configuracion/
-      usuarios/route.ts, [correo]/route.ts  ← listar/asignar/revocar rol (requiere DATABASE_URL)
+      usuarios/route.ts, [correo]/route.ts  ← listar/asignar/revocar rol (tabla usuarios del esquema propio)
       preferencias/route.ts                 ← Mi personalización en la base
       avisos/route.ts, [id]/route.ts         ← administrar avisos (solo admin)
       colaboradores/route.ts                ← buscador de colaboradores para asignar rol
@@ -121,22 +121,31 @@ Dockerfile, docker-compose.yml, .dockerignore  ← build/despliegue en contenedo
 
 ## Base de datos de la plataforma
 
-Reglas para toda plataforma que nace de este mockup:
+Una plataforma trabaja con **dos conexiones**, y la regla central es simple: **la base
+transaccional se usa solo para leer; todo lo que se escribe va en el esquema propio de la
+plataforma.**
 
-1. **Todo lo propio va en un esquema propio `cia_<slug>`** (ej. `cia_plataforma_auditorias`) en
-   la base de QA de plataformas (`srvpd_bd`). Nada propio en la base transaccional `flesan`, que es
-   **solo lectura**.
-2. **Variables de entorno** (en el `.env`, nunca en git): `DATABASE_URL_PLATAFORMA` (conexión a
-   QA) y `ESQUEMA_PLATAFORMA=cia_<slug>` (si falta, se usa `DB_QA_SCHEMA`). En la VM las
-   credenciales salen de `connections.env` (`CONN_*`).
+| Conexión | Variable | Dónde | Uso |
+|---|---|---|---|
+| Transaccional | `DATABASE_URL` → `lib/db.ts` (`pool`) | Base `flesan` (esquemas `public`, `flesan_procesos`, `flesan_rrhh`…) | **Solo lectura**: maestro de colaboradores, centros de gestión, movimientos y otra información transaccional |
+| Propia | `DATABASE_URL_PLATAFORMA` + `ESQUEMA_PLATAFORMA` → `lib/configuracion-db.ts` (`poolPlataforma`) | Base de QA de plataformas (`srvpd_bd`), esquema `cia_<slug>` | **Lectura y escritura**: todo lo que la plataforma crea o edita |
+
+Reglas:
+
+1. **Nunca `INSERT`, `UPDATE`, `DELETE` ni DDL en la transaccional.** Si una plataforma necesita
+   guardar algo que se relaciona con datos transaccionales, lo guarda en su esquema con la clave
+   (ej. el código del centro de gestión) y lee el resto de la transaccional.
+2. **Esquema propio `cia_<slug>`** (ej. `cia_plataforma_auditorias`). `ESQUEMA_PLATAFORMA` lo
+   nombra; si falta, se usa `DB_QA_SCHEMA`. Credenciales en el `.env` (nunca en git); en la VM
+   salen de `connections.env` (`CONN_*`).
 3. **QA es productiva en la práctica**: todo SQL se revisa y se aprueba antes de ejecutarlo, y se
    ejecuta una sola vez por plataforma. Crear el esquema (`CREATE SCHEMA cia_<slug>`) también.
-4. **Tablas obligatorias del estándar** — `db/002_configuracion.sql` (reemplazar `cia_<slug>`):
+4. **Tablas del estándar** (reemplazar `cia_<slug>` por el esquema):
 
-   | Tabla | Para qué |
-   |---|---|
-   | `preferencias_usuario` | Mi personalización guardada en la base (sigue al usuario) |
-   | `avisos` | Franja de avisos y Configuración › Avisos |
+   | Archivo | Tablas | ¿Obligatoria? |
+   |---|---|---|
+   | `db/002_configuracion.sql` | `preferencias_usuario`, `avisos` | Sí: Mi personalización en la base y avisos |
+   | `db/001_usuarios_roles.sql` | `usuarios` | Solo si los roles se administran desde Configuración (ver abajo) |
 
    Las próximas del estándar (fuentes de datos, registro de actividad, notificaciones) se sumarán
    como `db/003_…`, `db/004_…` (plan en `docs/SHELL.md`).
@@ -151,44 +160,28 @@ El mockup mismo no tiene esquema: sirve de plantilla, y sus funciones de base qu
 
 ## Roles persistidos en la base (opcional)
 
-> **Ojo:** el ejemplo de roles de la plantilla todavía usa `DATABASE_URL` y la tabla
-> `flesan_procesos.cia_<slug>_usuarios`, de antes de la regla de esquema propio. En una plataforma
-> nueva crea esa tabla dentro de `cia_<slug>` (como `plataforma_auditorias`) y apunta
-> `lib/usuarios-db.ts` a ella.
-
-**No es obligatorio para arrancar una plataforma nueva.** Sin `DATABASE_URL`, todo funciona igual
-que siempre (rol por lista de correos en `CIA_ADMIN_EMAILS`, sin panel de usuarios). Actívalo solo
-si la plataforma va a guardar datos propios en Postgres, o si quieres administrar roles desde
+**No es obligatorio.** Sin tabla de roles, todo funciona igual: administradores por lista de
+correos en `CIA_ADMIN_EMAILS` y el resto como `member`. Actívalo si quieres administrar roles desde
 `/configuracion/usuarios` en vez de a mano en el `.env`.
 
-Pasos para activarlo:
-
-1. Define `DATABASE_URL` en el `.env` (no lo subas a git).
-2. Si quieres el panel `/configuracion/usuarios`: aplica `db/001_usuarios_roles.sql` a mano contra
-   esa base de datos (no hay herramienta de migraciones — copia y pega el SQL en tu cliente de
-   Postgres).
-3. Reemplaza el texto `<slug>` por el nombre de esta plataforma en **los tres lugares donde
-   aparece**: `lib/usuarios-db.ts`, `app/api/configuracion/usuarios/route.ts` y
-   `db/001_usuarios_roles.sql` — debe quedar el mismo nombre de tabla en los tres.
-4. Reinicia el servidor. Prueba entrando con un correo que no esté en `CIA_ADMIN_EMAILS`, asígnale
-   rol admin desde `/configuracion/usuarios`, y confirma que el cambio de rol se refleja sin volver
-   a loguearte.
+1. La plataforma ya tiene su esquema y las variables `DATABASE_URL_PLATAFORMA` +
+   `ESQUEMA_PLATAFORMA` (sección anterior).
+2. Aplica `db/001_usuarios_roles.sql` en ese esquema (con la misma revisión y aprobación). Crea
+   `cia_<slug>.usuarios`; `lib/usuarios-db.ts` la encuentra sola a partir de `ESQUEMA_PLATAFORMA`.
+3. Reinicia el servidor. Entra con un correo que no esté en `CIA_ADMIN_EMAILS`, asígnale rol admin
+   desde `/configuracion/usuarios` y confirma que el cambio se refleja sin volver a iniciar sesión.
 
 **Resguardos:**
 
-- **Nunca borres `CIA_ADMIN_EMAILS`.** Es tu llave maestra: sigue funcionando aunque la base de
-  datos esté caída o la tabla no exista todavía — es la forma de no quedar bloqueado.
-- **Las fallas son silenciosas por diseño**: si la tabla no existe, `DATABASE_URL` está mal, o
-  olvidaste reemplazar `<slug>`, nadie ve un error — todos los correos fuera de `CIA_ADMIN_EMAILS`
-  quedan como `member` (el rol de menor privilegio) sin aviso. Es la opción segura (nunca da acceso
-  de más por error), pero si un rol asignado "no aparece", revisa los logs del servidor en vez de
-  asumir que el problema es otro.
-- Si cambias el esquema de la tabla más adelante, agrega un archivo nuevo `db/002_algo.sql` — no
-  edites el `001` que ya aplicaste en producción.
-- El panel de usuarios busca colaboradores en el maestro corporativo de RR.HH.
-  (`maestro_colaborador.sql` + `lib/colaboradores-db.ts`) — requiere que `DATABASE_URL` apunte a
-  una base con acceso al esquema `flesan_rrhh`. Si esta plataforma no necesita ese buscador, borra
-  esos dos archivos y adapta `/configuracion/usuarios` para buscar de otra forma.
+- **Nunca borres `CIA_ADMIN_EMAILS`.** Es la llave maestra: sigue funcionando aunque la base esté
+  caída o la tabla no exista, y es la forma de no quedar bloqueado.
+- **Las fallas son silenciosas por diseño**: si la tabla no existe o la conexión falla, todos los
+  correos fuera de `CIA_ADMIN_EMAILS` quedan como `member` (el menor privilegio), sin aviso. Si un
+  rol asignado «no aparece», revisa los logs del servidor.
+- El buscador de colaboradores del panel lee el maestro corporativo de RR.HH. **desde la
+  transaccional** (`maestro_colaborador.sql` + `lib/colaboradores-db.ts`, con `DATABASE_URL`, solo
+  lectura): la plataforma lee a la persona ahí y guarda su rol en su propio esquema. Si esta
+  plataforma no necesita ese buscador, borra esos dos archivos y adapta `/configuracion/usuarios`.
 
 ## Variables de entorno
 
