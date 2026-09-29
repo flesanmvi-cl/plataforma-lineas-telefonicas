@@ -60,6 +60,9 @@ export const NAV_CONFIG: NavItem = {
     { href: "/configuracion/acerca", label: "Acerca de" },
     { href: "/configuracion/usuarios", label: "Usuarios y roles", adminOnly: true },
     { href: "/configuracion/avisos", label: "Avisos", adminOnly: true },
+    { href: "/configuracion/fuentes-datos", label: "Fuentes de datos", adminOnly: true },
+    { href: "/configuracion/actividad", label: "Registro de actividad", adminOnly: true },
+    { href: "/configuracion/notificaciones", label: "Notificaciones y correos", adminOnly: true },
   ],
 };
 

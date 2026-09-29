@@ -697,6 +697,25 @@ textarea.dens-control {
   color: #fca5a5;
 }
 
+/* Estado de una fuente en Configuración › Fuentes de datos (mismos colores que el indicador). */
+.fuente-al-dia {
+  border-color: var(--color-status-ok);
+  color: #15803d;
+}
+.fuente-atrasada {
+  border-color: #f3d6a8;
+  background: #fdf3e3;
+  color: #b45309;
+}
+.dark .fuente-al-dia {
+  color: #4ade80;
+}
+.dark .fuente-atrasada {
+  border-color: rgba(251, 191, 36, 0.35);
+  background: rgba(251, 191, 36, 0.1);
+  color: #fbbf24;
+}
+
 /* ============================================================
    ESTADO DE LOS DATOS (barra superior)
    Píldora con punto de frescura: verde «al día», ámbar «atrasado», gris latiendo mientras

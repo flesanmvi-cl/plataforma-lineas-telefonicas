@@ -115,7 +115,7 @@ export function PanelPersonalizacion() {
             aria-label="Página de inicio"
             value={pref.inicio ?? "/"}
             onChange={(e) => cambiar({ inicio: e.target.value === "/" ? null : e.target.value })}
-            className="field-input w-72 cursor-pointer"
+            className="field-input w-72! cursor-pointer"
           >
             {NAV_ITEMS.map((item) =>
               item.children?.length ? (

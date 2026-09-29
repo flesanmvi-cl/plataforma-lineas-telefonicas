@@ -20,7 +20,7 @@ import { cn } from "@/lib/cn";
 /**
  * Landing de /configuracion: tarjetas en dos grupos. «Para ti» lo ve cualquier usuario;
  * «Administración de la plataforma» solo los administradores (cada sección tiene además su propio
- * gate en su layout). Las que aún no existen quedan como «Próximamente» (ver el plan de tablas en
+ * gate en el layout del grupo de rutas «(admin)»). Las que aún no existen quedan como «Próximamente» (ver el plan de tablas en
  * docs/SHELL.md). Al agregar una sección: una entrada aquí y en NAV_CONFIG de lib/nav.ts.
  */
 interface Seccion {
@@ -55,10 +55,10 @@ const ADMINISTRACION: Seccion[] = [
     description: "Quién es administrador o miembro. Asigna o revoca roles.",
     icon: Users,
   },
-  { title: "Fuentes de datos", description: "Última carga de cada fuente, si falló y cada cuánto se espera.", icon: Database },
-  { title: "Registro de actividad", description: "Quién hizo qué y cuándo: roles, cargas, exportaciones.", icon: Activity },
+  { href: "/configuracion/fuentes-datos", title: "Fuentes de datos", description: "Última carga de cada fuente, si falló y cada cuánto se espera.", icon: Database },
+  { href: "/configuracion/actividad", title: "Registro de actividad", description: "Quién hizo qué y cuándo: roles, cargas, exportaciones.", icon: Activity },
   { href: "/configuracion/avisos", title: "Avisos", description: "Franja para toda la plataforma, con fecha de inicio y término.", icon: Megaphone },
-  { title: "Notificaciones y correos", description: "Qué correos envía la plataforma, a quién y con qué plantilla.", icon: Mail },
+  { href: "/configuracion/notificaciones", title: "Notificaciones y correos", description: "Qué correos envía la plataforma, a quién y con qué plantilla.", icon: Mail },
 ];
 
 export default async function ConfiguracionPage() {

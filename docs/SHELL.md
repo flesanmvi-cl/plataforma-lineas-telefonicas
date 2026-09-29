@@ -27,6 +27,7 @@ Versión vigente: **shell-v1.1** (en preparación; `VERSION_SHELL` en `lib/nav-b
 | `app/(dashboard)/configuracion/acerca/page.tsx` | Acerca de: versión (package.json) y `VERSION_SHELL` |
 | `components/preferencias-sync.tsx`, `lib/configuracion-db.ts`, `app/api/configuracion/preferencias/route.ts` | Guarda Mi personalización en `preferencias_usuario` (si la tabla existe; si no, queda en el navegador) |
 | `components/avisos.tsx`, `app/api/avisos/route.ts`, `app/api/configuracion/avisos/**`, `app/(dashboard)/configuracion/avisos/*` | Franja de avisos y Configuración › Avisos (solo admin): crear y terminar, sin borrar |
+| `components/configuracion/*`, `app/(dashboard)/configuracion/(admin)/{fuentes-datos,actividad,notificaciones}` | **Maquetas** (datos de ejemplo, sin base) de Fuentes de datos, Registro de actividad y Notificaciones y correos; se conectan a sus tablas cuando se definan |
 | `components/comentarios/*` | Botón de comentarios CIA (burbuja por defecto, pestaña lateral o en la barra; se elige en Mi personalización). Reemplaza al `<cia-feedback>` central dentro del dashboard; usa `/api/feedback` y `/api/feedback/mios` |
 | `components/portales/*` | Acceso a Portal CIA / SAP Work Zone (lengüeta, media luna, cinta, burbuja) |
 | `components/breadcrumb-context.tsx` | Niveles de drilldown en la ruta de migas |
