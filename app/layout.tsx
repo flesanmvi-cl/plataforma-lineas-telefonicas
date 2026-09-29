@@ -1,6 +1,5 @@
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
-import Script from "next/script";
 import { Toaster } from "sonner";
 import { ThemeProvider } from "@/components/theme-provider";
 import "./globals.css";
@@ -99,13 +98,9 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
               },
             }}
           />
-          {/* Widget de feedback CIA (servicios-compartidos/servicios/widget-cia). El script se
-              sirve desde el feedback-api central; badge.js está detrás de la IP interna hasta
-              que TI publique recursos-cia.grupoflesan.com (revisar antes de servir por HTTPS). */}
-          <Script src="http://192.168.10.22:8083/badge.js" strategy="afterInteractive" />
-          {/* TODO: reemplazar por el slug real de esta plataforma (coordinar con el equipo CIA
-              para registrar el token en CIA_SERVICE_TOKENS del feedback-api central). */}
-          <cia-feedback data-plataforma="nombre-plataforma" />
+          {/* El botón de comentarios CIA lo dibuja el shell dentro del dashboard
+              (components/comentarios/widget.tsx) y usa /api/feedback y /api/feedback/mios.
+              Ya no se carga el <cia-feedback> central aquí. */}
         </ThemeProvider>
       </body>
     </html>

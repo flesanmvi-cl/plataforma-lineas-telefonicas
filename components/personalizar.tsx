@@ -136,6 +136,29 @@ export function PanelPersonalizacion() {
         </Fila>
       </Seccion>
 
+      <Seccion titulo="Comentarios CIA">
+        <Fila titulo="Botón de comentarios" detalle="Dónde aparece el botón para escribirle al equipo CIA.">
+          <Segmento<Preferencias["widgetCia"]>
+            valor={pref.widgetCia}
+            opciones={[
+              { valor: "burbuja", texto: "Burbuja" },
+              { valor: "pestana", texto: "Pestaña lateral" },
+              { valor: "barra", texto: "En la barra superior" },
+            ]}
+            onCambio={(v) => cambiar({ widgetCia: v, widgetMinimizado: false })}
+          />
+        </Fila>
+        {pref.widgetCia !== "barra" && (
+          <Fila titulo="Minimizado" detalle="Queda solo una marca en el borde; un clic lo devuelve.">
+            <Interruptor
+              activo={pref.widgetMinimizado}
+              etiqueta="Botón de comentarios minimizado"
+              onCambio={(v) => cambiar({ widgetMinimizado: v })}
+            />
+          </Fila>
+        )}
+      </Seccion>
+
       <Seccion titulo="Datos">
         <Fila titulo="Montos y fechas" detalle="MM$ o miles; 28 sep 2026 o 28-09-2026.">
           <Proximamente />

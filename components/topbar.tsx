@@ -7,6 +7,7 @@ import Link from "next/link";
 import { BotonTema, ThemeToggle } from "@/components/theme-toggle";
 import { BotonPantallaCompleta } from "@/components/pantalla-completa";
 import { EstadoDatos } from "@/components/estado-datos";
+import { BotonComentariosBarra } from "@/components/comentarios/widget";
 import { BotonesBarraModulos } from "@/components/modulos";
 import { UserMenu } from "@/components/user-menu";
 import { useUsuarioActual } from "@/components/user-context";
@@ -98,6 +99,7 @@ export function TopBar() {
       <div className="hidden md:flex items-center gap-2">
         <EstadoDatos />
         <BotonesBarraModulos />
+        <BotonComentariosBarra />
         <BotonPantallaCompleta />
         <BotonTema />
       </div>

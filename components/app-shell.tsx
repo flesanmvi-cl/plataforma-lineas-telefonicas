@@ -4,6 +4,7 @@ import { Sidebar } from "@/components/sidebar";
 import { TopBar } from "@/components/topbar";
 import { PantallaCompletaProvider, usePantallaCompleta } from "@/components/pantalla-completa";
 import { AplicarPreferencias } from "@/components/preferencias";
+import { WidgetCia } from "@/components/comentarios/widget";
 import { ModulosProvider, SuperposicionesModulos, useVistaEspecialModulos } from "@/components/modulos";
 
 // SHELL · marco del dashboard: sidebar, barra superior y contenido (igual en todas las plataformas).
@@ -36,6 +37,8 @@ function Marco({ children }: { children: React.ReactNode }) {
         <main className="flex-1 min-w-0 overflow-y-auto">{children}</main>
       </div>
       <SuperposicionesModulos />
+      {/* Comentarios CIA: en pantalla completa no flota nada sobre el reporte. */}
+      {!pantallaCompleta && <WidgetCia />}
     </div>
   );
 }

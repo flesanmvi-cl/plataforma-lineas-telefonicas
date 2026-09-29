@@ -15,9 +15,20 @@ export interface Preferencias {
   reducirAnimaciones: boolean;
   /** Ruta donde parte el usuario al entrar a la plataforma (null = Inicio). */
   inicio: string | null;
+  /** Forma del botón de comentarios CIA: burbuja (por defecto), pestaña lateral o en la barra. */
+  widgetCia: "burbuja" | "pestana" | "barra";
+  /** Burbuja o pestaña reducida a su mínima expresión (media luna o línea en el borde). */
+  widgetMinimizado: boolean;
 }
 
-const POR_DEFECTO: Preferencias = { texto: "normal", densidad: "compacta", reducirAnimaciones: false, inicio: null };
+const POR_DEFECTO: Preferencias = {
+  texto: "normal",
+  densidad: "compacta",
+  reducirAnimaciones: false,
+  inicio: null,
+  widgetCia: "burbuja",
+  widgetMinimizado: false,
+};
 const CLAVE = "cia-preferencias";
 const EVENTO = "cia-preferencias";
 const CLAVE_INICIO = "cia-inicio-aplicado";
