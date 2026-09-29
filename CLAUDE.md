@@ -61,6 +61,13 @@ shell y cuáles define cada plataforma). Un cambio en un archivo del shell aquí
 después a las plataformas; lo propio de esta plantilla va en `lib/nav.ts`, `components/modulos.tsx`,
 `lib/estado-datos.ts` y `app/globals.css`.
 
+## Base de datos de una plataforma nueva
+
+Reglas en README.md, «Base de datos de la plataforma»: todo lo propio en un esquema `cia_<slug>`
+de la base de QA (nunca en `flesan`, solo lectura), variables `DATABASE_URL_PLATAFORMA` y
+`ESQUEMA_PLATAFORMA`, tablas obligatorias del estándar en `db/002_configuracion.sql`, y todo SQL
+se muestra y aprueba antes de ejecutarlo en QA. El mockup no tiene esquema propio.
+
 ## Escala y densidad (default de la plantilla)
 
 - Raíz **fluida suave**: `html { font-size: clamp(14px, calc(8.5px + 0.5vw), 16px) }`. Todo va
