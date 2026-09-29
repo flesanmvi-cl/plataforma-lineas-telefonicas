@@ -252,7 +252,7 @@ export function ReporteEjecutivo() {
       />
 
       <div className="flex flex-col gap-4">
-        <div className="grid grid-cols-1 xl:grid-cols-[minmax(0,1.72fr)_minmax(0,1fr)] gap-4">
+        <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1.72fr)_minmax(0,1fr)] gap-4">
           <KpiPrincipal
             rotulo="Monto contratado"
             valor={total}
@@ -274,7 +274,7 @@ export function ReporteEjecutivo() {
 
         <BarraFiltros filtros={activos} onLimpiar={() => setFiltros({ tipo: "", unidad: "", nivel: "" })} />
 
-        <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           <TarjetaReporte numero={1} titulo="Tipo de contrato" detalle="monto contratado">
             <DonaLeyenda items={itemsTipo} seleccion={filtros.tipo || null} onSeleccion={(c) => alternar("tipo", c)} />
           </TarjetaReporte>
@@ -348,7 +348,7 @@ export function ReporteEjecutivo() {
                     <th>Unidad</th>
                     <th>Nivel</th>
                     <th>Tipo</th>
-                    <th>Vigencia</th>
+                    <th className="max-xl:hidden">Vigencia</th>
                     {encabezadoOrden("monto", "Contratado")}
                     {encabezadoOrden("facturado", "Facturado")}
                   </tr>
@@ -368,7 +368,7 @@ export function ReporteEjecutivo() {
                       <td>
                         <InsigniaSerie texto={TIPOS.find((t) => t.clave === f.tipo)!.nombre} color={colorTipo(f.tipo)} />
                       </td>
-                      <td className="rep-cifra text-muted whitespace-nowrap">
+                      <td className="rep-cifra text-muted whitespace-nowrap max-xl:hidden">
                         {f.desde} → {f.hasta}
                       </td>
                       <td>

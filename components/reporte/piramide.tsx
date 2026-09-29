@@ -38,7 +38,7 @@ export function Piramide({
   const base = 64;
 
   return (
-    <ul className="flex flex-col gap-0.5">
+    <ul className="@container flex flex-col gap-0.5">
       {niveles.map((n, i) => {
         const arriba = base + i * paso;
         const abajo = base + (i + 1) * paso;
@@ -48,11 +48,12 @@ export function Piramide({
         const atenuado = seleccion != null && seleccion !== n.numero;
         const contenido = (
           <>
-            <span className="flex justify-center w-[13.5rem] shrink-0 max-sm:hidden" aria-hidden>
+            <span className="flex justify-center w-[clamp(5.5rem,30cqw,13.5rem)] shrink-0 @max-[22rem]:hidden" aria-hidden>
               <span
                 className="h-[2.125rem] flex items-center justify-center"
                 style={{
-                  width: abajo,
+                  // Ancho relativo a la columna: la pirámide se achica con la tarjeta.
+                  width: `${(abajo / (base + niveles.length * paso)) * 100}%`,
                   clipPath: `polygon(${recorte.toFixed(1)}% 0, ${(100 - recorte).toFixed(1)}% 0, 100% 100%, 0 100%)`,
                   background: vacio ? "var(--color-surface-2)" : `color-mix(in srgb, ${color} ${Math.round(30 + 60 * peso)}%, transparent)`,
                 }}
@@ -62,26 +63,26 @@ export function Piramide({
                 </span>
               </span>
             </span>
-            <span className={cn("flex flex-col leading-tight w-36 shrink-0", vacio && "opacity-45")}>
-              <b className="text-[0.8125rem] font-bold text-text">Nivel {n.numero}</b>
+            <span className={cn("flex flex-col leading-tight w-[clamp(5.5rem,24cqw,9rem)] shrink-0 min-w-0", vacio && "opacity-45")}>
+              <b className="text-[0.8125rem] font-bold text-text truncate">Nivel {n.numero}</b>
               <span className="text-[0.6875rem] text-faint truncate">{n.nombre}</span>
             </span>
-            <span className={cn("flex items-baseline gap-1 w-20 shrink-0", vacio && "opacity-45")}>
+            <span className={cn("flex items-baseline gap-1 w-[4.5rem] shrink-0", vacio && "opacity-45")}>
               <b className="rep-cifra text-lg font-extrabold text-text">{cifra(n.cantidad)}</b>
-              <span className="text-[0.625rem] text-faint">{unidadCantidad}</span>
+              <span className="text-[0.625rem] text-faint @max-[30rem]:hidden">{unidadCantidad}</span>
             </span>
-            <span className="flex-1 h-1.5 rounded-full bg-surface-2 overflow-hidden max-md:hidden">
+            <span className="flex-1 min-w-8 h-1.5 rounded-full bg-surface-2 overflow-hidden @max-[36rem]:hidden">
               <span className="block h-full rounded-full" style={{ width: `${peso * 100}%`, background: color }} />
             </span>
-            <b className={cn("rep-cifra text-[0.9375rem] font-extrabold text-right w-28 shrink-0 ml-auto", vacio ? "text-faint" : "text-text")}>
+            <b className={cn("rep-cifra text-[0.9375rem] font-extrabold text-right shrink-0 ml-auto whitespace-nowrap", vacio ? "text-faint" : "text-text")}>
               {prefijo}
               {cifra(n.valor)}
               {unidad}
             </b>
-            <span className="rep-cifra text-xs text-muted text-right w-12 shrink-0">{porcentaje(n.valor, total)} %</span>
+            <span className="rep-cifra text-xs text-muted text-right w-12 shrink-0 @max-[26rem]:hidden">{porcentaje(n.valor, total)} %</span>
           </>
         );
-        const clases = "w-full flex items-center gap-3 h-9 px-2 rounded-lg text-left";
+        const clases = "w-full flex items-center gap-2.5 h-9 px-2 rounded-lg text-left";
         return (
           <li key={n.numero}>
             {onSeleccion ? (

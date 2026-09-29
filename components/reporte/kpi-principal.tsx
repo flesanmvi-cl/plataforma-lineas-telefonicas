@@ -43,7 +43,7 @@ export function KpiPrincipal({
     <section
       data-bloque="kpi-principal"
       data-bloque-titulo={rotulo}
-      className={cn("card rep-destacada relative overflow-hidden p-6 lg:p-7 min-w-0", className)}
+      className={cn("card rep-destacada @container relative overflow-hidden p-6 lg:p-7 min-w-0", className)}
     >
       {linea && (
         <svg viewBox="0 0 760 120" preserveAspectRatio="none" aria-hidden className="absolute inset-x-0 bottom-0 w-full h-28 pointer-events-none">
@@ -61,13 +61,13 @@ export function KpiPrincipal({
         <Rotulo punto>{rotulo}</Rotulo>
         <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
           <span className="text-2xl font-semibold text-muted">{prefijo}</span>
-          <span className="rep-cifra text-[3.75rem] sm:text-[5.25rem] font-extrabold text-text">{cifra(valor)}</span>
+          <span className="rep-cifra text-[clamp(3rem,11cqw,5.25rem)] font-extrabold text-text">{cifra(valor)}</span>
           <span className="text-lg font-semibold text-faint">{unidad}</span>
           {contraste && (
             <>
-              <span aria-hidden className="text-5xl font-light text-border-strong mx-1">/</span>
-              <span className="rep-cifra text-4xl font-bold text-serie-1">{cifra(contraste.valor)}</span>
-              <span className="text-sm text-muted">{contraste.etiqueta}</span>
+              <span aria-hidden className="text-[clamp(2rem,6cqw,3rem)] font-light text-border-strong mx-1">/</span>
+              <span className="rep-cifra text-[clamp(1.625rem,5cqw,2.5rem)] font-bold text-serie-1">{cifra(contraste.valor)}</span>
+              <span className="text-sm text-muted whitespace-nowrap">{contraste.etiqueta}</span>
             </>
           )}
         </div>

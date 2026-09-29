@@ -75,7 +75,7 @@ export function CeldaMonto({
 }) {
   return (
     <span className={cn("flex items-center justify-end gap-2.5", className)}>
-      <span className="w-20 h-[5px] rounded-full bg-surface-2 overflow-hidden max-lg:hidden" aria-hidden>
+      <span className="w-20 h-[5px] rounded-full bg-surface-2 overflow-hidden max-xl:hidden" aria-hidden>
         <span className="block h-full rounded-full" style={{ width: `${max ? (valor / max) * 100 : 0}%`, background: color }} />
       </span>
       <b className="rep-cifra text-[0.9375rem] font-extrabold text-right min-w-24 whitespace-nowrap">
