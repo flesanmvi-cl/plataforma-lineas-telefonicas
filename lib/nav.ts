@@ -59,6 +59,7 @@ export const NAV_CONFIG: NavItem = {
     { href: "/configuracion/comentarios", label: "Mis comentarios" },
     { href: "/configuracion/acerca", label: "Acerca de" },
     { href: "/configuracion/usuarios", label: "Usuarios y roles", adminOnly: true },
+    { href: "/configuracion/avisos", label: "Avisos", adminOnly: true },
   ],
 };
 

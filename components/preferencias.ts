@@ -3,9 +3,9 @@
 import { useEffect, useSyncExternalStore } from "react";
 import { usePathname, useRouter } from "next/navigation";
 
-// SHELL · preferencias de cada usuario («Mi personalización»). Por ahora se guardan en este
-// navegador; el plan es llevarlas a la tabla `preferencias_usuario` del esquema de cada
-// plataforma para que sigan al usuario en cualquier equipo. El tema lo maneja next-themes y el
+// SHELL · preferencias de cada usuario («Mi personalización»). Se guardan en este navegador y,
+// si la plataforma ya tiene la tabla `preferencias_usuario`, también en la base
+// (components/preferencias-sync.tsx), para que sigan al usuario en cualquier equipo. El tema lo maneja next-themes y el
 // estilo del acceso a portales, components/portales/estilo.ts.
 
 export interface Preferencias {
@@ -48,6 +48,19 @@ function leer(): Preferencias {
   } catch {}
   cache = { crudo, valor };
   return valor;
+}
+
+/** Lectura directa de lo guardado (para quien necesita el valor fuera de un render). */
+export function leerPreferencias(): Preferencias {
+  return leer();
+}
+
+/** Reemplaza las preferencias guardadas (ej. al traerlas de la base) y avisa a la página. */
+export function reemplazarPreferencias(valor: Partial<Preferencias>) {
+  try {
+    localStorage.setItem(CLAVE, JSON.stringify({ ...POR_DEFECTO, ...valor }));
+  } catch {}
+  window.dispatchEvent(new Event(EVENTO));
 }
 
 function suscribir(avisar: () => void) {

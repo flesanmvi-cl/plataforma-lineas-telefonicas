@@ -4,6 +4,8 @@ import { Sidebar } from "@/components/sidebar";
 import { TopBar } from "@/components/topbar";
 import { PantallaCompletaProvider, usePantallaCompleta } from "@/components/pantalla-completa";
 import { AplicarPreferencias } from "@/components/preferencias";
+import { SincronizarPreferencias } from "@/components/preferencias-sync";
+import { FranjaAvisos } from "@/components/avisos";
 import { WidgetCia } from "@/components/comentarios/widget";
 import { ModulosProvider, SuperposicionesModulos, useVistaEspecialModulos } from "@/components/modulos";
 
@@ -14,6 +16,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     <PantallaCompletaProvider>
       <ModulosProvider>
         <AplicarPreferencias />
+        <SincronizarPreferencias />
         <Marco>{children}</Marco>
       </ModulosProvider>
     </PantallaCompletaProvider>
@@ -33,6 +36,7 @@ function Marco({ children }: { children: React.ReactNode }) {
     <div className="h-screen flex bg-bg overflow-hidden">
       {!pantallaCompleta && <Sidebar />}
       <div className="flex-1 flex flex-col min-w-0">
+        <FranjaAvisos />
         <TopBar />
         <main className="flex-1 min-w-0 overflow-y-auto">{children}</main>
       </div>

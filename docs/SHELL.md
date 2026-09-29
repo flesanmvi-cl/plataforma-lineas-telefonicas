@@ -25,6 +25,8 @@ Versión vigente: **shell-v1.1** (en preparación; `VERSION_SHELL` en `lib/nav-b
 | `app/(dashboard)/configuracion/personalizacion/page.tsx` | Ruta de Mi personalización (abierta a todos) |
 | `components/mis-comentarios.tsx`, `app/(dashboard)/configuracion/comentarios/page.tsx` | Mis comentarios (lee `/api/feedback/mios`, servicio central de feedback) |
 | `app/(dashboard)/configuracion/acerca/page.tsx` | Acerca de: versión (package.json) y `VERSION_SHELL` |
+| `components/preferencias-sync.tsx`, `lib/configuracion-db.ts`, `app/api/configuracion/preferencias/route.ts` | Guarda Mi personalización en `preferencias_usuario` (si la tabla existe; si no, queda en el navegador) |
+| `components/avisos.tsx`, `app/api/avisos/route.ts`, `app/api/configuracion/avisos/**`, `app/(dashboard)/configuracion/avisos/*` | Franja de avisos y Configuración › Avisos (solo admin): crear y terminar, sin borrar |
 | `components/comentarios/*` | Botón de comentarios CIA (burbuja por defecto, pestaña lateral o en la barra; se elige en Mi personalización). Reemplaza al `<cia-feedback>` central dentro del dashboard; usa `/api/feedback` y `/api/feedback/mios` |
 | `components/portales/*` | Acceso a Portal CIA / SAP Work Zone (lengüeta, media luna, cinta, burbuja) |
 | `components/breadcrumb-context.tsx` | Niveles de drilldown en la ruta de migas |
@@ -33,7 +35,9 @@ Versión vigente: **shell-v1.1** (en preparación; `VERSION_SHELL` en `lib/nav-b
 | `lib/nav-base.ts` | Tipos y funciones de navegación (`isNavActive`, `gruposDe`, `crearMigas`…) |
 | `lib/cn.ts` | `cn()` (clsx + tailwind-merge) |
 
-Dependencias npm: `clsx`, `tailwind-merge`, `lucide-react`, `next-themes`.
+Dependencias npm: `clsx`, `tailwind-merge`, `lucide-react`, `next-themes`, `pg`.
+
+Variables de entorno de Configuración: `DATABASE_URL_PLATAFORMA` (base de QA propia) y `ESQUEMA_PLATAFORMA` (`cia_<slug>`). Sin ellas, Mi personalización queda solo en el navegador y no hay avisos.
 
 ## Archivos de cada plataforma (se adaptan)
 

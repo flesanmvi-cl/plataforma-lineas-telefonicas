@@ -674,6 +674,30 @@ textarea.dens-control {
 }
 
 /* ============================================================
+   AVISOS (franja sobre la barra superior, components/avisos.tsx)
+   ============================================================ */
+.aviso-atencion {
+  background: #fdf3e3;
+  border-color: #f3d6a8;
+  color: #7c3a06;
+}
+.aviso-critico {
+  background: #fdecec;
+  border-color: #f5c2c5;
+  color: #8f0a12;
+}
+.dark .aviso-atencion {
+  background: rgba(251, 191, 36, 0.1);
+  border-color: rgba(251, 191, 36, 0.3);
+  color: #fcd34d;
+}
+.dark .aviso-critico {
+  background: rgba(227, 6, 19, 0.14);
+  border-color: rgba(227, 6, 19, 0.4);
+  color: #fca5a5;
+}
+
+/* ============================================================
    ESTADO DE LOS DATOS (barra superior)
    Píldora con punto de frescura: verde «al día», ámbar «atrasado», gris latiendo mientras
    actualiza. Los colores de estado solo marcan estado, nunca acento.

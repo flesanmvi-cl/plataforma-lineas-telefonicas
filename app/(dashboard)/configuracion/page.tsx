@@ -57,7 +57,7 @@ const ADMINISTRACION: Seccion[] = [
   },
   { title: "Fuentes de datos", description: "Última carga de cada fuente, si falló y cada cuánto se espera.", icon: Database },
   { title: "Registro de actividad", description: "Quién hizo qué y cuándo: roles, cargas, exportaciones.", icon: Activity },
-  { title: "Avisos", description: "Franja para toda la plataforma, con fecha de inicio y término.", icon: Megaphone },
+  { href: "/configuracion/avisos", title: "Avisos", description: "Franja para toda la plataforma, con fecha de inicio y término.", icon: Megaphone },
   { title: "Notificaciones y correos", description: "Qué correos envía la plataforma, a quién y con qué plantilla.", icon: Mail },
 ];
 
