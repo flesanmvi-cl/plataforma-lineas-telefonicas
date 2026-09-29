@@ -55,16 +55,17 @@ export function PanelPortales({
         </button>
       </div>
       <div className="relative px-3 pb-3 flex flex-col gap-2.5">
-        {/* Línea punteada que une los dos mundos, como en el mapa del ecosistema */}
-        {PORTAL_CIA_URL && SAP_WORKZONE_URL && (
-          <span className="absolute left-[2.3rem] top-[3.4rem] h-7 border-l-2 border-dashed border-white/25" aria-hidden />
-        )}
         {PORTAL_CIA_URL && (
           <Portal href={PORTAL_CIA_URL} nombre="Portal CIA" detalle="Aplicativos y desafíos de la CIA" color="#ff3a3a">
             <span className="w-11 h-11 rounded-xl flex items-center justify-center shrink-0 bg-[rgba(227,6,19,0.15)] ring-1 ring-inset ring-[rgba(227,6,19,0.5)]">
               <CiaLogo className="w-6 h-6 text-[#ff3a3a]" />
             </span>
           </Portal>
+        )}
+        {/* Línea punteada que une los dos mundos, como en el mapa del ecosistema: va de un ícono al
+            otro sin importar el alto de las tarjetas (ocupa el espacio entre ellas y lo compensa). */}
+        {PORTAL_CIA_URL && SAP_WORKZONE_URL && (
+          <span className="relative z-10 ml-[2.125rem] -my-[1.4375rem] h-9 border-l-2 border-dashed border-white/25" aria-hidden />
         )}
         {SAP_WORKZONE_URL && (
           <Portal href={SAP_WORKZONE_URL} nombre="SAP Work Zone" detalle="Noticias, comunicaciones y trámites" color="#00aeef">

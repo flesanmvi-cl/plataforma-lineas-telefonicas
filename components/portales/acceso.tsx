@@ -52,8 +52,9 @@ function Lengueta() {
   );
 }
 
-// Media luna: en reposo asoma el lado CIA con la punta SAP del corte; al pasar el mouse se desliza
-// como píldora «CIA / SAP».
+// Media luna: en reposo asoma un disco que alterna, en carrusel, el logo del Portal CIA y el de
+// SAP (con su color de fondo). Al pasar el mouse se desliza como píldora «CIA / SAP» y al
+// presionarla el desplegable sale justo encima, dentro del sidebar.
 function MediaLuna() {
   const { abierta, setAbierta, raiz } = useDesplegable();
   return (
@@ -66,16 +67,31 @@ function MediaLuna() {
         aria-label={ETIQUETA}
         title="Portal CIA · SAP Work Zone"
         className={cn(
-          "acceso-portales media-luna-portales absolute left-0 bottom-3 h-11 flex items-center gap-1.5 pl-2 overflow-hidden rounded-r-full cursor-pointer",
-          "w-[1.875rem] hover:w-[5.25rem] focus-visible:w-[5.25rem]",
+          "acceso-portales media-luna-portales absolute left-0 bottom-3 h-11 overflow-hidden rounded-r-full cursor-pointer",
+          "w-9 hover:w-[5.25rem] focus-visible:w-[5.25rem]",
           abierta && "w-[5.25rem]",
         )}
       >
-        <CiaLogo className="w-4 h-4 shrink-0 text-(--portales-cia)" />
-        <span className="font-display text-[0.9375rem] font-extrabold italic leading-none text-muted shrink-0">/</span>
-        <LogoSap className="w-7 h-3.5 shrink-0" fondo="fill-(--portales-sap)" texto="fill-(--portales-sap-texto)" />
+        {/* Reposo: fondo y logo alternan CIA → SAP */}
+        <span className="ml-fondo absolute inset-0" aria-hidden />
+        <span className="ml-reposo absolute inset-y-0 left-0 w-9 overflow-hidden" aria-hidden>
+          <span className="ml-cia absolute inset-0 flex items-center justify-center">
+            <CiaLogo className="w-[1.125rem] h-[1.125rem] text-(--portales-cia)" />
+          </span>
+          <span className="ml-sap absolute inset-0 flex items-center justify-center">
+            <LogoSap className="w-[1.625rem] h-[0.8125rem]" fondo="fill-(--portales-sap)" texto="fill-(--portales-sap-texto)" />
+          </span>
+        </span>
+        {/* Abierta o con el mouse encima: los dos portales juntos */}
+        <span className="ml-abierta relative h-full flex items-center gap-1.5 pl-2">
+          <CiaLogo className="w-4 h-4 shrink-0 text-(--portales-cia)" />
+          <span className="font-display text-[0.9375rem] font-extrabold italic leading-none text-muted shrink-0">/</span>
+          <LogoSap className="w-7 h-3.5 shrink-0" fondo="fill-(--portales-sap)" texto="fill-(--portales-sap-texto)" />
+        </span>
       </button>
-      {abierta && <PanelPortales onCerrar={() => setAbierta(false)} className="left-full bottom-0 ml-3" />}
+      {abierta && (
+        <PanelPortales onCerrar={() => setAbierta(false)} className="panel-portales-arriba left-1.5 bottom-16 w-[14.25rem]" />
+      )}
     </div>
   );
 }

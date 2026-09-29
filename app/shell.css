@@ -774,6 +774,85 @@ textarea.dens-control {
   background: linear-gradient(115deg, var(--portales-fondo-cia) 39%, var(--portales-fondo-sap) 39%) left center /
     5.25rem 100% no-repeat;
 }
+/* Reposo: carrusel CIA → SAP cada 3 s (logo que sube y fondo que cambia de tono). Con el mouse
+   encima, al llegar con Tab o abierta, se ve la píldora «CIA / SAP» sobre el degradado. */
+.media-luna-portales .ml-fondo {
+  animation: ml-fondo 6s ease-in-out infinite;
+  transition: opacity 0.15s ease;
+}
+.media-luna-portales .ml-reposo {
+  transition: opacity 0.15s ease;
+}
+.media-luna-portales .ml-cia {
+  animation: ml-cia 6s ease-in-out infinite;
+}
+.media-luna-portales .ml-sap {
+  animation: ml-sap 6s ease-in-out infinite;
+}
+.media-luna-portales .ml-abierta {
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+.media-luna-portales:hover .ml-fondo,
+.media-luna-portales:hover .ml-reposo,
+.media-luna-portales:focus-visible .ml-fondo,
+.media-luna-portales:focus-visible .ml-reposo,
+.media-luna-portales[aria-expanded="true"] .ml-fondo,
+.media-luna-portales[aria-expanded="true"] .ml-reposo {
+  opacity: 0;
+}
+.media-luna-portales:hover .ml-abierta,
+.media-luna-portales:focus-visible .ml-abierta,
+.media-luna-portales[aria-expanded="true"] .ml-abierta {
+  opacity: 1;
+}
+@keyframes ml-fondo {
+  0%,
+  40%,
+  100% {
+    background-color: var(--portales-fondo-cia);
+  }
+  50%,
+  90% {
+    background-color: var(--portales-fondo-sap);
+  }
+}
+@keyframes ml-cia {
+  0%,
+  40% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  50%,
+  89.99% {
+    transform: translateY(-120%);
+    opacity: 0;
+  }
+  90% {
+    transform: translateY(120%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+@keyframes ml-sap {
+  0%,
+  40% {
+    transform: translateY(120%);
+    opacity: 0;
+  }
+  50%,
+  90% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-120%);
+    opacity: 0;
+  }
+}
 /* Cinta: línea de color en el borde y rótulo que se vuelve cinta al pasar el mouse */
 .cinta-portales,
 .cinta-portales:hover,
@@ -825,6 +904,20 @@ textarea.dens-control {
   box-shadow: 0 30px 60px -20px rgba(0, 0, 0, 0.7);
   animation: entrar-portales 0.35s cubic-bezier(0.22, 1, 0.36, 1);
 }
+/* Desplegable que sale hacia arriba (media luna): entra subiendo. */
+.panel-portales-arriba {
+  animation-name: entrar-portales-arriba;
+}
+@keyframes entrar-portales-arriba {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
 @keyframes entrar-portales {
   /* Solo X y escala en transform: el centrado vertical va en la propiedad translate. */
   from {
@@ -843,5 +936,17 @@ textarea.dens-control {
   .estado-datos-punto {
     animation: none;
     transition: none;
+  }
+  /* Media luna sin carrusel: queda fijo el logo del Portal CIA. */
+  .media-luna-portales .ml-fondo,
+  .media-luna-portales .ml-cia,
+  .media-luna-portales .ml-sap {
+    animation: none;
+  }
+  .media-luna-portales .ml-fondo {
+    background-color: var(--portales-fondo-cia);
+  }
+  .media-luna-portales .ml-sap {
+    opacity: 0;
   }
 }
