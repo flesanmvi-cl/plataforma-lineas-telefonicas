@@ -8,7 +8,8 @@ export * from "@/lib/nav-base";
 // consumen estos arreglos para no mantener listas sincronizadas a mano. Los tipos y las
 // funciones comunes vienen de `lib/nav-base.ts` (shell).
 
-/** Nombre en el encabezado del sidebar: texto normal + palabra destacada en rojo. */
+/** Nombre en el encabezado del sidebar: texto normal + palabra destacada en rojo. `texto` puede
+ * quedar vacío si el nombre es una sola palabra (va toda en rojo). */
 export const NOMBRE_PLATAFORMA = { texto: "Nombre", destacado: "Plataforma" };
 
 export const NAV_ITEMS: NavItem[] = [

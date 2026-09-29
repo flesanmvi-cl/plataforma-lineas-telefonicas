@@ -111,10 +111,11 @@ export function Sidebar() {
           <span
             className={cn(
               "font-display font-bold italic uppercase tracking-[0.04em] text-text leading-none whitespace-nowrap flex-1 min-w-0 truncate",
-              `${NOMBRE_PLATAFORMA.texto} ${NOMBRE_PLATAFORMA.destacado}`.length > 18 ? "text-[0.9375rem]" : "text-[1.1875rem]",
+              `${NOMBRE_PLATAFORMA.texto} ${NOMBRE_PLATAFORMA.destacado}`.trim().length > 18 ? "text-[0.9375rem]" : "text-[1.1875rem]",
             )}
           >
-            {NOMBRE_PLATAFORMA.texto} <span className="text-flesan-red">{NOMBRE_PLATAFORMA.destacado}</span>
+            {NOMBRE_PLATAFORMA.texto && `${NOMBRE_PLATAFORMA.texto} `}
+            <span className="text-flesan-red">{NOMBRE_PLATAFORMA.destacado}</span>
           </span>
         )}
       </div>
