@@ -62,6 +62,19 @@
   --color-chart-4: #f59e0b;
   --color-chart-5: #16a34a;
   --color-chart-grid: #e2e2e2;
+
+  /* Series de reportería (Reporte Tipo 1, components/reporte/): paleta amplia aprobada para
+     datos, tomada del panel de Conflicto de Interés. Distinguen categorías en gráficos y
+     tablas; nunca van en botones ni en llamados a la acción (ahí el rojo Flesan sigue siendo
+     el único acento). En oscuro suben de luminosidad. */
+  --color-serie-1: #2f6fdb; /* azul */
+  --color-serie-2: #c98a12; /* ámbar */
+  --color-serie-3: #d93a40; /* rojo de datos (no es el rojo de marca) */
+  --color-serie-4: #6f5ce0; /* morado */
+  --color-serie-5: #1e9160; /* verde */
+  --color-serie-6: #d9602a; /* naranjo */
+  --color-serie-7: #c93d74; /* rosado */
+  --color-serie-8: #7a7a82; /* gris: «Otras» */
 }
 
 /* Modo oscuro — premium dark surfaces */
@@ -78,6 +91,15 @@
   /* chart-2 es --flesan-black en claro (invisible sobre fondo oscuro) */
   --color-chart-2: #f4f4f4;
   --color-chart-grid: #2c2c2c;
+
+  --color-serie-1: #4c8df6;
+  --color-serie-2: #f2b33d;
+  --color-serie-3: #e5484d;
+  --color-serie-4: #8b7cf6;
+  --color-serie-5: #22a06b;
+  --color-serie-6: #e0662f;
+  --color-serie-7: #d6457f;
+  --color-serie-8: #6b6b73;
 }
 
 /* ============================================================
@@ -608,7 +630,8 @@ textarea.dens-control {
    data-estilo="reporte" sobre el cuerpo del reporte (KPIs, tablas, gráficos, filtros).
    El marco de la plataforma, los títulos de página y los botones siguen en Barlow:
    ahí vive la marca. Excepción explícita a la guía (que pide Barlow Semi Condensed
-   para datos), aprobada para reportería. Sin degradados: la identidad es plana. */
+   para datos), aprobada para reportería. Sin degradados: la identidad es plana, con una
+   única excepción aprobada, el brillo rojo de la tarjeta principal (.rep-destacada). */
 [data-estilo="reporte"] {
   --font-body: var(--font-inter-tight), var(--font-barlow), "Segoe UI", sans-serif;
   --font-label: var(--font-body);
@@ -660,6 +683,91 @@ textarea.dens-control {
 [data-estilo="reporte"] .btn-flesan {
   font-family: var(--font-barlow-semi), "Arial", sans-serif;
   font-feature-settings: normal;
+}
+
+/* ---- Piezas del Reporte Tipo 1 (components/reporte/) ---- */
+
+/* Tarjeta principal: brillo rojo desde la esquina (la única excepción a «sin degradados»). */
+.rep-destacada {
+  background:
+    radial-gradient(120% 140% at 0% 0%, color-mix(in srgb, var(--color-flesan-red) 10%, transparent) 0%, transparent 62%),
+    var(--color-surface);
+}
+.dark .rep-destacada {
+  background:
+    radial-gradient(120% 140% at 0% 0%, color-mix(in srgb, var(--color-flesan-red) 22%, transparent) 0%, color-mix(in srgb, var(--color-flesan-red) 5%, transparent) 38%, transparent 70%),
+    var(--color-surface);
+}
+
+/* Cifras grandes: apretadas y tabulares. */
+.rep-cifra {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.04em;
+  line-height: 0.95;
+}
+
+/* Fila que filtra al hacer clic (leyenda de dona, nivel de pirámide): atenúa lo no elegido. */
+.rep-filtrable {
+  transition: opacity 160ms var(--ease-flesan-out), background-color 160ms var(--ease-flesan-out);
+}
+.rep-filtrable[data-atenuado] {
+  opacity: 0.38;
+}
+.rep-filtrable:hover {
+  background: var(--color-surface-2);
+}
+.rep-filtrable:focus-visible {
+  outline: 2px solid var(--color-flesan-red);
+  outline-offset: 1px;
+}
+
+/* Grilla de fondo de las barras por año: cuatro líneas horizontales. */
+.rep-grilla {
+  background-image: linear-gradient(var(--color-border) 1px, transparent 1px);
+  background-size: 100% 25%;
+}
+
+/* Tabla del reporte: encabezado en mayúsculas espaciadas, filas con separador suave. */
+.rep-tabla {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8125rem;
+}
+.rep-tabla th {
+  padding: 0.75rem 0.875rem;
+  text-align: left;
+  font-size: 0.65625rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-faint);
+  border-bottom: 1px solid var(--color-border);
+  white-space: nowrap;
+}
+.rep-tabla td {
+  padding: 0.75rem 0.875rem;
+  border-bottom: 1px solid var(--color-border);
+  vertical-align: middle;
+}
+.rep-tabla tbody tr:last-child td {
+  border-bottom: 0;
+}
+.rep-tabla tbody tr:hover td {
+  background: var(--color-surface-2);
+}
+.rep-tabla th[aria-sort] button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+.rep-tabla th[aria-sort="descending"],
+.rep-tabla th[aria-sort="ascending"] {
+  color: var(--color-text);
 }
 
 /* Respeta reduce-motion */

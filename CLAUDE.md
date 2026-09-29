@@ -96,6 +96,8 @@ agrégalos al bloque `@theme` de `app/shell.css`, igual que ya está hecho aquí
 ## Reglas de marca rápidas
 
 - Rojo Flesan `#E30613` — única marca de acento. No usar otros rojos para call-to-action.
+  En reportería, los datos usan la paleta de series `--color-serie-1…8` (aprobada con el Reporte
+  Tipo 1); nunca en botones ni acciones. Receta y piezas de los reportes tipo: `docs/REPORTES.md`.
 - Copy en español (Chile), institucional, sin emojis, sin "líder/revolucionar/increíble".
 - Tagline oficial: "Confianza que construye" (no inventar otras).
 - Bullet de marca: cuadrado rojo (`.brand-bullet`), no usar viñetas redondas.

@@ -4,7 +4,7 @@ import { useEffect, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { RefreshCw } from "lucide-react";
 import { cn } from "@/lib/cn";
-import { CADA_HORAS, obtenerEstadoDatos } from "@/lib/estado-datos";
+import { CADA_HORAS, actualizarDatos, obtenerEstadoDatos } from "@/lib/estado-datos";
 
 const MESES = ["ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic"];
 
@@ -65,6 +65,9 @@ export function EstadoDatos() {
     if (actualizando) return;
     setActualizando(true);
     const inicio = Date.now();
+    // La plataforma primero trae datos nuevos de su fuente (ej. descarta una caché); después se
+    // vuelve a dibujar la vista con ellos.
+    await actualizarDatos();
     startTransition(() => router.refresh());
     const estado = await obtenerEstadoDatos();
     await new Promise((r) => setTimeout(r, Math.max(0, MINIMO_MS - (Date.now() - inicio))));

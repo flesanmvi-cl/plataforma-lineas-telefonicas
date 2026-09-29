@@ -38,7 +38,11 @@ function Marco({ children }: { children: React.ReactNode }) {
       <div className="flex-1 flex flex-col min-w-0">
         <FranjaAvisos />
         <TopBar />
-        <main className="flex-1 min-w-0 overflow-y-auto">{children}</main>
+        {/* flex-col: la página hija tiene un alto resuelto contra el cual estirarse (un reporte
+            que reparte la pantalla entre gráfico y tablas). scrollbar-gutter: el espacio de la
+            barra de scroll queda reservado; si no, cuando la página cambia de alto por un píxel
+            (al filtrar) la barra aparece o desaparece y todo el contenido cambia de ancho. */}
+        <main className="flex-1 min-w-0 overflow-y-auto flex flex-col [scrollbar-gutter:stable]">{children}</main>
       </div>
       <SuperposicionesModulos />
       {/* Comentarios CIA: en pantalla completa no flota nada sobre el reporte. */}

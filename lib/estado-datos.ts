@@ -18,6 +18,10 @@ export interface EstadoDatos {
  * Fecha de ejemplo: hoy a las 06:00 (o ayer, si aún no son las 06:00). Con `?datos=atrasado` en
  * la URL devuelve una fecha de hace 32 horas, para revisar el estado atrasado.
  */
+/** «Actualizar» del indicador: trae datos nuevos de la fuente antes de refrescar la vista (ej.
+ * descartar una caché o disparar la carga). En el mockup no hay fuente: no hace nada. */
+export async function actualizarDatos(): Promise<void> {}
+
 export async function obtenerEstadoDatos(): Promise<EstadoDatos | null> {
   const atrasado = new URLSearchParams(window.location.search).get("datos") === "atrasado";
   const ahora = new Date();

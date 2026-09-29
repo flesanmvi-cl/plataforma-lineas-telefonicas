@@ -30,6 +30,7 @@ Versión vigente: **shell-v1.1** (en preparación; `VERSION_SHELL` en `lib/nav-b
 | `components/configuracion/*`, `app/(dashboard)/configuracion/(admin)/{fuentes-datos,actividad,notificaciones}` | **Maquetas** (datos de ejemplo, sin base) de Fuentes de datos, Registro de actividad y Notificaciones y correos; se conectan a sus tablas cuando se definan |
 | `components/comentarios/*` | Botón de comentarios CIA (burbuja por defecto, pestaña lateral o en la barra; se elige en Mi personalización). Reemplaza al `<cia-feedback>` central dentro del dashboard; usa `/api/feedback` y `/api/feedback/mios` |
 | `components/portales/*` | Acceso a Portal CIA / SAP Work Zone (lengüeta, media luna, cinta, burbuja) |
+| `components/reporte/*` | Piezas del Reporte Tipo 1 (KPI principal, dona con leyenda, pirámide, barras apiladas, filtros cruzados, celdas de tabla). Sus estilos `.rep-*` y la paleta `--color-serie-*` están en `app/shell.css`. Receta en `docs/REPORTES.md` |
 | `components/breadcrumb-context.tsx` | Niveles de drilldown en la ruta de migas |
 | `components/cia-logo.tsx` | Símbolo CIA |
 | `components/section-tabs.tsx`, `components/page-header.tsx` | Pestañas de sección y encabezado de página |
