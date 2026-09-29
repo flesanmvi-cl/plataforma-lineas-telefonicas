@@ -16,7 +16,7 @@ export type EstiloPortales = (typeof ESTILOS_PORTALES)[number]["id"];
 
 const CLAVE = "cia-estilo-portales";
 const EVENTO = "cia-estilo-portales";
-const POR_DEFECTO: EstiloPortales = "lengueta";
+const POR_DEFECTO: EstiloPortales = "media-luna";
 
 function leer(): EstiloPortales {
   try {
