@@ -56,6 +56,8 @@ export const NAV_CONFIG: NavItem = {
   children: [
     { href: "/configuracion/personalizacion", label: "Mi personalización" },
     { href: "/configuracion/presentaciones", label: "Presentaciones" },
+    { href: "/configuracion/comentarios", label: "Mis comentarios" },
+    { href: "/configuracion/acerca", label: "Acerca de" },
     { href: "/configuracion/usuarios", label: "Usuarios y roles", adminOnly: true },
   ],
 };

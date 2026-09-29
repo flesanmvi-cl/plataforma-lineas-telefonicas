@@ -44,8 +44,8 @@ const PARA_TI: Seccion[] = [
     description: "Activa «Agregar a presentación» y administra tus presentaciones.",
     icon: Presentation,
   },
-  { title: "Mis comentarios", description: "Lo que enviaste con el botón de comentarios y en qué estado va.", icon: MessageSquare },
-  { title: "Acerca de", description: "Versión de la plataforma y del estándar, y contacto de soporte de la CIA.", icon: Info },
+  { href: "/configuracion/comentarios", title: "Mis comentarios", description: "Lo que enviaste con el botón de comentarios y en qué estado va.", icon: MessageSquare },
+  { href: "/configuracion/acerca", title: "Acerca de", description: "Versión de la plataforma y del estándar, y contacto de soporte de la CIA.", icon: Info },
 ];
 
 const ADMINISTRACION: Seccion[] = [

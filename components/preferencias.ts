@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useSyncExternalStore } from "react";
+import { usePathname, useRouter } from "next/navigation";
 
 // SHELL · preferencias de cada usuario («Mi personalización»). Por ahora se guardan en este
 // navegador; el plan es llevarlas a la tabla `preferencias_usuario` del esquema de cada
@@ -12,11 +13,14 @@ export interface Preferencias {
   texto: "chico" | "normal" | "grande";
   densidad: "compacta" | "comoda";
   reducirAnimaciones: boolean;
+  /** Ruta donde parte el usuario al entrar a la plataforma (null = Inicio). */
+  inicio: string | null;
 }
 
-const POR_DEFECTO: Preferencias = { texto: "normal", densidad: "compacta", reducirAnimaciones: false };
+const POR_DEFECTO: Preferencias = { texto: "normal", densidad: "compacta", reducirAnimaciones: false, inicio: null };
 const CLAVE = "cia-preferencias";
 const EVENTO = "cia-preferencias";
+const CLAVE_INICIO = "cia-inicio-aplicado";
 
 let cache: { crudo: string | null; valor: Preferencias } = { crudo: null, valor: POR_DEFECTO };
 
@@ -61,6 +65,26 @@ export function usePreferencias(): [Preferencias, (cambio: Partial<Preferencias>
  * vez en el AppShell. */
 export function AplicarPreferencias() {
   const [p] = usePreferencias();
+  const router = useRouter();
+  const pathname = usePathname();
+
+  // Página de inicio preferida: solo la primera vez que se entra en la sesión del navegador y
+  // solo si se entró por «/». Después, el ítem Inicio del menú sigue llevando a Inicio.
+  useEffect(() => {
+    try {
+      if (sessionStorage.getItem(CLAVE_INICIO)) return;
+      sessionStorage.setItem(CLAVE_INICIO, "1");
+    } catch {
+      return;
+    }
+    const inicio = leer().inicio;
+    if (pathname === "/" && inicio && inicio.startsWith("/") && !inicio.startsWith("//") && inicio !== "/") {
+      router.replace(inicio);
+    }
+    // Solo al montar: es la entrada a la plataforma.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   useEffect(() => {
     const raiz = document.documentElement;
     if (p.texto === "normal") raiz.removeAttribute("data-texto");

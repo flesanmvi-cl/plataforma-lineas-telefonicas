@@ -5,7 +5,7 @@ sidebar, barra superior, navegación, escala fluida, densidad compacta, tokens d
 componentes del marco (acceso a portales, estado de los datos, pantalla completa, Personalizar).
 El contenido de cada plataforma (pantallas, gráficos, datos) no es parte del shell.
 
-Versión vigente: **shell-v1** (etiqueta git `shell-v1` en este repo).
+Versión vigente: **shell-v1.1** (en preparación; `VERSION_SHELL` en `lib/nav-base.ts`). La anterior, `shell-v1`, es la que tienen hoy las plataformas migradas.
 
 ## Archivos del shell (se copian tal cual, no se editan por plataforma)
 
@@ -23,6 +23,8 @@ Versión vigente: **shell-v1** (etiqueta git `shell-v1` en este repo).
 | `components/estado-datos.tsx` | Indicador de frescura de los datos |
 | `components/personalizar.tsx`, `components/preferencias.ts` | «Mi personalización» (tema, tamaño, densidad, animaciones, portales) y cómo se aplican las preferencias |
 | `app/(dashboard)/configuracion/personalizacion/page.tsx` | Ruta de Mi personalización (abierta a todos) |
+| `components/mis-comentarios.tsx`, `app/(dashboard)/configuracion/comentarios/page.tsx` | Mis comentarios (lee `/api/feedback/mios`, servicio central de feedback) |
+| `app/(dashboard)/configuracion/acerca/page.tsx` | Acerca de: versión (package.json) y `VERSION_SHELL` |
 | `components/portales/*` | Acceso a Portal CIA / SAP Work Zone (lengüeta, media luna, cinta, burbuja) |
 | `components/breadcrumb-context.tsx` | Niveles de drilldown en la ruta de migas |
 | `components/cia-logo.tsx` | Símbolo CIA |

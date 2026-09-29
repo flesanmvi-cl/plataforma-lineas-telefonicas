@@ -3,6 +3,9 @@ import type { LucideIcon } from "lucide-react";
 // SHELL · parte común de la navegación (igual en todas las plataformas; no editar por plataforma).
 // Los ítems del menú de cada plataforma viven en `lib/nav.ts`, que reexporta esto.
 
+/** Versión del estándar de plataformas (shell) que tiene esta plataforma. Se muestra en Acerca de. */
+export const VERSION_SHELL = "shell-v1.1";
+
 /** Subpanel de un ítem del menú. Se muestra en el menú flotante del sidebar. */
 export interface NavChild {
   href: string;
