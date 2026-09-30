@@ -60,7 +60,7 @@ export function KpiPrincipal({
       <div className="relative flex flex-col gap-4">
         <Rotulo punto>{rotulo}</Rotulo>
         <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-          <span className="text-2xl font-semibold text-muted">{prefijo}</span>
+          {prefijo && <span className="text-2xl font-semibold text-muted">{prefijo}</span>}
           <span className="rep-cifra text-[clamp(3rem,11cqw,5.25rem)] font-extrabold text-text">{cifra(valor)}</span>
           <span className="text-lg font-semibold text-faint">{unidad}</span>
           {contraste && (

@@ -8,7 +8,8 @@ real: los bloques no cambian.
 |---|---|---|---|
 | 1 | Resumen ejecutivo del período, con filtros cruzados | `components/pruebas/reporte-ejecutivo.tsx` | `components/reporte/` |
 | 2 | Ventas con meta: mensual, acumulado, categoría, ciudad, vendedor y proyecto, en tres vistas (Tablero, Territorio, Vendedor × mes) | `components/pruebas/ventas/` | `components/reporte/` |
-| 3 | Ficha de una entidad (una obra, un contrato) | `components/pruebas/reporte-obra.tsx` | laboratorio |
+| 3 | Dotación (RR.HH.): stock al cierre, movimientos y rotación de 12 meses, composición por edad, sexo, antigüedad y contrato | `components/pruebas/personas/` | `components/reporte/` |
+| — | Ficha de una entidad (antes Tipo 3), en `/pruebas/reportes/obra` | `components/pruebas/reporte-obra.tsx` | laboratorio |
 | — | Costos por obra con drilldown (antes Tipo 2), en `/pruebas/reportes/costos` | `components/pruebas/reporte-costos.tsx` | laboratorio + ECharts |
 
 ## Reporte Tipo 1
@@ -37,6 +38,11 @@ rojo solo en la tarjeta principal.
 | `MapaChile`, `MapaLatitud` | `mapa-chile.tsx` | puntos `{ clave, nombre, lat, lon, valor, color, detalle }` sobre el contorno real (GeoJSON `/lab/chile-regiones.json`) |
 | `MatrizCalor` | `matriz-calor.tsx` | filas × columnas (vendedor × mes), columnas activas del período |
 | `BarrasVariacion` | `variacion.tsx` | variación % por ítem alrededor de cero |
+| `FlujoMensual` | `flujo-mensual.tsx` | por mes: entradas (arriba), salidas (abajo) y saldo; el neto bajo cada mes |
+| `Cascada` | `cascada.tsx` | saldo inicial, movimientos con signo y saldo final (puente); el eje no parte de cero |
+| `PiramideEdad` | `piramide-edad.tsx` | tramos con un valor a cada lado (hombres / mujeres); clic en tramo o en lado |
+| `RankingTope` | `ranking-tope.tsx` | `{ clave, nombre, detalle, valor, tope }[]` donde menos es mejor (rotación), semáforo `colorTope` |
+| `Columnas` | `columnas.tsx` | histograma simple por tramo, con % y clic para filtrar |
 | Celdas de tabla | `celdas.tsx` | `CeldaNombre` (iniciales), `InsigniaSerie`, `ValorConMas`, `NumeroCaja`, `CeldaMonto` |
 
 La tabla usa `<table className="rep-tabla">`, y los formatos de cifra (es-CL, MM) están en
@@ -66,6 +72,19 @@ Las tres vistas se calculan desde las mismas filas y comparten los filtros: `com
 - **Período:** «Acumulado» suma de enero al mes elegido y «Mes» muestra solo ese mes. Un clic en un mes de cualquier gráfico cambia a «Mes».
 - **Meta:** existe por vendedor. La de una ciudad reparte la de cada vendedor según dónde vendió. No hay meta por categoría: con una categoría elegida se muestra «sin meta».
 - **Semáforo** (`colorCumplimiento` en `formato.ts`): sobre 100 % verde, 90-99 % ámbar, bajo 90 % rojo.
+
+## Reporte Tipo 3 (dotación)
+
+Se usa **una fila por persona y contrato** (gerencia, nivel, contrato, sexo, año de nacimiento,
+mes de ingreso y, si salió, mes y motivo de egreso) más los **cupos autorizados por gerencia**.
+Cálculos en `components/pruebas/personas/calculos.ts`.
+
+- **Corte:** un mes de cierre. La dotación es quien está vigente al cierre, y los movimientos y la rotación son de los 12 meses hasta ese mes.
+- **Rotación:** egresos de los 12 meses sobre la dotación promedio de esos meses. La voluntaria cuenta solo las renuncias.
+- **Tope:** cada gerencia tiene un tope de rotación, y el de un grupo es el de sus gerencias ponderado por dotación. Semáforo `colorTope`: hasta el 90 % del tope va en verde, hasta el tope en ámbar y sobre el tope en rojo.
+- **Cupos:** existen solo por gerencia. Con un filtro de sexo, edad, antigüedad o contrato, el KPI principal no muestra cupos.
+- **Puente:** con filtro de edad o antigüedad las personas cambian de tramo en el año, y esa diferencia va como «Cambio de tramo» para que el puente cuadre.
+- **Privacidad:** el reporte es agregado y no lista personas. Los datos reales de RR.HH. no salen de la red interna.
 
 ### Color
 

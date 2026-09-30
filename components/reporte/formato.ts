@@ -49,6 +49,19 @@ export function colorCumplimiento(pct: number | null) {
   return pct >= 100 ? "var(--color-serie-5)" : pct >= 90 ? "var(--color-serie-2)" : "var(--color-serie-3)";
 }
 
+/** Número con un decimal: «14,2». */
+export function decimal(n: number) {
+  return unDecimal.format(n);
+}
+
+/**
+ * Semáforo contra un tope (rotación, ausentismo: menos es mejor): hasta el 90 % del tope verde,
+ * hasta el tope ámbar, sobre el tope rojo de datos.
+ */
+export function colorTope(valor: number, tope: number) {
+  return valor <= tope * 0.9 ? "var(--color-serie-5)" : valor <= tope ? "var(--color-serie-2)" : "var(--color-serie-3)";
+}
+
 /** Variación con signo y un decimal: «+11,2 %», «−3,1 %». */
 export function conSigno(pct: number) {
   const texto = unDecimal.format(Math.abs(pct));
