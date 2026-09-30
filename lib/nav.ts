@@ -43,6 +43,7 @@ export const NAV_ITEMS: NavItem[] = [
       { href: "/pruebas/formularios/tipo-1", label: "Formulario Tipo 1", grupo: "Formularios" },
       { href: "/pruebas/formularios/tipo-2", label: "Formulario Tipo 2", grupo: "Formularios" },
       { href: "/pruebas/formularios/tipo-3", label: "Formulario Tipo 3", grupo: "Formularios" },
+      { href: "/pruebas/maquetas", label: "Constructor de maquetas", grupo: "Maquetas" },
     ],
   },
 ];

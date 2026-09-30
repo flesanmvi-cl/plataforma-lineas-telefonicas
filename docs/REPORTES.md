@@ -91,3 +91,15 @@ Cálculos en `components/pruebas/personas/calculos.ts`.
 La paleta de series es solo para **datos**: categorías en gráficos, insignias y avatares. En
 botones, enlaces de acción y selección, el rojo Flesan sigue siendo el único acento (el punto rojo
 de la opción activa, la lupa del buscador).
+
+## Constructor de maquetas
+
+En `/pruebas/maquetas` (menú Pruebas › Constructor de maquetas) se arma la maqueta de un reporte o
+formulario sin escribir código. Tiene tres paneles: el catálogo, el lienzo de 12 columnas y las
+propiedades o el tema. Código en `components/constructor/` y modelo en `lib/constructor/tipos.ts`.
+
+- **Catálogo:** textos y estructura, las piezas de `components/reporte/` con datos de ejemplo y todo el laboratorio de diseño. Para sumar una pieza nueva, se agrega en `components/constructor/elementos.tsx`.
+- **Bloques:** se arrastran o se agregan con clic, entran después del bloque elegido y se reordenan arrastrando su manilla. Cada uno tiene elemento, título, detalle, ancho (3, 4, 6, 8 o 12), alto y número de bloque.
+- **Tema:** el panel del laboratorio, guardado dentro de cada maqueta. Cambia los elementos del laboratorio; las piezas estándar siguen los tokens de la plataforma.
+- **Guardar:** en este navegador (conveniencia). Para compartir, «Exportar JSON» e «Importar».
+- **Ruta:** no puede llamarse `constructor`. Las herramientas de desarrollo de Next guardan las rutas en un objeto y ese segmento choca con `Object.prototype.constructor`, lo que bota la página en dev.

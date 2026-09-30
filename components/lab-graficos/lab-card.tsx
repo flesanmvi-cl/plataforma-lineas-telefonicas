@@ -104,7 +104,7 @@ export function LabCard({ grafico, alto = 280, sinEnlace, titulo, limpia, classN
   );
 }
 
-class LimiteError extends Component<{ nombre: string; children: ReactNode }, { error: string | null }> {
+export class LimiteError extends Component<{ nombre: string; children: ReactNode }, { error: string | null }> {
   state = { error: null as string | null };
 
   static getDerivedStateFromError(e: Error) {

@@ -114,3 +114,40 @@ export function LabTemaFijo({ tema, children }: { tema: TemaLab; children: React
 
   return <Contexto.Provider value={{ tema, setTema: noEditable, reiniciar: noEditable, tokens }}>{children}</Contexto.Provider>;
 }
+
+/**
+ * Tema controlado desde afuera: el constructor de maquetas guarda el tema dentro de cada
+ * maqueta, y el panel «Tema» del laboratorio lo edita a través de este proveedor.
+ */
+export function LabTemaControlado({
+  tema,
+  onCambio,
+  children,
+}: {
+  tema: TemaLab;
+  onCambio: (tema: TemaLab) => void;
+  children: ReactNode;
+}) {
+  const { resolvedTheme } = useTheme();
+  const [montado, setMontado] = useState(false);
+  const [fuentesListas, setFuentesListas] = useState(0);
+
+  useEffect(() => {
+    setMontado(true);
+    document.fonts?.ready.then(() => setFuentesListas((n) => n + 1));
+  }, []);
+
+  const oscuro = montado && resolvedTheme === "dark";
+  const tokens = useMemo(
+    () => calcularTokens(tema, oscuro, montado ? resolverFuente(tema.fuente) : "sans-serif"),
+    // fuentesListas fuerza el recálculo cuando terminan de cargar las letras.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [tema, oscuro, fuentesListas, montado],
+  );
+
+  return (
+    <Contexto.Provider value={{ tema, setTema: (cambio) => onCambio({ ...tema, ...cambio }), reiniciar: () => onCambio(TEMA_INICIAL), tokens }}>
+      {children}
+    </Contexto.Provider>
+  );
+}
