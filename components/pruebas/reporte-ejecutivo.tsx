@@ -242,7 +242,7 @@ export function ReporteEjecutivo() {
         actions={
           <>
             <AvisoEjemplo />
-            <Link href="/pruebas/reportes/costos" className="inline-flex items-center gap-1 text-[0.8125rem] text-muted hover:text-text">
+            <Link href="/pruebas/reportes/tipo-4" className="inline-flex items-center gap-1 text-[0.8125rem] text-muted hover:text-text">
               Análisis por obra
               <ArrowUpRight className="w-3.5 h-3.5" aria-hidden />
             </Link>

@@ -60,7 +60,7 @@ function colorDesviacion(t: TokensLab, d: number) {
   return d > 5 ? t.estado.malo : d > 0 ? t.estado.alerta : t.estado.bueno;
 }
 
-// Costos por obra (antes Reporte Tipo 2) · analítico con drilldown: filtros a la izquierda y, a la derecha, un gráfico de
+// Reporte Tipo 4 · costos por obra · analítico con drilldown: filtros a la izquierda y, a la derecha, un gráfico de
 // costo contra presupuesto que baja de Línea → Obra → Partida al hacer clic. Los niveles se
 // publican en la barra superior (BreadcrumbContext) y la tabla de detalle sigue al nivel.
 type Cambio<V> = V | ((prev: V) => V);

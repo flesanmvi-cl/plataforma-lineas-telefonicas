@@ -4,13 +4,13 @@ Pantallas de referencia en el menú «Pruebas» del sidebar. Para armar un repor
 plataforma, se copia el tipo que corresponde y se cambian sus datos de ejemplo por la consulta
 real: los bloques no cambian.
 
-| Tipo | Para qué | Pantalla | Piezas |
+| Tipo (menú) | Para qué | Pantalla | Piezas |
 |---|---|---|---|
-| 1 | Resumen ejecutivo del período, con filtros cruzados | `components/pruebas/reporte-ejecutivo.tsx` | `components/reporte/` |
-| 2 | Ventas con meta: mensual, acumulado, categoría, ciudad, vendedor y proyecto, en tres vistas (Tablero, Territorio, Vendedor × mes) | `components/pruebas/ventas/` | `components/reporte/` |
-| 3 | Dotación (RR.HH.): stock al cierre, movimientos y rotación de 12 meses, composición por edad, sexo, antigüedad y contrato | `components/pruebas/personas/` | `components/reporte/` |
-| — | Ficha de una entidad (antes Tipo 3), en `/pruebas/reportes/obra` | `components/pruebas/reporte-obra.tsx` | laboratorio |
-| — | Costos por obra con drilldown (antes Tipo 2), en `/pruebas/reportes/costos` | `components/pruebas/reporte-costos.tsx` | laboratorio + ECharts |
+| 1 (Contratación) | Resumen ejecutivo del período, con filtros cruzados | `components/pruebas/reporte-ejecutivo.tsx` | `components/reporte/` |
+| 2 (Ventas) | Ventas con meta: mensual, acumulado, categoría, ciudad, vendedor y proyecto, en tres vistas (Tablero, Territorio, Vendedor × mes) | `components/pruebas/ventas/` | `components/reporte/` |
+| 3 (RRHH) | Dotación (RR.HH.): stock al cierre, movimientos y rotación de 12 meses, composición por edad, sexo, antigüedad y contrato | `components/pruebas/personas/` | `components/reporte/` |
+| 4 (Costos) | Costos por obra con drilldown (Línea → Obra → Partida) | `components/pruebas/reporte-costos.tsx` | laboratorio + ECharts |
+| 5 (Ficha de obra) | Ficha de una entidad (una obra) | `components/pruebas/reporte-obra.tsx` | laboratorio |
 
 ## Reporte Tipo 1
 

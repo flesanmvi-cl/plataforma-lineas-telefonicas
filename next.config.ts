@@ -25,6 +25,9 @@ const nextConfig: NextConfig = {
       // Presentaciones pasó a Configuración (abierta a todos los usuarios).
       { source: "/presentaciones", destination: "/configuracion/presentaciones", permanent: false },
       { source: "/ui-kit/laboratorio-graficos/comparador", destination: `${lab}/graficos/comparador`, permanent: false },
+      // Costos y la ficha de obra pasaron a ser los Reportes Tipo 4 y 5.
+      { source: "/pruebas/reportes/costos", destination: "/pruebas/reportes/tipo-4", permanent: false },
+      { source: "/pruebas/reportes/obra", destination: "/pruebas/reportes/tipo-5", permanent: false },
       { source: "/ui-kit/laboratorio-graficos/contexto", destination: `${lab}/contexto`, permanent: false },
     ];
   },

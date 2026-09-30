@@ -79,7 +79,7 @@ const ESTADO_OBRA: Estado = DESVIACION >= -3 ? "En plazo" : DESVIACION >= -10 ? 
 
 const pesos = (n: number) => `$ ${formato.millones(n)}`;
 
-// Reporte Tipo 3 · seguimiento de una obra: ficha con estado, mandante, plazo y avance; Gantt,
+// Reporte Tipo 5 · seguimiento de una obra: ficha con estado, mandante, plazo y avance; Gantt,
 // curva S, hitos, ubicación y tabla de partidas. Obra, mandante y administrador son ficticios.
 export function ReporteObra() {
   usePublicarVista("Obra Centro · seguimiento", [`Corte ${fecha(HOY)}`]);
