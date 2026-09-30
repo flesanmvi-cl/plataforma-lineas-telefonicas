@@ -34,6 +34,7 @@ import {
   type Persona,
 } from "./datos";
 import { antiguedad, cuposDe, estadisticas, mensual, piramide, porContrato, porGerencia, puente, topeDe, type Dim, type Estadisticas, type Filtros } from "./calculos";
+import { Desplegable } from "@/components/desplegable";
 
 // Reporte Tipo 3 · dotación (RR.HH.). Mismo look & feel y receta que el Tipo 1: todo se calcula
 // desde una fila por persona y los filtros son cruzados (cada gráfico sin su propio filtro).
@@ -90,16 +91,14 @@ export function ReporteDotacion() {
         actions={
           <>
             <AvisoEjemplo />
-            <label className="inline-flex items-center gap-2 text-[0.8125rem] text-muted">
-              Cierre
-              <select value={cierre} onChange={(e) => setFiltros({ cierre: e.target.value })} className="field-input w-44! rounded-full!" aria-label="Mes de cierre">
-                {CIERRES.map((m) => (
-                  <option key={m} value={m}>
-                    {mayus(rotuloMesLargo(m))}
-                  </option>
-                ))}
-              </select>
-            </label>
+            <Desplegable
+              conRotulo
+              etiqueta="Cierre"
+              valor={String(cierre)}
+              onCambio={(v) => setFiltros({ cierre: v })}
+              alinear="derecha"
+              opciones={CIERRES.map((m) => ({ valor: String(m), texto: mayus(rotuloMesLargo(m)) }))}
+            />
           </>
         }
       />

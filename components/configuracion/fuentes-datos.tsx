@@ -5,6 +5,7 @@ import { Loader2, RefreshCw } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/cn";
 import { AvisoMaqueta, duracion, fechaHora } from "@/components/configuracion/maqueta";
+import { Desplegable } from "@/components/desplegable";
 
 // MAQUETA · Configuración › Fuentes de datos (solo administradores). Datos de ejemplo.
 // En una plataforma: tablas fuentes_datos + cargas_datos (plan en docs/SHELL.md); el indicador
@@ -148,14 +149,15 @@ export function FuentesDatos() {
 
       <div className="flex items-center gap-3">
         <h2 className="font-label text-xs font-semibold tracking-[0.12em] uppercase text-muted">Últimas cargas</h2>
-        <select aria-label="Filtrar por fuente" value={filtro} onChange={(e) => setFiltro(e.target.value)} className="field-input w-56! ml-auto">
-          <option value="todas">Todas las fuentes</option>
-          {fuentes.map((f) => (
-            <option key={f.clave} value={f.clave}>
-              {f.nombre}
-            </option>
-          ))}
-        </select>
+        <Desplegable
+          variante="filtro"
+          etiqueta="Fuente"
+          className="ml-auto"
+          valor={filtro}
+          activo={filtro !== "todas"}
+          onCambio={setFiltro}
+          opciones={[{ valor: "todas", texto: "Todas" }, ...fuentes.map((f) => ({ valor: f.clave, texto: f.nombre }))]}
+        />
       </div>
       <div className="card overflow-hidden p-0">
         <table className="w-full text-sm">

@@ -9,6 +9,7 @@ import { AvisoEjemplo } from "../piezas";
 import { CATEGORIAS, MESES_LARGOS, ULTIMO_MES } from "./datos";
 import { textoPeriodo, type Filtros, type Periodo } from "./calculos";
 import { VistaMatriz, VistaTablero, VistaTerritorio } from "./vistas";
+import { Desplegable } from "@/components/desplegable";
 
 // Reporte Tipo 2 · ventas. Tres vistas sobre las mismas filas y los mismos filtros:
 // «Tablero» (la principal, en la línea del Tipo 1), «Territorio» (mapa protagonista) y
@@ -77,21 +78,14 @@ export function ReporteVentas() {
         actions={
           <>
             <AvisoEjemplo />
-            <label className="inline-flex items-center gap-2 text-[0.8125rem] text-muted">
-              {f.periodo === "mes" ? "Mes" : "Hasta"}
-              <select
-                value={f.mes}
-                onChange={(e) => setFiltros({ mes: e.target.value })}
-                className="field-input w-44! rounded-full!"
-                aria-label={f.periodo === "mes" ? "Mes" : "Acumular hasta"}
-              >
-                {MESES_LARGOS.slice(0, ULTIMO_MES + 1).map((m, i) => (
-                  <option key={m} value={i}>
-                    {m[0].toUpperCase() + m.slice(1)} 2026
-                  </option>
-                ))}
-              </select>
-            </label>
+            <Desplegable
+              conRotulo
+              etiqueta={f.periodo === "mes" ? "Mes" : "Hasta"}
+              valor={String(f.mes)}
+              onCambio={(v) => setFiltros({ mes: v })}
+              alinear="derecha"
+              opciones={MESES_LARGOS.slice(0, ULTIMO_MES + 1).map((m, i) => ({ valor: String(i), texto: `${m[0].toUpperCase() + m.slice(1)} 2026` }))}
+            />
             <Pildoras etiqueta="Período" opciones={PERIODOS} valor={f.periodo} onCambio={(v) => setFiltros({ periodo: v })} />
           </>
         }

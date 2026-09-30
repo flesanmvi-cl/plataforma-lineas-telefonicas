@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { Check, ChevronDown, X, type LucideIcon } from "lucide-react";
 import { useTokens } from "@/components/lab-graficos/tema-context";
 import { conAlfa } from "@/lib/lab-graficos/tema";
+import { Desplegable } from "@/components/desplegable";
 import { estiloControl, estiloLista, estiloOpcion, normalizar } from "./comun";
 import { CajaCampo, MarcoCampo, useIdsCampo } from "./marco";
 import type { PropsCampoComun } from "./campo-texto";
@@ -29,7 +30,11 @@ export interface PropsCampoSelect
   icono?: LucideIcon;
 }
 
-/** Select nativo estilizado: el más accesible y el mejor en móvil para listas cortas. */
+/**
+ * Select de lista corta con el desplegable del shell (components/desplegable): botón con el look
+ * del campo y lista flotante redondeada, con check rojo en la opción elegida. Antes era un
+ * <select> nativo, cuya lista abierta no se puede estilar.
+ */
 export function CampoSelect({
   etiqueta,
   ayuda,
@@ -48,7 +53,6 @@ export function CampoSelect({
   onFocus,
   onBlur,
   style,
-  ...resto
 }: PropsCampoSelect) {
   const t = useTokens();
   const [foco, setFoco] = useState(false);
@@ -76,47 +80,39 @@ export function CampoSelect({
         flotante={flota ? { texto: etiqueta, htmlFor: ids.id, arriba, requerido } : null}
         style={{ cursor: disabled ? "not-allowed" : "pointer" }}
       >
-        <select
+        <Desplegable
+          variante="libre"
           id={ids.id}
-          className="lab-campo"
-          value={value}
-          disabled={disabled}
-          aria-invalid={error ? true : undefined}
-          aria-required={requerido || undefined}
-          aria-describedby={ids.describedBy}
-          onChange={(e) => onChange(e.target.value)}
-          onFocus={(e) => {
+          etiqueta={etiqueta}
+          valor={value}
+          onCambio={onChange}
+          deshabilitado={disabled}
+          invalido={Boolean(error)}
+          requerido={requerido}
+          describedBy={ids.describedBy}
+          onFocus={() => {
             setFoco(true);
-            onFocus?.(e);
+            onFocus?.({} as never);
           }}
-          onBlur={(e) => {
+          onBlur={() => {
             setFoco(false);
-            onBlur?.(e);
+            onBlur?.({} as never);
           }}
-          style={{
+          className="flex-1 min-w-0 self-stretch"
+          claseBoton="lab-campo w-full justify-between text-left"
+          estiloBoton={{
             ...estiloControl(t),
-            appearance: "none",
             cursor: "inherit",
-            paddingRight: 22,
             color: value === "" ? t.campo.placeholder : "inherit",
             ...style,
           }}
-          {...resto}
+          placeholder={placeholder}
+          opciones={opciones.map((o) => ({ valor: o.valor, texto: o.etiqueta, detalle: o.detalle }))}
         >
-          {placeholder !== undefined && (
-            <option value="">{flota && !arriba ? "" : placeholder}</option>
-          )}
-          {opciones.map((o) => (
-            <option key={o.valor} value={o.valor} style={{ color: t.texto, background: t.fondoTarjeta }}>
-              {o.etiqueta}
-            </option>
-          ))}
-        </select>
-        <ChevronDown
-          size={16}
-          aria-hidden
-          style={{ position: "absolute", right: t.campo.estilo === "subrayado" ? 2 : 10, color: t.textoSuave, pointerEvents: "none" }}
-        />
+          <span className="truncate">
+            {opciones.find((o) => o.valor === value)?.etiqueta ?? (flota && !arriba ? "" : (placeholder ?? ""))}
+          </span>
+        </Desplegable>
       </CajaCampo>
     </MarcoCampo>
   );

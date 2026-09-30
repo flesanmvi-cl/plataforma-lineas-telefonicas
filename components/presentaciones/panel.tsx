@@ -7,6 +7,7 @@ import { cn } from "@/lib/cn";
 import { usePresentaciones } from "@/components/presentaciones/contexto";
 import { useDescarga } from "@/components/presentaciones/use-descarga";
 import type { Diapositiva } from "@/lib/presentaciones/tipos";
+import { Desplegable } from "@/components/desplegable";
 
 /**
  * Panel lateral «Presentaciones»: elegir la presentación activa, ver y reordenar sus
@@ -43,20 +44,16 @@ export function PanelPresentaciones() {
             </button>
           </div>
           <div className="flex gap-2">
-            <select
-              aria-label="Presentación activa"
-              value={activa?.id ?? ""}
-              onChange={(e) => activar(e.target.value)}
-              disabled={!presentaciones.length}
-              className="field-input flex-1"
-            >
-              {!presentaciones.length && <option value="">Sin presentaciones</option>}
-              {presentaciones.map((p) => (
-                <option key={p.id} value={p.id}>
-                  {p.nombre}
-                </option>
-              ))}
-            </select>
+            <Desplegable
+              variante="campo"
+              etiqueta="Presentación activa"
+              className="flex-1 min-w-0"
+              valor={activa?.id ?? ""}
+              onCambio={activar}
+              deshabilitado={!presentaciones.length}
+              placeholder="Sin presentaciones"
+              opciones={presentaciones.map((p) => ({ valor: p.id, texto: p.nombre }))}
+            />
             <button type="button" onClick={() => crear(`Presentación ${presentaciones.length + 1}`)} className="btn-flesan btn-flesan-ghost btn-flesan-sm">
               <Plus className="w-4 h-4" />
               Nueva

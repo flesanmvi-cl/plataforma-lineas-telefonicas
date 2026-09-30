@@ -8,6 +8,7 @@ import { ESTILOS_PORTALES, useEstiloPortales, type EstiloPortales } from "@/comp
 import { usePreferencias, type Preferencias } from "@/components/preferencias";
 import { PersonalizacionModulos } from "@/components/modulos";
 import { NAV_ITEMS } from "@/lib/nav";
+import { Desplegable } from "@/components/desplegable";
 
 /**
  * SHELL · «Mi personalización» (Configuración › Mi personalización): cómo ve y usa la plataforma
@@ -111,28 +112,18 @@ export function PanelPersonalizacion() {
           </div>
         </Fila>
         <Fila titulo="Página de inicio" detalle="Dónde partes al entrar a la plataforma.">
-          <select
-            aria-label="Página de inicio"
-            value={pref.inicio ?? "/"}
-            onChange={(e) => cambiar({ inicio: e.target.value === "/" ? null : e.target.value })}
-            className="field-input w-72! cursor-pointer"
-          >
-            {NAV_ITEMS.map((item) =>
-              item.children?.length ? (
-                <optgroup key={item.href} label={item.label}>
-                  {item.children.map((h) => (
-                    <option key={h.href} value={h.href}>
-                      {h.label}
-                    </option>
-                  ))}
-                </optgroup>
-              ) : (
-                <option key={item.href} value={item.href}>
-                  {item.label}
-                </option>
-              ),
+          <Desplegable
+            etiqueta="Página de inicio"
+            valor={pref.inicio ?? "/"}
+            onCambio={(v) => cambiar({ inicio: v === "/" ? null : v })}
+            className="w-72"
+            claseBoton="w-full justify-between"
+            opciones={NAV_ITEMS.flatMap((item) =>
+              item.children?.length
+                ? item.children.map((h) => ({ valor: h.href, texto: `${item.label} › ${h.label}` }))
+                : [{ valor: item.href, texto: item.label }],
             )}
-          </select>
+          />
         </Fila>
       </Seccion>
 

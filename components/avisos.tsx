@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { AlertTriangle, Info, Megaphone, X } from "lucide-react";
 import { cn } from "@/lib/cn";
+import { Desplegable } from "@/components/desplegable";
 
 // SHELL · avisos para toda la plataforma (tabla `avisos`, db/002_configuracion.sql):
 // - FranjaAvisos: se monta sobre la barra superior y muestra los vigentes; cada usuario puede
@@ -162,14 +163,20 @@ export function GestionAvisos() {
           <textarea value={mensaje} maxLength={500} rows={2} onChange={(e) => setMensaje(e.target.value)} className="field-input h-auto py-2 resize-none" placeholder="Ej.: El viernes 18:00 la plataforma estará en mantención por 30 minutos." />
         </label>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-          <label className="flex flex-col gap-1">
+          <div className="flex flex-col gap-1">
             <span className="label-meta text-[0.625rem] text-faint">Nivel</span>
-            <select value={nivel} onChange={(e) => setNivel(e.target.value as Nivel)} className="field-input">
-              <option value="info">Información</option>
-              <option value="atencion">Atención</option>
-              <option value="critico">Crítico</option>
-            </select>
-          </label>
+            <Desplegable
+              variante="campo"
+              etiqueta="Nivel"
+              valor={nivel}
+              onCambio={(v) => setNivel(v as Nivel)}
+              opciones={[
+                { valor: "info", texto: "Información" },
+                { valor: "atencion", texto: "Atención" },
+                { valor: "critico", texto: "Crítico" },
+              ]}
+            />
+          </div>
           <label className="flex flex-col gap-1">
             <span className="label-meta text-[0.625rem] text-faint">Desde (vacío = ahora)</span>
             <input type="datetime-local" value={desde} onChange={(e) => setDesde(e.target.value)} className="field-input" />

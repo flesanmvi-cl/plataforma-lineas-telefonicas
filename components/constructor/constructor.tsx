@@ -12,6 +12,7 @@ import { ESTANDAR } from "@/lib/lab-graficos/estandar";
 import { TEMA_INICIAL } from "@/lib/lab-graficos/tema";
 import { ALTOS, ANCHOS, nuevoId, type Ancho, type Bloque, type Maqueta, type TipoMaqueta } from "@/lib/constructor/tipos";
 import { ELEMENTOS, elementoPorId, GRUPOS, type ElementoConstructor } from "./elementos";
+import { Desplegable } from "@/components/desplegable";
 
 // Constructor de maquetas en /pruebas/maquetas: la ruta no puede llamarse «constructor», porque
 // las herramientas de desarrollo de Next guardan las rutas en un objeto y el segmento choca con
@@ -231,21 +232,15 @@ export function Constructor() {
         />
 
         <div className="card flex flex-wrap items-center gap-2.5 px-4 py-2.5 mb-4 rounded-2xl!">
-          <select
-            value={maqueta.id}
-            onChange={(e) => {
-              setActualId(e.target.value);
+          <Desplegable
+            etiqueta="Maqueta"
+            valor={maqueta.id}
+            onCambio={(v) => {
+              setActualId(v);
               setSeleccion(null);
             }}
-            className="field-input w-56! rounded-full!"
-            aria-label="Maqueta"
-          >
-            {maquetas.map((m) => (
-              <option key={m.id} value={m.id}>
-                {m.nombre}
-              </option>
-            ))}
-          </select>
+            opciones={maquetas.map((m) => ({ valor: m.id, texto: m.nombre, detalle: `${m.bloques.length} bloques` }))}
+          />
           <input
             value={maqueta.nombre}
             onChange={(e) => cambiarMaqueta({ nombre: e.target.value })}
@@ -624,11 +619,14 @@ function Propiedades({
         <b className="text-sm text-text">{el.nombre}</b>
       </div>
 
-      <Campo rotulo="Elemento">
-        <select
-          value={bloque.elemento}
-          onChange={(e) => {
-            const nuevo = elementoPorId(e.target.value)!;
+      <Campo rotulo="Elemento" grupo>
+        <Desplegable
+          variante="campo"
+          etiqueta="Elemento"
+          valor={bloque.elemento}
+          opciones={hermanos.map((h) => ({ valor: h.id, texto: h.nombre }))}
+          onCambio={(v) => {
+            const nuevo = elementoPorId(v)!;
             // Si el título seguía siendo el del elemento anterior, toma el del nuevo.
             onCambio({
               elemento: nuevo.id,
@@ -637,14 +635,7 @@ function Propiedades({
               alto: nuevo.alto,
             });
           }}
-          className="field-input w-full!"
-        >
-          {hermanos.map((h) => (
-            <option key={h.id} value={h.id}>
-              {h.nombre}
-            </option>
-          ))}
-        </select>
+        />
       </Campo>
 
       {rotuloTitulo && (

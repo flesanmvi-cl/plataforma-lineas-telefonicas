@@ -9,6 +9,7 @@ import { PageHeader } from "@/components/page-header";
 import { etiquetaRol, type Rol } from "@/lib/roles";
 import type { Colaborador } from "@/lib/colaboradores-db";
 import type { UsuarioAsignado } from "@/lib/usuarios-db";
+import { Desplegable } from "@/components/desplegable";
 
 /**
  * Ejemplo de página `adminOnly` con datos reales: asigna/revoca el rol admin/member de
@@ -154,13 +155,19 @@ export function UsuariosClient() {
                 {seleccionado.cargo && <p className="text-xs text-faint mt-0.5">{seleccionado.cargo}</p>}
               </div>
 
-              <label className="flex flex-col gap-1.5">
+              <div className="flex flex-col gap-1.5">
                 <span className="label-meta text-muted">Rol</span>
-                <select className="field-input" value={rolForm} onChange={(e) => setRolForm(e.target.value as Rol)}>
-                  <option value="member">Miembro</option>
-                  <option value="admin">Administrador</option>
-                </select>
-              </label>
+                <Desplegable
+                  variante="campo"
+                  etiqueta="Rol"
+                  valor={rolForm}
+                  onCambio={(v) => setRolForm(v as Rol)}
+                  opciones={[
+                    { valor: "member", texto: "Miembro" },
+                    { valor: "admin", texto: "Administrador" },
+                  ]}
+                />
+              </div>
 
               <div className="flex gap-2 pt-2">
                 <button type="button" className="btn-flesan btn-flesan-primary" onClick={guardar} disabled={guardando}>

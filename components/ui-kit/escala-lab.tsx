@@ -5,6 +5,7 @@ import { ArrowDown, ArrowUp, Download, Filter } from "lucide-react";
 import { cn } from "@/lib/cn";
 import { PlantillaLineaSimple } from "@/components/lab-graficos/graficos/tiempo/plantilla-linea-simple";
 import { LabTemaProvider } from "@/components/lab-graficos/tema-context";
+import { Desplegable } from "@/components/desplegable";
 
 /**
  * Laboratorio de escala (/ui-kit/escala). La plataforma usa por defecto la raíz fluida
@@ -198,11 +199,7 @@ function Formulario() {
     <form className="card dens-card flex flex-col dens-gap" onSubmit={(e) => e.preventDefault()}>
       <div className="grid grid-cols-1 sm:grid-cols-2 dens-gap">
         <Campo label="Obra">
-          <select className="field-input dens-control" defaultValue="vespucio">
-            <option value="vespucio">Obra Vespucio</option>
-            <option value="aysen">Obra Aysén</option>
-            <option value="toro">Obra Toro</option>
-          </select>
+          <ObraEjemplo />
         </Campo>
         <Campo label="Fecha de cierre">
           <input type="date" className="field-input dens-control" defaultValue="2026-09-30" />
@@ -315,5 +312,22 @@ function Reporte() {
         </LabTemaProvider>
       </div>
     </>
+  );
+}
+
+function ObraEjemplo() {
+  const [obra, setObra] = useState("vespucio");
+  return (
+    <Desplegable
+      variante="campo"
+      etiqueta="Obra"
+      valor={obra}
+      onCambio={setObra}
+      opciones={[
+        { valor: "vespucio", texto: "Obra Vespucio" },
+        { valor: "aysen", texto: "Obra Aysén" },
+        { valor: "toro", texto: "Obra Toro" },
+      ]}
+    />
   );
 }

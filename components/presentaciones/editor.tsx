@@ -11,6 +11,7 @@ import { ALTO, ANCHO, capturarUrl, miniatura, urlDiapositiva } from "@/lib/prese
 import { imagenesDe } from "@/lib/presentaciones/exportar";
 import { borrarImagen, guardarImagen, leerImagen } from "@/lib/presentaciones/imagenes";
 import type { Diapositiva, Presentacion } from "@/lib/presentaciones/tipos";
+import { Desplegable } from "@/components/desplegable";
 
 /** Editor de presentaciones (/presentaciones?id=…): miniaturas, vista previa y detalle. */
 /** `encabezadoExtra`: bloque bajo el título (en Configuración, el interruptor de activar/desactivar). */
@@ -87,13 +88,12 @@ export function EditorPresentaciones({ encabezadoExtra }: { encabezadoExtra?: Re
       )}
 
       <div className="flex flex-wrap items-center gap-2">
-        <select aria-label="Presentación" value={activa.id} onChange={(e) => activar(e.target.value)} className="field-input !w-auto">
-          {presentaciones.map((p) => (
-            <option key={p.id} value={p.id}>
-              {p.nombre} · {p.diapositivas.length} diapositiva{p.diapositivas.length === 1 ? "" : "s"}
-            </option>
-          ))}
-        </select>
+        <Desplegable
+          etiqueta="Presentación"
+          valor={activa.id}
+          onCambio={activar}
+          opciones={presentaciones.map((p) => ({ valor: p.id, texto: p.nombre, detalle: `${p.diapositivas.length} diapositiva${p.diapositivas.length === 1 ? "" : "s"}` }))}
+        />
         <input
           aria-label="Nombre de la presentación"
           value={activa.nombre}

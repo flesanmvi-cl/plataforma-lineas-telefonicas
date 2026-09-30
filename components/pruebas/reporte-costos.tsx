@@ -42,6 +42,7 @@ import {
 import { BotonExcel } from "@/components/boton-excel";
 import { descargarExcel } from "@/lib/exportar/excel";
 import { AvisoEjemplo, Bloque, ChipFiltro, estiloRotulo, Segmentado, type OpcionSegmentado } from "./piezas";
+import { Desplegable } from "@/components/desplegable";
 
 const PERIODOS: OpcionSegmentado<Periodo>[] = [
   { id: "anio", texto: "Año" },
@@ -297,17 +298,21 @@ function PanelFiltros({
             </div>
           </div>
 
-          <label className="flex flex-col gap-2">
+          <div className="flex flex-col gap-2">
             <span style={estiloRotulo(t)}>Región</span>
-            <select value={region} onChange={(e) => onRegion(e.target.value)} style={{ ...estiloCampo(t), fontFamily: t.fuente, width: "100%" }}>
-              <option value="">Todas las regiones</option>
-              {REGIONES_CORTAS.map((r) => (
-                <option key={r} value={r}>
-                  {r}
-                </option>
-              ))}
-            </select>
-          </label>
+            <Desplegable
+              variante="libre"
+              etiqueta="Región"
+              valor={region}
+              onCambio={onRegion}
+              className="w-full"
+              claseBoton="w-full justify-between"
+              estiloBoton={{ ...estiloCampo(t), fontFamily: t.fuente, width: "100%" }}
+              opciones={[{ valor: "", texto: "Todas las regiones" }, ...REGIONES_CORTAS.map((r) => ({ valor: r, texto: r }))]}
+            >
+              <span className="truncate">{region || "Todas las regiones"}</span>
+            </Desplegable>
+          </div>
 
           <div role="group" aria-label="Estado de la obra" className="flex flex-col gap-2">
             <span style={estiloRotulo(t)}>Estado de la obra</span>

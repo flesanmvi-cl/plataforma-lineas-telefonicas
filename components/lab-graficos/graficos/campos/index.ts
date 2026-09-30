@@ -21,7 +21,7 @@ export const GRAFICOS_CAMPOS: GraficoLab[] = [
     nombre: "Selección",
     familia: "campos",
     libreria: "HTML",
-    descripcion: "Select nativo para listas cortas, buscable (combobox) para largas, radios en fila e interruptor.",
+    descripcion: "Select con lista propia para listas cortas, buscable (combobox) para largas, radios en fila e interruptor.",
     interacciones: ["Filtrar escribiendo", "Flechas, Enter y Esc", "Quitar selección"],
     ancho: true,
     alto: 250,

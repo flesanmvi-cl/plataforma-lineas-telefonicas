@@ -9,6 +9,7 @@ import { usePresentaciones } from "@/components/presentaciones/contexto";
 import { useVistaActual } from "@/components/presentaciones/vista-actual";
 import { capturarUrl, miniatura, urlDiapositiva } from "@/lib/presentaciones/capturar";
 import { guardarImagen } from "@/lib/presentaciones/imagenes";
+import { Desplegable } from "@/components/desplegable";
 
 const NUEVA = "__nueva__";
 
@@ -147,14 +148,17 @@ export function BotonAgregarVista() {
               </div>
 
               <Campo etiqueta="Presentación" htmlFor={`${id}-destino`}>
-                <select id={`${id}-destino`} value={destino} onChange={(e) => setDestino(e.target.value)} className="field-input">
-                  {presentaciones.map((p) => (
-                    <option key={p.id} value={p.id}>
-                      {p.nombre} · {p.diapositivas.length} diapositiva{p.diapositivas.length === 1 ? "" : "s"}
-                    </option>
-                  ))}
-                  <option value={NUEVA}>Nueva presentación…</option>
-                </select>
+                <Desplegable
+                  id={`${id}-destino`}
+                  variante="campo"
+                  etiqueta="Presentación"
+                  valor={destino}
+                  onCambio={setDestino}
+                  opciones={[
+                    ...presentaciones.map((p) => ({ valor: p.id, texto: p.nombre, detalle: `${p.diapositivas.length} diapositiva${p.diapositivas.length === 1 ? "" : "s"}` })),
+                    { valor: NUEVA, texto: "Nueva presentación…" },
+                  ]}
+                />
               </Campo>
               {destino === NUEVA && (
                 <Campo etiqueta="Nombre de la nueva presentación" htmlFor={`${id}-nombre`}>
@@ -166,14 +170,14 @@ export function BotonAgregarVista() {
               </Campo>
               {bloques.length > 0 && (
                 <Campo etiqueta="Qué incluir" htmlFor={`${id}-bloque`}>
-                  <select id={`${id}-bloque`} value={bloque} onChange={(e) => setBloque(e.target.value)} className="field-input">
-                    <option value="">Toda la vista</option>
-                    {bloques.map((b) => (
-                      <option key={b.id} value={b.id}>
-                        Solo: {b.titulo}
-                      </option>
-                    ))}
-                  </select>
+                  <Desplegable
+                    id={`${id}-bloque`}
+                    variante="campo"
+                    etiqueta="Qué incluir"
+                    valor={bloque}
+                    onCambio={setBloque}
+                    opciones={[{ valor: "", texto: "Toda la vista" }, ...bloques.map((b) => ({ valor: b.id, texto: `Solo: ${b.titulo}` }))]}
+                  />
                 </Campo>
               )}
               <div className="flex flex-col gap-1.5">

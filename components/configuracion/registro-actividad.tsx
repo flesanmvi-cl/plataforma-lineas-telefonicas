@@ -5,6 +5,7 @@ import { Search } from "lucide-react";
 import { BotonExcel } from "@/components/boton-excel";
 import { descargarExcel } from "@/lib/exportar/excel";
 import { AvisoMaqueta, fechaHora } from "@/components/configuracion/maqueta";
+import { Desplegable } from "@/components/desplegable";
 
 // MAQUETA · Configuración › Registro de actividad (solo administradores). Datos de ejemplo.
 // En una plataforma: tabla registro_actividad; cada acción importante llama a
@@ -57,8 +58,8 @@ export function RegistroActividad() {
   const [datos, setDatos] = useState<Evento[] | null>(null);
   const [ahora, setAhora] = useState(0);
   const [rango, setRango] = useState("7");
-  const [usuario, setUsuario] = useState("todos");
-  const [accion, setAccion] = useState("todas");
+  const [usuarios, setUsuarios] = useState<string[]>([]);
+  const [acciones, setAcciones] = useState<string[]>([]);
   const [texto, setTexto] = useState("");
   const [pagina, setPagina] = useState(0);
 
@@ -75,13 +76,13 @@ export function RegistroActividad() {
     return datos.filter(
       (e) =>
         ahora - e.fecha.getTime() <= horas * 3_600_000 &&
-        (usuario === "todos" || e.correo === usuario) &&
-        (accion === "todas" || e.accion === accion) &&
+        (!usuarios.length || usuarios.includes(e.correo)) &&
+        (!acciones.length || acciones.includes(e.accion)) &&
         (!q || `${e.detalle} ${e.entidad} ${e.correo}`.toLowerCase().includes(q)),
     );
-  }, [datos, ahora, rango, usuario, accion, texto]);
+  }, [datos, ahora, rango, usuarios, acciones, texto]);
 
-  useEffect(() => setPagina(0), [rango, usuario, accion, texto]);
+  useEffect(() => setPagina(0), [rango, usuarios, acciones, texto]);
 
   if (!datos) return <div className="skeleton h-64 rounded-flesan" />;
 
@@ -93,29 +94,34 @@ export function RegistroActividad() {
       <AvisoMaqueta tablas="registro_actividad" />
 
       <div className="flex flex-wrap items-center gap-2">
-        <select aria-label="Rango de fechas" value={rango} onChange={(e) => setRango(e.target.value)} className="field-input w-44!">
-          {RANGOS.map((r) => (
-            <option key={r.id} value={r.id}>
-              {r.texto}
-            </option>
-          ))}
-        </select>
-        <select aria-label="Usuario" value={usuario} onChange={(e) => setUsuario(e.target.value)} className="field-input w-60!">
-          <option value="todos">Todos los usuarios</option>
-          {USUARIOS.map((u) => (
-            <option key={u} value={u}>
-              {u}
-            </option>
-          ))}
-        </select>
-        <select aria-label="Acción" value={accion} onChange={(e) => setAccion(e.target.value)} className="field-input w-44!">
-          <option value="todas">Todas las acciones</option>
-          {ACCIONES.map((a) => (
-            <option key={a} value={a}>
-              {a}
-            </option>
-          ))}
-        </select>
+        <Desplegable
+          variante="filtro"
+          etiqueta="Rango"
+          valor={rango}
+          activo={rango !== "7"}
+          onCambio={setRango}
+          opciones={RANGOS.map((r) => ({ valor: r.id, texto: r.texto }))}
+        />
+        <Desplegable
+          multiple
+          variante="filtro"
+          etiqueta="Usuario"
+          textoTodos="Todos"
+          valor={usuarios}
+          activo={usuarios.length > 0}
+          onCambio={setUsuarios}
+          opciones={USUARIOS.map((u) => ({ valor: u, texto: u }))}
+        />
+        <Desplegable
+          multiple
+          variante="filtro"
+          etiqueta="Acción"
+          textoTodos="Todas"
+          valor={acciones}
+          activo={acciones.length > 0}
+          onCambio={setAcciones}
+          opciones={ACCIONES.map((a) => ({ valor: a, texto: a }))}
+        />
         <label className="relative flex-1 min-w-52">
           <span className="sr-only">Buscar en el detalle</span>
           <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-faint" aria-hidden />
@@ -137,7 +143,7 @@ export function RegistroActividad() {
                   ],
                 },
               ],
-              { archivo: "registro-actividad", filtros: { Rango: RANGOS.find((r) => r.id === rango)?.texto ?? "", Usuario: usuario, Acción: accion } },
+              { archivo: "registro-actividad", filtros: { Rango: RANGOS.find((r) => r.id === rango)?.texto ?? "", Usuario: usuarios.join(", ") || "Todos", Acción: acciones.join(", ") || "Todas" } },
             )
           }
         />

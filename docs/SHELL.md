@@ -21,6 +21,7 @@ Versión vigente: **shell-v1.1** (en preparación; `VERSION_SHELL` en `lib/nav-b
 | `components/theme-toggle.tsx` | Claro / oscuro |
 | `components/pantalla-completa.tsx` | Pantalla completa para reportería |
 | `components/estado-datos.tsx` | Indicador de frescura de los datos |
+| `components/desplegable.tsx` | Desplegable estándar (reemplaza a todo `<select>`): selección única o múltiple con casillas; variantes filtro, píldora, campo y libre; lista en portal con check rojo y buscador desde 12 opciones |
 | `components/personalizar.tsx`, `components/preferencias.ts` | «Mi personalización» (tema, tamaño, densidad, animaciones, portales) y cómo se aplican las preferencias |
 | `app/(dashboard)/configuracion/personalizacion/page.tsx` | Ruta de Mi personalización (abierta a todos) |
 | `components/mis-comentarios.tsx`, `app/(dashboard)/configuracion/comentarios/page.tsx` | Mis comentarios (lee `/api/feedback/mios`, servicio central de feedback) |
