@@ -68,7 +68,7 @@ transaccional (`DATABASE_URL`, `lib/db.ts`) se usa solo para leer** (maestro de 
 centros de gestión, movimientos…); **todo lo que se escribe va en el esquema propio `cia_<slug>`**
 de la base de QA (`DATABASE_URL_PLATAFORMA` + `ESQUEMA_PLATAFORMA`, `lib/configuracion-db.ts`).
 Tablas del estándar en `db/002_configuracion.sql` (y `db/001_usuarios_roles.sql` si hay roles
-administrados); todo SQL se muestra y aprueba antes de ejecutarlo en QA. El mockup no tiene esquema.
+administrados, `db/003_notificaciones.sql` si hay campanita); todo SQL se muestra y aprueba antes de ejecutarlo en QA. El mockup no tiene esquema.
 
 ## Escala y densidad (default de la plantilla)
 

@@ -21,6 +21,7 @@ Versión vigente: **shell-v1.1** (en preparación; `VERSION_SHELL` en `lib/nav-b
 | `components/theme-toggle.tsx` | Claro / oscuro |
 | `components/pantalla-completa.tsx` | Pantalla completa para reportería |
 | `components/estado-datos.tsx` | Indicador de frescura de los datos |
+| `components/notificaciones/*`, `lib/notificaciones-db.ts`, `lib/notificaciones-tipos.ts`, `app/api/notificaciones/*`, `app/(dashboard)/notificaciones/` | Campanita de la barra superior (panel con las últimas 10, primero las no leídas), bandeja `/notificaciones` y su API. Tabla en `db/003_notificaciones.sql`; sin ella, datos de ejemplo. Solo aparece con sesión y si la plataforma declara tipos |
 | `components/desplegable.tsx` | Desplegable estándar (reemplaza a todo `<select>`): selección única o múltiple con casillas; variantes filtro, píldora, campo y libre; lista en portal con check rojo y buscador desde 12 opciones |
 | `components/personalizar.tsx`, `components/preferencias.ts` | «Mi personalización» (tema, tamaño, densidad, animaciones, portales) y cómo se aplican las preferencias |
 | `app/(dashboard)/configuracion/personalizacion/page.tsx` | Ruta de Mi personalización (abierta a todos) |
@@ -47,6 +48,7 @@ Variables de entorno de Configuración: `DATABASE_URL_PLATAFORMA` (base de QA pr
 | Archivo | Qué define |
 |---|---|
 | `lib/nav.ts` | `NOMBRE_PLATAFORMA`, `NAV_ITEMS` (menú), `NAV_CONFIG` (Configuración, en el pie: con `adminOnly: true` solo la ven administradores; sin él, la ven todos y cada hijo puede ser `adminOnly`), `migasDe`. Reexporta `lib/nav-base.ts` |
+| `lib/notificaciones-plataforma.ts` | Tipos de notificación de la plataforma (etiqueta, ícono y color) y sus datos de ejemplo. Vacío = sin campanita. Se emiten con `crearNotificacion()` de `lib/notificaciones-db.ts` |
 | `components/modulos.tsx` | Módulos opcionales enchufados al shell (ej. Presentaciones). Sin módulos: versión mínima abajo |
 | `lib/estado-datos.ts` | `obtenerEstadoDatos()` (fuente real de la fecha) y `CADA_HORAS`. Sin datos que refrescar: devolver `null` |
 | `app/globals.css` | `@import "tailwindcss"; @import "./shell.css";` y luego lo propio de la plataforma |

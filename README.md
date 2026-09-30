@@ -146,9 +146,10 @@ Reglas:
    |---|---|---|
    | `db/002_configuracion.sql` | `preferencias_usuario`, `avisos` | Sí: Mi personalización en la base y avisos |
    | `db/001_usuarios_roles.sql` | `usuarios` | Solo si los roles se administran desde Configuración (ver abajo) |
+   | `db/003_notificaciones.sql` | `notificaciones` | Solo si la plataforma tiene login y declara tipos en `lib/notificaciones-plataforma.ts` (campanita) |
 
-   Las próximas del estándar (fuentes de datos, registro de actividad, notificaciones) se sumarán
-   como `db/003_…`, `db/004_…` (plan en `docs/SHELL.md`).
+   Las próximas del estándar (fuentes de datos, registro de actividad) se sumarán como
+   `db/004_…` (plan en `docs/SHELL.md`).
 5. **Nunca se edita un SQL ya aplicado**: los cambios van en un archivo nuevo numerado.
 6. **Registra lo aplicado** en `docs/ARQUITECTURA.md` de la plataforma: archivo, esquema y fecha.
 7. **Archivos adjuntos fuera de la base** siempre que se pueda (disco o almacenamiento de

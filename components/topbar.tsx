@@ -9,6 +9,7 @@ import { BotonPantallaCompleta } from "@/components/pantalla-completa";
 import { EstadoDatos } from "@/components/estado-datos";
 import { BotonComentariosBarra } from "@/components/comentarios/widget";
 import { BotonesBarraModulos } from "@/components/modulos";
+import { Campanita } from "@/components/notificaciones/campanita";
 import { UserMenu } from "@/components/user-menu";
 import { useUsuarioActual } from "@/components/user-context";
 import { cn } from "@/lib/cn";
@@ -100,11 +101,13 @@ export function TopBar() {
         <EstadoDatos />
         <BotonesBarraModulos />
         <BotonComentariosBarra />
+        <Campanita />
         <BotonPantallaCompleta />
         <BotonTema />
       </div>
 
       <div className="flex md:hidden items-center gap-3">
+        <Campanita />
         <ThemeToggle />
         <UserMenu name={user?.name} email={user?.email} image={user?.image} role={user?.role} />
       </div>

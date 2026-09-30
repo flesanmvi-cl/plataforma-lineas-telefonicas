@@ -63,11 +63,17 @@ export interface Miga {
 
 /** Ruta de migas según la URL: Inicio › Sección › Subpanel. Los niveles de drilldown
  * propios de una página (estado interno) se agregan aparte vía BreadcrumbContext. */
+/** Páginas del shell que no van en el menú pero sí tienen nombre en la ruta de migas. */
+const RUTAS_SHELL: Miga[] = [{ label: "Notificaciones", href: "/notificaciones" }];
+
 export function crearMigas(pathname: string, items: NavItem[], config?: NavItem): Miga[] {
   const inicio = items[0];
   const migas: Miga[] = [{ label: inicio.label, href: inicio.href }];
   const item = [...items, ...(config ? [config] : [])].find((i) => i.href !== "/" && isNavActive(pathname, i.href));
-  if (!item) return migas;
+  if (!item) {
+    const propia = RUTAS_SHELL.find((r) => isNavActive(pathname, r.href));
+    return propia ? [...migas, propia] : migas;
+  }
   migas.push({ label: item.label, href: item.href });
   const hijo = hijoActivo(item, pathname);
   if (hijo && hijo.href !== item.href) migas.push({ label: hijo.label, href: hijo.href });
