@@ -1,5 +1,5 @@
 /**
- * Datos de ejemplo del Reporte Tipo 2 (costos por obra): obras sintéticas del laboratorio y
+ * Datos de ejemplo del reporte de costos por obra (drilldown; antes Reporte Tipo 2): obras sintéticas del laboratorio y
  * sus partidas, deterministas (misma semilla, mismos números en servidor y cliente).
  */
 import { azar, LINEAS } from "@/lib/lab-graficos/datos";

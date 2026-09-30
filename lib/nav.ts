@@ -38,6 +38,7 @@ export const NAV_ITEMS: NavItem[] = [
       { href: "/pruebas/reportes/tipo-1", label: "Reporte Tipo 1", grupo: "Reportes" },
       { href: "/pruebas/reportes/tipo-2", label: "Reporte Tipo 2", grupo: "Reportes" },
       { href: "/pruebas/reportes/tipo-3", label: "Reporte Tipo 3", grupo: "Reportes" },
+      { href: "/pruebas/reportes/costos", label: "Costos (drilldown)", grupo: "Reportes" },
       { href: "/pruebas/formularios/tipo-1", label: "Formulario Tipo 1", grupo: "Formularios" },
       { href: "/pruebas/formularios/tipo-2", label: "Formulario Tipo 2", grupo: "Formularios" },
       { href: "/pruebas/formularios/tipo-3", label: "Formulario Tipo 3", grupo: "Formularios" },

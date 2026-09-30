@@ -1,7 +1,7 @@
-import { ReporteCostos } from "@/components/pruebas/reporte-costos";
+import { ReporteVentas } from "@/components/pruebas/ventas/reporte";
 
-export const metadata = { title: "Reporte Tipo 2 · Costos por obra" };
+export const metadata = { title: "Reporte Tipo 2 · Ventas" };
 
 export default function ReporteTipo2Page() {
-  return <ReporteCostos />;
+  return <ReporteVentas />;
 }

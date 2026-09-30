@@ -38,6 +38,23 @@ export const SERIES = [
   "var(--color-serie-8)",
 ];
 
+/**
+ * Semáforo de cumplimiento de meta: sobre 100 % verde, 90-99 % ámbar, bajo 90 % rojo de datos.
+ * Sin meta (null), gris.
+ */
+export function colorCumplimiento(pct: number | null) {
+  if (pct === null) return "var(--color-serie-8)";
+  // Se evalúa sobre el entero que se muestra: un 99,6 % rotulado «100 %» va en verde.
+  pct = Math.round(pct);
+  return pct >= 100 ? "var(--color-serie-5)" : pct >= 90 ? "var(--color-serie-2)" : "var(--color-serie-3)";
+}
+
+/** Variación con signo y un decimal: «+11,2 %», «−3,1 %». */
+export function conSigno(pct: number) {
+  const texto = unDecimal.format(Math.abs(pct));
+  return `${pct > 0 ? "+" : pct < 0 ? "−" : ""}${texto} %`;
+}
+
 /** Fondo suave de una serie para insignias y avatares. */
 export function fondoSerie(color: string, pctMezcla = 15) {
   return `color-mix(in srgb, ${color} ${pctMezcla}%, transparent)`;

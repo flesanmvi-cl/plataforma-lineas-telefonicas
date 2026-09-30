@@ -9,7 +9,7 @@
 export interface Diapositiva {
   id: string;
   titulo: string;
-  /** Ruta de la vista con sus filtros: pathname + search (ej. /pruebas/reportes/tipo-2?lineas=Minería). */
+  /** Ruta de la vista con sus filtros: pathname + search (ej. /pruebas/reportes/costos?lineas=Minería). */
   ruta: string;
   /** Filtros legibles al momento de agregarla (para el pie de la diapositiva y el panel). */
   filtros: string[];

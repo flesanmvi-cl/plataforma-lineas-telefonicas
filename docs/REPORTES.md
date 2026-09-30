@@ -7,8 +7,9 @@ real: los bloques no cambian.
 | Tipo | Para qué | Pantalla | Piezas |
 |---|---|---|---|
 | 1 | Resumen ejecutivo del período, con filtros cruzados | `components/pruebas/reporte-ejecutivo.tsx` | `components/reporte/` |
-| 2 | Analítico con drilldown (dónde está la desviación) | `components/pruebas/reporte-costos.tsx` | laboratorio + ECharts |
+| 2 | Ventas con meta: mensual, acumulado, categoría, ciudad, vendedor y proyecto, en tres vistas (Tablero, Territorio, Vendedor × mes) | `components/pruebas/ventas/` | `components/reporte/` |
 | 3 | Ficha de una entidad (una obra, un contrato) | `components/pruebas/reporte-obra.tsx` | laboratorio |
+| — | Costos por obra con drilldown (antes Tipo 2), en `/pruebas/reportes/costos` | `components/pruebas/reporte-costos.tsx` | laboratorio + ECharts |
 
 ## Reporte Tipo 1
 
@@ -28,6 +29,14 @@ rojo solo en la tarjeta principal.
 | `DonaLeyenda` | `dona-leyenda.tsx` | `{ clave, nombre, valor, detalle, color }[]`, selección y `onSeleccion` |
 | `Piramide` | `piramide.tsx` | `{ numero, nombre, cantidad, valor }[]` por nivel, selección |
 | `BarrasApiladas` | `barras-apiladas.tsx` | categorías (años) y series con un valor por categoría |
+| `KpiTarjeta` | `kpi-tarjeta.tsx` | KPI chico para una franja; barra con marca de meta opcional |
+| `BarrasComparadas` | `barras-comparadas.tsx` | por mes: actual, año anterior y meta (línea punteada); clic elige el mes |
+| `LineaAcumulada` | `linea-acumulada.tsx` | valores por mes del año, la meta y el año anterior (los acumula) |
+| `BarraParticipacion` | `participacion.tsx` | igual que la dona, en una barra al 100 % con fichas |
+| `RankingMeta` | `ranking-meta.tsx` | `{ clave, nombre, detalle, valor, meta }[]`: barra, marca de meta y semáforo |
+| `MapaChile`, `MapaLatitud` | `mapa-chile.tsx` | puntos `{ clave, nombre, lat, lon, valor, color, detalle }` sobre el contorno real (GeoJSON `/lab/chile-regiones.json`) |
+| `MatrizCalor` | `matriz-calor.tsx` | filas × columnas (vendedor × mes), columnas activas del período |
+| `BarrasVariacion` | `variacion.tsx` | variación % por ítem alrededor de cero |
 | Celdas de tabla | `celdas.tsx` | `CeldaNombre` (iniciales), `InsigniaSerie`, `ValorConMas`, `NumeroCaja`, `CeldaMonto` |
 
 La tabla usa `<table className="rep-tabla">`, y los formatos de cifra (es-CL, MM) están en
@@ -49,6 +58,14 @@ La tabla usa `<table className="rep-tabla">`, y los formatos de cifra (es-CL, MM
    completos: Tailwind v4 no emite una variable que no encuentra escrita en el código.
 6. Cada bloque puede cambiar de gráfico según la pregunta (una dona por barras, por ejemplo) sin
    cambiar el look.
+
+## Reporte Tipo 2 (ventas)
+
+Las tres vistas se calculan desde las mismas filas y comparten los filtros: `components/pruebas/ventas/calculos.ts`. Se usa **una fila por unidad vendida** más la **meta mensual por vendedor**.
+
+- **Período:** «Acumulado» suma de enero al mes elegido y «Mes» muestra solo ese mes. Un clic en un mes de cualquier gráfico cambia a «Mes».
+- **Meta:** existe por vendedor. La de una ciudad reparte la de cada vendedor según dónde vendió. No hay meta por categoría: con una categoría elegida se muestra «sin meta».
+- **Semáforo** (`colorCumplimiento` en `formato.ts`): sobre 100 % verde, 90-99 % ámbar, bajo 90 % rojo.
 
 ### Color
 
