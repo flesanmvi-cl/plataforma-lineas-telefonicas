@@ -19,6 +19,8 @@ export interface Preferencias {
   widgetCia: "burbuja" | "pestana" | "barra";
   /** Burbuja o pestaña reducida a su mínima expresión (media luna o línea en el borde). */
   widgetMinimizado: boolean;
+  /** Muestra el botón «Tutorial» del sidebar en las pantallas que tienen recorrido guiado. */
+  tutoriales: boolean;
 }
 
 const POR_DEFECTO: Preferencias = {
@@ -28,6 +30,7 @@ const POR_DEFECTO: Preferencias = {
   inicio: null,
   widgetCia: "burbuja",
   widgetMinimizado: false,
+  tutoriales: true,
 };
 const CLAVE = "cia-preferencias";
 const EVENTO = "cia-preferencias";

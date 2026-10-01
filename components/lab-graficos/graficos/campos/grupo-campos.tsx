@@ -35,6 +35,7 @@ export function GrupoCampos({ leyenda, descripcion, icono: Icono, columnas = 2, 
   const id = useId();
   return (
     <fieldset
+      data-grupo={leyenda}
       aria-labelledby={`${id}-leyenda`}
       aria-describedby={descripcion ? `${id}-desc` : undefined}
       className={className}

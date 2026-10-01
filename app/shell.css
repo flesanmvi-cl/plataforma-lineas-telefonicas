@@ -27,6 +27,8 @@
   --color-status-ok: #16a34a;
   --color-status-warn: #f59e0b;
   --color-status-down: #e30613;
+  /* Velo del tutorial guiado (components/tutorial): oscurece todo menos la zona del paso. */
+  --color-tutorial-velo: rgb(10 12 16 / 0.62);
 
   /* Semánticos — modo claro */
   --color-bg: #f4f4f4;
@@ -79,6 +81,7 @@
 
 /* Modo oscuro — premium dark surfaces */
 .dark {
+  --color-tutorial-velo: rgb(0 0 0 / 0.72);
   --color-bg: #0f0f0f;
   --color-surface: #1a1a1a;
   --color-surface-2: #232323;

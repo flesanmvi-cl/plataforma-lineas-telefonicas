@@ -22,6 +22,7 @@ Versión vigente: **shell-v1.1** (en preparación; `VERSION_SHELL` en `lib/nav-b
 | `components/pantalla-completa.tsx` | Pantalla completa para reportería |
 | `components/estado-datos.tsx` | Indicador de frescura de los datos |
 | `components/notificaciones/*`, `lib/notificaciones-db.ts`, `lib/notificaciones-tipos.ts`, `app/api/notificaciones/*`, `app/(dashboard)/notificaciones/` | Campanita de la barra superior (panel con las últimas 10, primero las no leídas), bandeja `/notificaciones` y su API. Tabla en `db/003_notificaciones.sql`; sin ella, datos de ejemplo. Solo aparece con sesión y si la plataforma declara tipos |
+| `components/tutorial/tutorial.tsx` | Tutorial guiado (origen: eerr_gestion). Una pantalla declara su recorrido con `useTutorial(pasos)` y aparece «Tutorial» en el pie del sidebar; cada paso ilumina un `data-tutorial`, un `data-bloque` o un `data-grupo` (grupos de campos). Se apaga en Mi personalización › Ayuda. En desarrollo avisa en consola si un paso no encuentra su zona. Ejemplos: Reporte Tipo 3 y Formulario Tipo 1 |
 | `components/desplegable.tsx` | Desplegable estándar (reemplaza a todo `<select>`): selección única o múltiple con casillas; variantes filtro, píldora, campo y libre; lista en portal con check rojo y buscador desde 12 opciones |
 | `components/personalizar.tsx`, `components/preferencias.ts` | «Mi personalización» (tema, tamaño, densidad, animaciones, portales) y cómo se aplican las preferencias |
 | `app/(dashboard)/configuracion/personalizacion/page.tsx` | Ruta de Mi personalización (abierta a todos) |

@@ -3,6 +3,7 @@
 import { useMemo, useRef, useState } from "react";
 import { Banknote, Building2, MapPin, Save, Settings2 } from "lucide-react";
 import { toast } from "sonner";
+import { useTutorial, type PasoTutorial } from "@/components/tutorial/tutorial";
 import { PageHeader } from "@/components/page-header";
 import { useTokens } from "@/components/lab-graficos/tema-context";
 import { BotonLab } from "@/components/lab-graficos/graficos/botones/boton-lab";
@@ -121,8 +122,33 @@ function sumarDias(iso: string, dias: number) {
   return f.toISOString().slice(0, 10);
 }
 
+// Recorrido guiado del Formulario Tipo 1: los grupos en orden y cómo guardar.
+const PASOS_FORMULARIO: PasoTutorial[] = [
+  {
+    selector: '[data-grupo="Datos generales"]',
+    titulo: "Parte por los datos generales",
+    texto: "Los campos con asterisco rojo son obligatorios. El código lo entrega Control de Gestión; si no lo tienes, guarda un borrador y vuelve después.",
+  },
+  {
+    selector: '[data-grupo="Ubicación"]',
+    titulo: "Dónde está la obra",
+    texto: "Elige la región y la comuna: con ellas la obra aparece en los mapas y reportes por territorio.",
+  },
+  {
+    selector: '[data-grupo="Montos y plazos"]',
+    titulo: "Montos y plazos",
+    texto: "El presupuesto va en miles de pesos y el contrato en UF. El anticipo no puede pasar del 30 %; el formulario te avisa si algo no cuadra.",
+  },
+  {
+    selector: '[data-tutorial="acciones"]',
+    titulo: "Guarda cuando quieras",
+    texto: "«Guardar borrador» conserva lo avanzado aunque falten datos. «Guardar obra» revisa todo y te lleva al primer campo con error.",
+  },
+];
+
 export default function FormularioTipo1() {
   const t = useTokens();
+  useTutorial(PASOS_FORMULARIO);
   const [obra, setObra] = useState<Obra>(VACIA);
   const [contrato, setContrato] = useState<ArchivoCargado[]>([]);
   const [intentado, setIntentado] = useState(false);
@@ -420,6 +446,7 @@ export default function FormularioTipo1() {
 
         {/* Acciones fijas al pie: siempre a la vista en formularios largos. */}
         <div
+          data-tutorial="acciones"
           className="sticky bottom-0 z-10 -mx-4 lg:-mx-8 mt-6 px-4 lg:px-8 py-3 flex flex-wrap items-center gap-2"
           style={{ background: t.fondo, borderTop: `1px solid ${t.eje}` }}
         >

@@ -127,6 +127,12 @@ export function PanelPersonalizacion() {
         </Fila>
       </Seccion>
 
+      <Seccion titulo="Ayuda">
+        <Fila titulo="Tutoriales" detalle="Muestra «Tutorial» en el sidebar de las pantallas que tienen recorrido guiado.">
+          <Interruptor activo={pref.tutoriales} etiqueta="Tutoriales" onCambio={(v) => cambiar({ tutoriales: v })} />
+        </Fila>
+      </Seccion>
+
       <Seccion titulo="Comentarios CIA">
         <Fila titulo="Botón de comentarios" detalle="Dónde aparece el botón para escribirle al equipo CIA.">
           <Segmento<Preferencias["widgetCia"]>

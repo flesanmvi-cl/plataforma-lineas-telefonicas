@@ -20,6 +20,8 @@ import { Columnas } from "@/components/reporte/columnas";
 import { CeldaMonto } from "@/components/reporte/celdas";
 import { cifra, colorTope, decimal } from "@/components/reporte/formato";
 import { AvisoEjemplo } from "../piezas";
+import { useTutorial } from "@/components/tutorial/tutorial";
+import { PASOS_DOTACION } from "./tutorial";
 import {
   CIERRES,
   CONTRATOS,
@@ -54,6 +56,7 @@ export function ReporteDotacion() {
   const cierre = CIERRES.includes(Number(crudo.cierre)) ? Number(crudo.cierre) : ULTIMO;
   const f: Filtros = { cierre, gerencia: crudo.gerencia, genero: crudo.genero, edad: crudo.edad, antig: crudo.antig, contrato: crudo.contrato };
   const agrupar = crudo.tabla as Agrupar;
+  useTutorial(PASOS_DOTACION);
 
   const alternar = (campo: Dim, valor: string) => setFiltros((p) => ({ [campo]: p[campo] === valor ? "" : valor }));
   const clave = JSON.stringify(f);
@@ -91,14 +94,16 @@ export function ReporteDotacion() {
         actions={
           <>
             <AvisoEjemplo />
-            <Desplegable
-              conRotulo
-              etiqueta="Cierre"
-              valor={String(cierre)}
-              onCambio={(v) => setFiltros({ cierre: v })}
-              alinear="derecha"
-              opciones={CIERRES.map((m) => ({ valor: String(m), texto: mayus(rotuloMesLargo(m)) }))}
-            />
+            <span data-tutorial="cierre" className="inline-flex">
+              <Desplegable
+                conRotulo
+                etiqueta="Cierre"
+                valor={String(cierre)}
+                onCambio={(v) => setFiltros({ cierre: v })}
+                alinear="derecha"
+                opciones={CIERRES.map((m) => ({ valor: String(m), texto: mayus(rotuloMesLargo(m)) }))}
+              />
+            </span>
           </>
         }
       />
@@ -122,7 +127,7 @@ export function ReporteDotacion() {
             ]}
             tendencia={tendencia}
           />
-          <div className="grid grid-cols-2 gap-4">
+          <div data-tutorial="indicadores" className="grid grid-cols-2 gap-4">
             <KpiTarjeta
               rotulo="Rotación 12 meses"
               valor={decimal(r.rotacion)}

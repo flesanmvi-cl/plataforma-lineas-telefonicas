@@ -16,7 +16,7 @@ export interface FiltroActivo {
  */
 export function BarraFiltros({ filtros, onLimpiar }: { filtros: FiltroActivo[]; onLimpiar?: () => void }) {
   return (
-    <div className="card flex flex-wrap items-center gap-2.5 px-5 min-h-12 py-2 rounded-full! shadow-none!" aria-live="polite">
+    <div data-tutorial="filtros" className="card flex flex-wrap items-center gap-2.5 px-5 min-h-12 py-2 rounded-full! shadow-none!" aria-live="polite">
       <Rotulo className="mr-1">Filtros</Rotulo>
       {filtros.length === 0 && <span className="text-[0.8125rem] text-faint">Clic en un gráfico para filtrar</span>}
       {filtros.map((f) => (

@@ -19,6 +19,7 @@ import { useUsuarioActual } from "@/components/user-context";
 import { CiaLogo } from "@/components/cia-logo";
 import { UserCard } from "@/components/user-menu";
 import { AccesoPortales } from "@/components/portales/acceso";
+import { BotonTutorial } from "@/components/tutorial/tutorial";
 
 const COLLAPSE_KEY = "sidebar-collapsed";
 
@@ -144,8 +145,9 @@ export function Sidebar() {
       {/* Portales del grupo (CIA / SAP), en el estilo que el usuario eligió en «Personalizar» */}
       <AccesoPortales />
 
-      {/* Pie: configuración, colapsar y usuario (el tema vive en la barra superior) */}
+      {/* Pie: tutorial (si la pantalla tiene), configuración, colapsar y usuario (el tema vive en la barra superior) */}
       <div data-sidebar-pie className={cn("border-t border-border flex flex-col gap-2 py-3", collapsed ? "px-2 items-center" : "px-3")}>
+        <BotonTutorial colapsado={collapsed} />
         {/* Configuración y, a su lado, el botón para colapsar el menú */}
         <div className={cn("flex items-center gap-2", collapsed ? "flex-col" : "w-full")}>
           {verConfig && (

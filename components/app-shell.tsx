@@ -8,6 +8,7 @@ import { SincronizarPreferencias } from "@/components/preferencias-sync";
 import { FranjaAvisos } from "@/components/avisos";
 import { WidgetCia } from "@/components/comentarios/widget";
 import { ModulosProvider, SuperposicionesModulos, useVistaEspecialModulos } from "@/components/modulos";
+import { TutorialProvider } from "@/components/tutorial/tutorial";
 
 // SHELL · marco del dashboard: sidebar, barra superior y contenido (igual en todas las plataformas).
 // Los módulos opcionales (ej. Presentaciones) se enchufan desde components/modulos.tsx.
@@ -17,7 +18,9 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       <ModulosProvider>
         <AplicarPreferencias />
         <SincronizarPreferencias />
-        <Marco>{children}</Marco>
+        <TutorialProvider>
+          <Marco>{children}</Marco>
+        </TutorialProvider>
       </ModulosProvider>
     </PantallaCompletaProvider>
   );
