@@ -10,6 +10,8 @@ import { CATEGORIAS, MESES_LARGOS, ULTIMO_MES } from "./datos";
 import { textoPeriodo, type Filtros, type Periodo } from "./calculos";
 import { VistaMatriz, VistaTablero, VistaTerritorio } from "./vistas";
 import { Desplegable } from "@/components/desplegable";
+import { useTutorial } from "@/components/tutorial/tutorial";
+import { PASOS_TIPO_2 } from "../tutoriales";
 
 // Reporte Tipo 2 · ventas. Tres vistas sobre las mismas filas y los mismos filtros:
 // «Tablero» (la principal, en la línea del Tipo 1), «Territorio» (mapa protagonista) y
@@ -36,6 +38,7 @@ export interface PropsVista {
 }
 
 export function ReporteVentas() {
+  useTutorial(PASOS_TIPO_2);
   const [crudo, setFiltros] = useFiltrosUrl({
     vista: "tablero",
     periodo: "acum",

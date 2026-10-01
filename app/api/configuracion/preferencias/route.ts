@@ -5,7 +5,7 @@ import { guardarPreferencias, leerPreferencias } from "@/lib/configuracion-db";
 // Mi personalización: preferencias del usuario en sesión. 204 = la plataforma aún no tiene la
 // tabla (o no hay base): el cliente sigue con lo guardado en el navegador.
 
-const CLAVES = new Set(["tema", "texto", "densidad", "reducirAnimaciones", "inicio", "widgetCia", "widgetMinimizado", "portales", "tutoriales"]);
+const CLAVES = new Set(["tema", "texto", "densidad", "reducirAnimaciones", "inicio", "widgetCia", "widgetMinimizado", "portales", "tutoriales", "ofrecerTutoriales"]);
 const MAX_BYTES = 4096;
 
 export async function GET() {

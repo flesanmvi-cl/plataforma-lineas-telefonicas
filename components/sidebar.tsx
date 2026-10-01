@@ -152,6 +152,7 @@ export function Sidebar() {
         <div className={cn("flex items-center gap-2", collapsed ? "flex-col" : "w-full")}>
           {verConfig && (
             <Link
+              data-tutorial="configuracion"
               href={NAV_CONFIG.href}
               title={collapsed ? NAV_CONFIG.label : undefined}
               aria-current={configActiva ? "page" : undefined}
@@ -174,7 +175,7 @@ export function Sidebar() {
             {collapsed ? <ChevronsRight className="w-4 h-4" /> : <ChevronsLeft className="w-4 h-4" />}
           </button>
         </div>
-        <div className="w-full">
+        <div className="w-full" data-tutorial="usuario">
           <UserCard name={user?.name} email={user?.email} image={user?.image} role={user?.role} colapsado={collapsed} />
         </div>
       </div>

@@ -43,6 +43,8 @@ import { BotonExcel } from "@/components/boton-excel";
 import { descargarExcel } from "@/lib/exportar/excel";
 import { AvisoEjemplo, Bloque, ChipFiltro, estiloRotulo, Segmentado, type OpcionSegmentado } from "./piezas";
 import { Desplegable } from "@/components/desplegable";
+import { useTutorial } from "@/components/tutorial/tutorial";
+import { PASOS_TIPO_4 } from "./tutoriales";
 
 const PERIODOS: OpcionSegmentado<Periodo>[] = [
   { id: "anio", texto: "Año" },
@@ -68,6 +70,7 @@ type Cambio<V> = V | ((prev: V) => V);
 const aplicar = <V,>(v: Cambio<V>, prev: V) => (typeof v === "function" ? (v as (p: V) => V)(prev) : v);
 
 export function ReporteCostos() {
+  useTutorial(PASOS_TIPO_4);
   // Filtros y nivel del drilldown en la URL: «Agregar a presentación» guarda la vista tal cual
   // y al abrir esa URL se reconstruye (ver useFiltrosUrl).
   const [f, setF] = useFiltrosUrl({
@@ -347,7 +350,7 @@ function Resumen({ filas, obras }: { filas: FilaCosto[]; obras: number }) {
     { nombre: "Avance físico", valor: formato.porcentaje(total.avance), nota: "Ponderado por presupuesto" },
   ];
   return (
-    <div className="card grid grid-cols-2 md:grid-cols-4" style={{ borderRadius: t.radio, fontFamily: t.fuente }}>
+    <div data-tutorial="resumen" className="card grid grid-cols-2 md:grid-cols-4" style={{ borderRadius: t.radio, fontFamily: t.fuente }}>
       {cifras.map((c, i) => (
         <div
           key={c.nombre}

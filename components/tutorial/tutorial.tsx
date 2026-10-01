@@ -2,18 +2,25 @@
 
 import { createContext, useCallback, useContext, useEffect, useLayoutEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import { createPortal } from "react-dom";
+import { usePathname } from "next/navigation";
 import { ChevronLeft, ChevronRight, GraduationCap, X } from "lucide-react";
 import { cn } from "@/lib/cn";
 import { usePreferencias } from "@/components/preferencias";
+import { PASOS_PLATAFORMA } from "./recorrido-plataforma";
 
 // SHELL · tutorial guiado (origen: eerr_gestion, Propuesta C). Recorre la pantalla paso a paso,
 // como los tutoriales de los bancos: cada paso ilumina una zona y deja el resto bajo un velo, con
 // un globo al lado que dice qué hacer.
 //
-// Una pantalla declara su recorrido con useTutorial(pasos). Con eso aparece el botón «Tutorial»
-// en el pie del sidebar (solo en esa pantalla); sin pasos, no hay botón. El usuario puede
-// apagarlo en Mi personalización. Las zonas se marcan con `data-tutorial="…"`, o se reutiliza el
-// `data-bloque` que ya llevan las tarjetas de reporte y el `data-grupo` de los grupos de campos.
+// El birrete «Tutorial» del pie del sidebar está en todas las pantallas:
+// - si la pantalla declaró su recorrido con useTutorial(pasos), explica esa pantalla y al final
+//   ofrece el recorrido de la plataforma;
+// - si no, muestra el recorrido de la plataforma (components/tutorial/recorrido-plataforma.ts).
+// La primera vez que alguien entra a una pantalla con recorrido (o a Inicio), se le ofrece con
+// una tarjeta junto al birrete; nunca se abre solo. Ambas cosas se apagan en Mi personalización.
+//
+// Las zonas se marcan con `data-tutorial="…"`, o se reutiliza el `data-bloque` de las tarjetas de
+// reporte y el `data-grupo` de los grupos de campos.
 
 export interface PasoTutorial {
   /** Selector CSS de la zona a iluminar. Si no está en la pantalla, el paso se salta. */
@@ -24,33 +31,102 @@ export interface PasoTutorial {
   texto: string;
 }
 
+type Origen = "pantalla" | "plataforma";
+
 interface ValorTutorial {
   pasos: PasoTutorial[] | null;
   registrar: (pasos: PasoTutorial[] | null) => void;
   abierto: boolean;
-  iniciar: () => void;
+  iniciar: (origen?: Origen) => void;
 }
 
 const Contexto = createContext<ValorTutorial | null>(null);
 
-/** Va alrededor del dashboard (AppShell): une los pasos de la pantalla con el botón del sidebar. */
-export function TutorialProvider({ children }: { children: ReactNode }) {
-  const [pasos, setPasos] = useState<PasoTutorial[] | null>(null);
-  const [activos, setActivos] = useState<PasoTutorial[] | null>(null);
-  const [i, setI] = useState(0);
+// Pantallas a las que ya se les ofreció el recorrido (en este navegador).
+const CLAVE_VISTOS = "cia-tutoriales-ofrecidos";
+function leerVistos(): string[] {
+  try {
+    const v = JSON.parse(localStorage.getItem(CLAVE_VISTOS) ?? "[]");
+    return Array.isArray(v) ? v : [];
+  } catch {
+    return [];
+  }
+}
+function marcarVisto(clave: string) {
+  try {
+    const vistos = leerVistos();
+    if (!vistos.includes(clave)) localStorage.setItem(CLAVE_VISTOS, JSON.stringify([...vistos, clave].slice(-200)));
+  } catch {}
+}
+/** Vuelve a ofrecer los recorridos en todas las pantallas (Mi personalización). */
+export function reiniciarOfrecimientos() {
+  try {
+    localStorage.removeItem(CLAVE_VISTOS);
+  } catch {}
+}
 
-  const iniciar = useCallback(() => {
-    // Solo los pasos cuya zona existe ahora (ej. sin datos de backlog no hay botón Backlog).
-    const presentes = (pasos ?? []).filter((p) => buscar(p));
-    if (!presentes.length) return;
-    setActivos(presentes);
-    setI(0);
-  }, [pasos]);
+/** Va alrededor del dashboard (AppShell): une los pasos de la pantalla con el birrete del sidebar. */
+export function TutorialProvider({ children }: { children: ReactNode }) {
+  const pathname = usePathname();
+  const [pref] = usePreferencias();
+  const [pasos, setPasos] = useState<PasoTutorial[] | null>(null);
+  const [recorrido, setRecorrido] = useState<{ pasos: PasoTutorial[]; origen: Origen } | null>(null);
+  const [i, setI] = useState(0);
+  const [oferta, setOferta] = useState<{ clave: string; origen: Origen } | null>(null);
+
+  const iniciar = useCallback(
+    (origen?: Origen) => {
+      const elegido: Origen = origen ?? (pasos?.length ? "pantalla" : "plataforma");
+      // Solo los pasos cuya zona existe ahora (ej. sin campanita no hay paso de notificaciones).
+      const presentes = (elegido === "pantalla" ? (pasos ?? []) : PASOS_PLATAFORMA).filter((p) => buscar(p));
+      setOferta(null);
+      if (!presentes.length) return;
+      setRecorrido({ pasos: presentes, origen: elegido });
+      setI(0);
+    },
+    [pasos],
+  );
+
+  // Ofrecimiento de la primera visita: en una pantalla con recorrido propio, o en Inicio (el de
+  // la plataforma). Espera un momento a que la pantalla se dibuje y registre sus pasos.
+  const ofrecer = pref.tutoriales && pref.ofrecerTutoriales && !recorrido;
+  useEffect(() => {
+    setOferta(null);
+    if (!ofrecer) return;
+    const origen: Origen | null = pasos?.length ? "pantalla" : pathname === "/" ? "plataforma" : null;
+    if (!origen) return;
+    const clave = origen === "plataforma" ? "plataforma" : `pantalla:${pathname}`;
+    if (leerVistos().includes(clave)) return;
+    const t = setTimeout(() => setOferta({ clave, origen }), 1200);
+    return () => clearTimeout(t);
+  }, [pathname, pasos, ofrecer]);
 
   return (
-    <Contexto.Provider value={{ pasos, registrar: setPasos, abierto: activos !== null, iniciar }}>
+    <Contexto.Provider value={{ pasos, registrar: setPasos, abierto: recorrido !== null, iniciar }}>
       {children}
-      {activos && <Recorrido pasos={activos} i={i} onIr={setI} onCerrar={() => setActivos(null)} />}
+      {oferta && (
+        <Ofrecimiento
+          origen={oferta.origen}
+          onAceptar={() => {
+            marcarVisto(oferta.clave);
+            iniciar(oferta.origen);
+          }}
+          onDescartar={() => {
+            marcarVisto(oferta.clave);
+            setOferta(null);
+          }}
+        />
+      )}
+      {recorrido && (
+        <Recorrido
+          pasos={recorrido.pasos}
+          i={i}
+          onIr={setI}
+          onCerrar={() => setRecorrido(null)}
+          // Al terminar el de una pantalla, se ofrece el de la plataforma.
+          siguiente={recorrido.origen === "pantalla" ? { texto: "Ver la plataforma", onClick: () => iniciar("plataforma") } : undefined}
+        />
+      )}
     </Contexto.Provider>
   );
 }
@@ -80,17 +156,19 @@ export function useTutorial(pasos: PasoTutorial[]) {
   }, [pasos, registrar]);
 }
 
-/** Botón «Tutorial» del pie del sidebar: solo si la pantalla tiene recorrido y el usuario no lo apagó. */
+/** Birrete «Tutorial» del pie del sidebar, en todas las pantallas salvo que el usuario lo apague. */
 export function BotonTutorial({ colapsado, className }: { colapsado: boolean; className?: string }) {
   const ctx = useContext(Contexto);
   const [pref] = usePreferencias();
-  if (!ctx?.pasos?.length || !pref.tutoriales) return null;
+  if (!ctx || !pref.tutoriales) return null;
+  const propio = Boolean(ctx.pasos?.length);
   return (
     <button
       type="button"
-      onClick={ctx.iniciar}
-      title={colapsado ? "Tutorial" : "Recorrido guiado por esta pantalla"}
-      aria-label="Abrir el tutorial de esta pantalla"
+      data-boton-tutorial
+      onClick={() => ctx.iniciar()}
+      title={colapsado ? "Tutorial" : propio ? "Recorrido guiado por esta pantalla" : "Recorrido guiado por la plataforma"}
+      aria-label={propio ? "Abrir el tutorial de esta pantalla" : "Abrir el tutorial de la plataforma"}
       className={cn(
         "flex items-center gap-3 w-full px-3 py-2.5 font-label text-xs tracking-[0.08em] uppercase transition-colors border-l-2 whitespace-nowrap cursor-pointer",
         colapsado && "justify-center px-0 w-8",
@@ -101,6 +179,71 @@ export function BotonTutorial({ colapsado, className }: { colapsado: boolean; cl
       <GraduationCap className={cn("w-4 h-4 shrink-0", ctx.abierto && "text-flesan-red")} />
       {!colapsado && "Tutorial"}
     </button>
+  );
+}
+
+// ---------------------------------------------------------------- ofrecimiento
+
+/** Tarjeta chica junto al birrete: «¿Te muestro cómo se usa?». No tapa la pantalla. */
+function Ofrecimiento({ origen, onAceptar, onDescartar }: { origen: Origen; onAceptar: () => void; onDescartar: () => void }) {
+  const [, setPref] = usePreferencias();
+  const [pos, setPos] = useState<CSSProperties | null>(null);
+
+  useLayoutEffect(() => {
+    const ubicar = () => {
+      const boton = document.querySelector("[data-boton-tutorial]");
+      const r = boton?.getBoundingClientRect();
+      // Al lado del sidebar, a la altura del birrete; sin sidebar (móvil), abajo a la izquierda.
+      const borde = boton?.closest("aside")?.getBoundingClientRect().right ?? r?.right ?? 0;
+      setPos(r && r.width ? { left: borde + 12, bottom: Math.max(window.innerHeight - r.bottom - 8, 16) } : { left: 16, bottom: 16 });
+    };
+    ubicar();
+    window.addEventListener("resize", ubicar);
+    return () => window.removeEventListener("resize", ubicar);
+  }, []);
+
+  if (!pos) return null;
+  return createPortal(
+    <div
+      role="dialog"
+      aria-labelledby="oferta-tutorial-titulo"
+      className="fixed z-[60] w-[min(19rem,calc(100vw-2rem))] card shadow-xl p-4 flex flex-col gap-3 animate-fade-in"
+      style={pos}
+    >
+      <div className="flex items-start gap-3">
+        <span aria-hidden className="w-8 h-8 shrink-0 rounded-xl inline-flex items-center justify-center bg-flesan-red/10 text-flesan-red">
+          <GraduationCap className="w-4 h-4" />
+        </span>
+        <div className="flex flex-col gap-1 min-w-0">
+          <p id="oferta-tutorial-titulo" className="text-sm font-semibold text-text leading-snug">
+            {origen === "plataforma" ? "¿Te muestro cómo se usa la plataforma?" : "¿Te muestro cómo se usa esta pantalla?"}
+          </p>
+          <p className="text-xs text-muted leading-snug">Un recorrido corto, paso a paso. Lo puedes repetir con el birrete.</p>
+        </div>
+        <button type="button" onClick={onDescartar} aria-label="Cerrar" className="-mt-1 -mr-1 w-7 h-7 shrink-0 flex items-center justify-center rounded-md text-faint hover:text-text hover:bg-surface-2 cursor-pointer">
+          <X className="w-4 h-4" />
+        </button>
+      </div>
+      <div className="flex flex-wrap items-center gap-2">
+        <button type="button" onClick={onAceptar} className={cn(BOTON, "border-flesan-red bg-flesan-red text-white hover:bg-flesan-red-dark hover:border-flesan-red-dark")}>
+          Ver recorrido
+        </button>
+        <button type="button" onClick={onDescartar} className={cn(BOTON, "border-border-strong text-muted hover:text-text hover:border-text")}>
+          Ahora no
+        </button>
+        <button
+          type="button"
+          onClick={() => {
+            onDescartar();
+            setPref({ ofrecerTutoriales: false });
+          }}
+          className="text-xs text-faint hover:text-text cursor-pointer ml-auto"
+        >
+          No volver a ofrecer
+        </button>
+      </div>
+    </div>,
+    document.body,
   );
 }
 
@@ -128,7 +271,20 @@ function buscar(paso: PasoTutorial): HTMLElement | null {
   return todos[paso.indice ?? 0] ?? todos[0] ?? null;
 }
 
-function Recorrido({ pasos, i, onIr, onCerrar }: { pasos: PasoTutorial[]; i: number; onIr: (i: number) => void; onCerrar: () => void }) {
+function Recorrido({
+  pasos,
+  i,
+  onIr,
+  onCerrar,
+  siguiente,
+}: {
+  pasos: PasoTutorial[];
+  i: number;
+  onIr: (i: number) => void;
+  onCerrar: () => void;
+  /** Acción extra en el último paso (ej. seguir con el recorrido de la plataforma). */
+  siguiente?: { texto: string; onClick: () => void };
+}) {
   const paso = pasos[i];
   const ultimo = i === pasos.length - 1;
   const [zona, setZona] = useState<Caja | null>(null);
@@ -280,10 +436,15 @@ function Recorrido({ pasos, i, onIr, onCerrar }: { pasos: PasoTutorial[]; i: num
             ))}
           </div>
           <div className="flex items-center gap-2 ml-auto">
-            {i > 0 && (
+            {i > 0 && !(ultimo && siguiente) && (
               <button type="button" onClick={() => onIr(i - 1)} className={cn(BOTON, "border-border-strong text-muted hover:text-text hover:border-text")}>
                 <ChevronLeft className="w-4 h-4" />
                 Anterior
+              </button>
+            )}
+            {ultimo && siguiente && (
+              <button type="button" onClick={siguiente.onClick} className={cn(BOTON, "border-border-strong text-muted hover:text-text hover:border-text")}>
+                {siguiente.texto}
               </button>
             )}
             <button

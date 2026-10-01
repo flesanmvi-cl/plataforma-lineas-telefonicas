@@ -9,6 +9,7 @@ import { usePreferencias, type Preferencias } from "@/components/preferencias";
 import { PersonalizacionModulos } from "@/components/modulos";
 import { NAV_ITEMS } from "@/lib/nav";
 import { Desplegable } from "@/components/desplegable";
+import { reiniciarOfrecimientos } from "@/components/tutorial/tutorial";
 
 /**
  * SHELL · «Mi personalización» (Configuración › Mi personalización): cómo ve y usa la plataforma
@@ -20,6 +21,7 @@ export function PanelPersonalizacion() {
   const [montado, setMontado] = useState(false);
   useEffect(() => setMontado(true), []);
   const [pref, cambiar, restablecer] = usePreferencias();
+  const [reiniciado, setReiniciado] = useState(false);
   const [estilo, elegirEstilo] = useEstiloPortales();
 
   return (
@@ -128,9 +130,27 @@ export function PanelPersonalizacion() {
       </Seccion>
 
       <Seccion titulo="Ayuda">
-        <Fila titulo="Tutoriales" detalle="Muestra «Tutorial» en el sidebar de las pantallas que tienen recorrido guiado.">
+        <Fila titulo="Tutoriales" detalle="Muestra el birrete «Tutorial» en el sidebar: recorre la pantalla, o la plataforma si la pantalla no tiene recorrido propio.">
           <Interruptor activo={pref.tutoriales} etiqueta="Tutoriales" onCambio={(v) => cambiar({ tutoriales: v })} />
         </Fila>
+        {pref.tutoriales && (
+          <Fila titulo="Ofrecer al entrar" detalle="La primera vez que entras a una pantalla con recorrido, te pregunta si quieres verlo.">
+            <div className="flex items-center gap-3">
+              <button
+                type="button"
+                onClick={() => {
+                  reiniciarOfrecimientos();
+                  cambiar({ ofrecerTutoriales: true });
+                  setReiniciado(true);
+                }}
+                className="text-xs text-muted hover:text-flesan-red cursor-pointer"
+              >
+                {reiniciado ? "Listo: se volverán a ofrecer" : "Volver a ofrecer todos"}
+              </button>
+              <Interruptor activo={pref.ofrecerTutoriales} etiqueta="Ofrecer tutoriales al entrar" onCambio={(v) => cambiar({ ofrecerTutoriales: v })} />
+            </div>
+          </Fila>
+        )}
       </Seccion>
 
       <Seccion titulo="Comentarios CIA">

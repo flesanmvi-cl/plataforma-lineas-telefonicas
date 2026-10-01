@@ -42,7 +42,7 @@ function CampanitaActiva() {
   }, [abierto]);
 
   return (
-    <div ref={raiz} className="relative">
+    <div ref={raiz} data-tutorial="campanita" className="relative">
       <button
         type="button"
         onClick={() => setAbierto((v) => !v)}

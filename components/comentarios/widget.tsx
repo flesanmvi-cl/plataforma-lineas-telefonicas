@@ -50,11 +50,12 @@ export function WidgetCia() {
             onClick={restaurar}
             aria-label="Mostrar comentarios CIA"
             title="Comentarios CIA"
+            data-tutorial="buzon"
             className="fixed right-0 top-1/2 -translate-y-1/2 z-40 w-[5px] h-14 rounded-l-sm bg-flesan-red hover:w-2.5 transition-[width] cursor-pointer"
           />
         ) : (
           !abierto && (
-            <div className="group fixed right-0 top-1/2 -translate-y-1/2 z-40 flex flex-col items-end gap-1">
+            <div data-tutorial="buzon" className="group fixed right-0 top-1/2 -translate-y-1/2 z-40 flex flex-col items-end gap-1">
               <button
                 type="button"
                 onClick={minimizar}
@@ -99,12 +100,13 @@ export function WidgetCia() {
           onClick={restaurar}
           aria-label="Mostrar comentarios CIA"
           title="Comentarios CIA"
+          data-tutorial="buzon"
           className="fixed right-0 bottom-7 z-40 w-3.5 h-7 rounded-l-full bg-surface border border-r-0 border-border-strong flex items-center justify-end pr-0.5 shadow-sm cursor-pointer hover:w-4 transition-[width]"
         >
           <span className="w-2 h-2 rounded-full bg-flesan-red" aria-hidden />
         </button>
       ) : (
-        <div className="group fixed right-5 bottom-5 z-40">
+        <div data-tutorial="buzon" className="group fixed right-5 bottom-5 z-40">
           {!abierto && (
             <>
               <span className="pointer-events-none absolute right-12 top-1/2 -translate-y-1/2 whitespace-nowrap rounded-flesan-sm bg-flesan-black text-white text-xs px-2.5 py-1 opacity-0 group-hover:opacity-100 transition-opacity">
@@ -201,7 +203,7 @@ export function BotonComentariosBarra() {
     }
   }
   return (
-    <div ref={raiz} className="relative">
+    <div ref={raiz} data-tutorial="buzon" className="relative">
       <button
         type="button"
         onClick={alternar}

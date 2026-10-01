@@ -88,7 +88,7 @@ export function EstadoDatos() {
   const cuando = esHoy ? formatearHora(actualizadoEn) : formatearDia(actualizadoEn);
 
   return (
-    <div className={cn("estado-datos group relative", atrasado && "is-atrasado")}>
+    <div data-tutorial="estado-datos" className={cn("estado-datos group relative", atrasado && "is-atrasado")}>
       <div
         className="estado-datos-pildora flex items-center h-[1.875rem] rounded-full border overflow-hidden"
         title={atrasado ? undefined : `Datos al ${formatearCompleta(actualizadoEn)}`}

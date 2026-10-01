@@ -27,6 +27,8 @@ import { conAlfa, type TokensLab } from "@/lib/lab-graficos/tema";
 import { BotonExcel } from "@/components/boton-excel";
 import { descargarExcel } from "@/lib/exportar/excel";
 import { AvisoEjemplo, Bloque } from "./piezas";
+import { useTutorial } from "@/components/tutorial/tutorial";
+import { PASOS_TIPO_5 } from "./tutoriales";
 
 // Mismo corte que el Gantt y la línea de hitos del laboratorio (día 100 desde el inicio).
 const HOY = 100;
@@ -82,6 +84,7 @@ const pesos = (n: number) => `$ ${formato.millones(n)}`;
 // Reporte Tipo 5 · seguimiento de una obra: ficha con estado, mandante, plazo y avance; Gantt,
 // curva S, hitos, ubicación y tabla de partidas. Obra, mandante y administrador son ficticios.
 export function ReporteObra() {
+  useTutorial(PASOS_TIPO_5);
   usePublicarVista("Obra Centro · seguimiento", [`Corte ${fecha(HOY)}`]);
   return (
     <div className="animate-fade-in page-shell py-6 lg:py-8">
@@ -159,7 +162,7 @@ function Ficha({ className }: { className?: string }) {
   ];
 
   return (
-    <section className={`card p-4 grid grid-cols-1 lg:grid-cols-12 gap-5 min-w-0 ${className ?? ""}`} style={{ borderRadius: t.radio, fontFamily: t.fuente }}>
+    <section data-tutorial="ficha" className={`card p-4 grid grid-cols-1 lg:grid-cols-12 gap-5 min-w-0 ${className ?? ""}`} style={{ borderRadius: t.radio, fontFamily: t.fuente }}>
       <div className="lg:col-span-5 flex flex-col gap-3 min-w-0">
         <div className="flex flex-wrap items-center gap-2">
           <h2 style={{ fontSize: 15, fontWeight: 600, color: t.texto }}>Ficha de la obra</h2>

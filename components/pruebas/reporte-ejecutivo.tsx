@@ -18,6 +18,8 @@ import { CeldaMonto, CeldaNombre, InsigniaSerie, NumeroCaja, ValorConMas } from 
 import { cifra, SERIES } from "@/components/reporte/formato";
 import { CONTRATOS, NIVELES, TIPOS, UNIDADES, UNIVERSO, type Contrato, type Tipo } from "./datos-contratacion";
 import { AvisoEjemplo } from "./piezas";
+import { useTutorial } from "@/components/tutorial/tutorial";
+import { PASOS_TIPO_1 } from "./tutoriales";
 
 // Reporte Tipo 1 · tablero ejecutivo con filtros cruzados (look & feel del panel de Conflicto
 // de Interés, opción A aprobada). Todos los bloques se calculan desde una lista de filas: en una
@@ -91,6 +93,7 @@ function porSubcontratista(filas: Contrato[]): FilaSubcontratista[] {
 }
 
 export function ReporteEjecutivo() {
+  useTutorial(PASOS_TIPO_1);
   const [filtros, setFiltros] = useFiltrosUrl({ vista: "historico", tipo: "", unidad: "", nivel: "", tabla: "subcontratista" });
   const vista = filtros.vista as Vista;
   const vistaTabla = filtros.tabla as VistaTabla;

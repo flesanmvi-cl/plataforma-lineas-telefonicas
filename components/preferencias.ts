@@ -21,6 +21,8 @@ export interface Preferencias {
   widgetMinimizado: boolean;
   /** Muestra el botón «Tutorial» del sidebar en las pantallas que tienen recorrido guiado. */
   tutoriales: boolean;
+  /** Ofrece el recorrido la primera vez que se entra a una pantalla que lo tiene (y a Inicio). */
+  ofrecerTutoriales: boolean;
 }
 
 const POR_DEFECTO: Preferencias = {
@@ -31,6 +33,7 @@ const POR_DEFECTO: Preferencias = {
   widgetCia: "burbuja",
   widgetMinimizado: false,
   tutoriales: true,
+  ofrecerTutoriales: true,
 };
 const CLAVE = "cia-preferencias";
 const EVENTO = "cia-preferencias";

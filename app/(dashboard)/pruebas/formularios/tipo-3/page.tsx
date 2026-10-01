@@ -28,6 +28,8 @@ import {
   type RangoFechas,
 } from "@/components/lab-graficos/graficos/campos/componentes";
 import { OBRAS, PROVEEDORES } from "@/components/lab-graficos/graficos/campos/datos";
+import { useTutorial } from "@/components/tutorial/tutorial";
+import { PASOS_FORMULARIO_3 } from "@/components/pruebas/tutoriales";
 
 /*
  * Formulario Tipo 3: maestro-detalle («Estado de pago»). Encabezado del documento con campos,
@@ -70,6 +72,7 @@ const subtotal = (l: Linea) => (l.cantidad ?? 0) * (l.precio ?? 0);
 const diaCl = (iso: string | null | undefined) => (iso ? iso.split("-").reverse().join("-") : "sin fecha");
 
 export default function FormularioTipo3() {
+  useTutorial(PASOS_FORMULARIO_3);
   const t = useTokens();
   const [enc, setEnc] = useState<Encabezado>({
     obra: "obra-norte",

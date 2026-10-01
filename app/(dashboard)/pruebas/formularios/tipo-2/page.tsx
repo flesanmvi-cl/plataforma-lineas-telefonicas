@@ -26,6 +26,8 @@ import {
   type ErrorResumen,
 } from "@/components/lab-graficos/graficos/campos/componentes";
 import { CENTROS_COSTO, OBRAS } from "@/components/lab-graficos/graficos/campos/datos";
+import { useTutorial } from "@/components/tutorial/tutorial";
+import { PASOS_FORMULARIO_2 } from "@/components/pruebas/tutoriales";
 
 /*
  * Formulario Tipo 2: formulario por pasos («Solicitud de compra»). Stepper arriba, avanzar y
@@ -205,6 +207,7 @@ function Dato({ termino, children }: { termino: string; children: ReactNode }) {
 }
 
 export default function FormularioTipo2() {
+  useTutorial(PASOS_FORMULARIO_2);
   const t = useTokens();
   const [sol, setSol] = useState<Solicitud>(INICIAL);
   const [paso, setPaso] = useState(0);
@@ -583,7 +586,7 @@ export default function FormularioTipo2() {
             </motion.div>
           </AnimatePresence>
 
-          <div className="flex flex-wrap items-center gap-2 mt-6 pt-4" style={{ borderTop: `1px solid ${t.grilla}` }}>
+          <div data-tutorial="navegacion" className="flex flex-wrap items-center gap-2 mt-6 pt-4" style={{ borderTop: `1px solid ${t.grilla}` }}>
             {paso > 0 && (
               <BotonLab variante="contorno" icono={ArrowLeft} onClick={() => ir(paso - 1)}>
                 Anterior

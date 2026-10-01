@@ -71,6 +71,7 @@ export function BotonPantallaCompleta() {
   const Icono = activa ? Minimize2 : Maximize2;
   return (
     <button
+      data-tutorial="pantalla-completa"
       type="button"
       onClick={alternar}
       title={texto}
