@@ -47,7 +47,7 @@ Variables de entorno de Configuración: `DATABASE_URL_PLATAFORMA` (base de QA pr
 
 | Archivo | Qué define |
 |---|---|
-| `lib/nav.ts` | `NOMBRE_PLATAFORMA`, `NAV_ITEMS` (menú), `NAV_CONFIG` (Configuración, en el pie: con `adminOnly: true` solo la ven administradores; sin él, la ven todos y cada hijo puede ser `adminOnly`), `migasDe`. Reexporta `lib/nav-base.ts` |
+| `lib/nav.ts` | `NOMBRE_PLATAFORMA` (también el título de la pestaña del navegador, fijo en `app/layout.tsx`: las páginas no definen `metadata.title`), `NAV_ITEMS` (menú), `NAV_CONFIG` (Configuración, en el pie: con `adminOnly: true` solo la ven administradores; sin él, la ven todos y cada hijo puede ser `adminOnly`), `migasDe`. Reexporta `lib/nav-base.ts` |
 | `lib/notificaciones-plataforma.ts` | Tipos de notificación de la plataforma (etiqueta, ícono y color) y sus datos de ejemplo. Vacío = sin campanita. Se emiten con `crearNotificacion()` de `lib/notificaciones-db.ts` |
 | `components/modulos.tsx` | Módulos opcionales enchufados al shell (ej. Presentaciones). Sin módulos: versión mínima abajo |
 | `lib/estado-datos.ts` | `obtenerEstadoDatos()` (fuente real de la fecha) y `CADA_HORAS`. Sin datos que refrescar: devolver `null` |

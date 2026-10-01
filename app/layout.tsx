@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import { Toaster } from "sonner";
 import { ThemeProvider } from "@/components/theme-provider";
+import { NOMBRE_PLATAFORMA } from "@/lib/nav";
 import "./globals.css";
 
 // Fuentes auto-hospedadas (no next/font/google): en redes corporativas con
@@ -65,8 +66,12 @@ const interTight = localFont({
   display: "swap",
 });
 
+// La pestaña del navegador lleva siempre el nombre de la plataforma (lib/nav.ts), no el de la
+// vista: el template sin %s ignora el título que defina una página.
+const TITULO = `${[NOMBRE_PLATAFORMA.texto, NOMBRE_PLATAFORMA.destacado].filter(Boolean).join(" ")} · Grupo Flesan`;
+
 export const metadata: Metadata = {
-  title: "Nombre Plataforma · Grupo Flesan",
+  title: { default: TITULO, template: TITULO },
   description: "Mockup base de plataforma — Grupo Flesan.",
 };
 

@@ -1,8 +1,6 @@
 import { PageHeader } from "@/components/page-header";
 import { GestionAvisos } from "@/components/avisos";
 
-export const metadata = { title: "Avisos" };
-
 // Configuración › Avisos (solo administradores; gate en layout.tsx).
 export default function AvisosPage() {
   return (

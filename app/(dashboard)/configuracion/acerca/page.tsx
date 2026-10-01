@@ -3,8 +3,6 @@ import paquete from "@/package.json";
 import { PageHeader } from "@/components/page-header";
 import { NOMBRE_PLATAFORMA, VERSION_SHELL } from "@/lib/nav";
 
-export const metadata = { title: "Acerca de" };
-
 // Configuración › Acerca de: abierta a todos. La versión sale de package.json y la del estándar,
 // de lib/nav-base.ts (se actualiza al traer una versión nueva del shell).
 export default function AcercaPage() {

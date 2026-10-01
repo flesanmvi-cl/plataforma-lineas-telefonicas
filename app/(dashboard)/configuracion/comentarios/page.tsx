@@ -1,8 +1,6 @@
 import { PageHeader } from "@/components/page-header";
 import { MisComentarios } from "@/components/mis-comentarios";
 
-export const metadata = { title: "Mis comentarios" };
-
 // Configuración › Mis comentarios: abierta a todos los usuarios.
 export default function ComentariosPage() {
   return (

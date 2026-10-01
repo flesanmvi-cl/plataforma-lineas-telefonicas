@@ -1,8 +1,6 @@
 import { PageHeader } from "@/components/page-header";
 import { PanelPersonalizacion } from "@/components/personalizar";
 
-export const metadata = { title: "Mi personalización" };
-
 // Configuración › Mi personalización: abierta a todos los usuarios.
 export default function PersonalizacionPage() {
   return (

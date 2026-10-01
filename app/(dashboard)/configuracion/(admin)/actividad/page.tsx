@@ -1,8 +1,6 @@
 import { PageHeader } from "@/components/page-header";
 import { RegistroActividad } from "@/components/configuracion/registro-actividad";
 
-export const metadata = { title: "Registro de actividad" };
-
 // Configuración › Registro de actividad (solo administradores; gate en ../layout.tsx). Maqueta con datos de ejemplo.
 export default function Pagina() {
   return (
