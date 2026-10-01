@@ -1,9 +1,12 @@
 "use client";
 
 import { useEffect, useState, useTransition } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { RefreshCw } from "lucide-react";
 import { cn } from "@/lib/cn";
+import { esAdmin } from "@/lib/roles";
+import { useUsuarioActual } from "@/components/user-context";
 import { CADA_HORAS, actualizarDatos, obtenerEstadoDatos } from "@/lib/estado-datos";
 
 const MESES = ["ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic"];
@@ -35,8 +38,12 @@ const MINIMO_MS = 900;
  */
 // SHELL · indicador de la barra superior (igual en todas las plataformas). La fuente de la fecha
 // y la frecuencia esperada son de cada plataforma: lib/estado-datos.ts.
+/** Detalle de las cargas (solo administradores: la página vive en el grupo (admin)). */
+const RUTA_DETALLE = "/configuracion/fuentes-datos";
+
 export function EstadoDatos() {
   const router = useRouter();
+  const verDetalle = esAdmin(useUsuarioActual()?.role);
   const [actualizadoEn, setActualizadoEn] = useState<Date | null>(null);
   // null: aún cargando; false: la plataforma no informa estado de datos (no se muestra nada).
   const [disponible, setDisponible] = useState<boolean | null>(null);
@@ -93,7 +100,7 @@ export function EstadoDatos() {
         className="estado-datos-pildora flex items-center h-[1.875rem] rounded-full border overflow-hidden"
         title={atrasado ? undefined : `Datos al ${formatearCompleta(actualizadoEn)}`}
       >
-        <span className="flex items-center gap-2 pl-3 pr-2.5 text-xs font-medium whitespace-nowrap" aria-live="polite">
+        <TextoEstado verDetalle={verDetalle}>
           <span
             className={cn("estado-datos-punto w-2 h-2 rounded-full shrink-0", actualizando && "is-actualizando")}
             aria-hidden
@@ -112,7 +119,7 @@ export function EstadoDatos() {
               </span>
             </>
           )}
-        </span>
+        </TextoEstado>
         <button
           type="button"
           onClick={actualizar}
@@ -147,5 +154,19 @@ export function EstadoDatos() {
         </div>
       )}
     </div>
+  );
+}
+
+/** El texto de la píldora: para un administrador, enlace al detalle de las cargas. */
+function TextoEstado({ verDetalle, children }: { verDetalle: boolean; children: React.ReactNode }) {
+  const clases = "flex items-center gap-2 pl-3 pr-2.5 text-xs font-medium whitespace-nowrap";
+  return verDetalle ? (
+    <Link href={RUTA_DETALLE} aria-live="polite" title="Ver el detalle en Fuentes de datos" className={cn(clases, "self-stretch hover:underline underline-offset-2")}>
+      {children}
+    </Link>
+  ) : (
+    <span aria-live="polite" className={clases}>
+      {children}
+    </span>
   );
 }
