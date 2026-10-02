@@ -15,6 +15,8 @@ export interface NavChild {
   grupo?: string;
   /** Solo para administradores (ej. «Usuarios y roles» dentro de Configuración). */
   adminOnly?: boolean;
+  /** Perfiles que ven este subpanel (ver `NavItem.perfiles`). */
+  perfiles?: string[];
 }
 
 export interface NavItem {
@@ -24,9 +26,31 @@ export interface NavItem {
   /** Oculta el ítem del menú y bloquea la ruta para roles no-admin (ver
    * app/(dashboard)/configuracion/layout.tsx para el patrón de gate). */
   adminOnly?: boolean;
+  /** Perfiles de la plataforma que ven el ítem (ej. ["gerencia"] en una plataforma con perfiles
+   * gerencia y vendedor). Sin él, lo ven todos. El perfil lo define cada plataforma y llega en
+   * `UsuarioActual.perfil`. Solo oculta el ítem: la ruta se protege en el servidor. */
+  perfiles?: string[];
   /** Con hijos, el ítem abre un menú flotante con sus subpaneles en vez de navegar.
    * Sin hijos, es un enlace directo. Ej. Ventas → [Gerencia, Vendedor]. */
   children?: NavChild[];
+}
+
+/** Si el usuario ve un ítem o subpanel del menú: `adminOnly` exige administrador y `perfiles`, que
+ * su perfil esté en la lista. Un administrador ve todo. */
+export function visibleEnMenu(
+  item: { adminOnly?: boolean; perfiles?: string[] },
+  usuario: { admin: boolean; perfil?: string | null },
+): boolean {
+  if (usuario.admin) return true;
+  if (item.adminOnly) return false;
+  return !item.perfiles || (!!usuario.perfil && item.perfiles.includes(usuario.perfil));
+}
+
+/** Los ítems del menú que ve el usuario, con sus subpaneles también filtrados. */
+export function menuPara<T extends NavItem>(items: T[], usuario: { admin: boolean; perfil?: string | null }): T[] {
+  return items
+    .filter((i) => visibleEnMenu(i, usuario))
+    .map((i) => (i.children ? { ...i, children: i.children.filter((h) => visibleEnMenu(h, usuario)) } : i));
 }
 
 export function isNavActive(pathname: string, href: string): boolean {

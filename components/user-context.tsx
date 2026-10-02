@@ -8,6 +8,9 @@ export interface UsuarioActual {
   email?: string | null;
   image?: string | null;
   role?: Rol;
+  /** Perfil propio de la plataforma (ej. "gerencia" | "vendedor"), si la plataforma los usa. El
+   * menú oculta los ítems cuyo `perfiles` no lo incluye (lib/nav-base.ts, visibleEnMenu). */
+  perfil?: string | null;
 }
 
 const UserContext = createContext<UsuarioActual | null>(null);

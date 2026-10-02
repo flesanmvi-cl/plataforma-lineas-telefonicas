@@ -10,6 +10,8 @@ import {
   NAV_ITEMS,
   NOMBRE_PLATAFORMA,
   gruposDe,
+  menuPara,
+  visibleEnMenu,
   hijoActivo,
   isNavActive,
   type NavItem,
@@ -41,7 +43,7 @@ export function Sidebar() {
   const navRef = useRef<HTMLElement>(null);
   const user = useUsuarioActual();
   const admin = esAdmin(user?.role);
-  const items = NAV_ITEMS.filter((item) => !item.adminOnly || admin);
+  const items = menuPara(NAV_ITEMS, { admin, perfil: user?.perfil });
 
   // Persistido en localStorage para que sobreviva un refresh, no solo la
   // navegacion dentro de la SPA.
@@ -89,7 +91,7 @@ export function Sidebar() {
 
   const configActiva = isNavActive(pathname, NAV_CONFIG.href);
   // Configuración se muestra a todos salvo que la plataforma la marque solo para administradores.
-  const verConfig = !NAV_CONFIG.adminOnly || admin;
+  const verConfig = visibleEnMenu(NAV_CONFIG, { admin, perfil: user?.perfil });
   const ConfigIcon = NAV_CONFIG.icon;
 
   return (

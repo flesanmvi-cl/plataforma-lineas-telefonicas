@@ -48,7 +48,7 @@ Variables de entorno de Configuración: `DATABASE_URL_PLATAFORMA` (base de QA pr
 
 | Archivo | Qué define |
 |---|---|
-| `lib/nav.ts` | `NOMBRE_PLATAFORMA` (también el título de la pestaña del navegador, fijo en `app/layout.tsx`: las páginas no definen `metadata.title`), `NAV_ITEMS` (menú), `NAV_CONFIG` (Configuración, en el pie: con `adminOnly: true` solo la ven administradores; sin él, la ven todos y cada hijo puede ser `adminOnly`), `migasDe`. Reexporta `lib/nav-base.ts` |
+| `lib/nav.ts` | `NOMBRE_PLATAFORMA` (también el título de la pestaña del navegador, fijo en `app/layout.tsx`: las páginas no definen `metadata.title`), `NAV_ITEMS` (menú), `NAV_CONFIG` (Configuración, en el pie: con `adminOnly: true` solo la ven administradores; sin él, la ven todos y cada hijo puede ser `adminOnly`), `migasDe`. Un ítem o subpanel con `perfiles: ["gerencia"]` solo lo ve quien tenga ese perfil (ver Perfiles). Reexporta `lib/nav-base.ts` |
 | `lib/notificaciones-plataforma.ts` | Tipos de notificación de la plataforma (etiqueta, ícono y color) y sus datos de ejemplo. Vacío = sin campanita. Se emiten con `crearNotificacion()` de `lib/notificaciones-db.ts` |
 | `components/modulos.tsx` | Módulos opcionales enchufados al shell (ej. Presentaciones). Sin módulos: versión mínima abajo |
 | `lib/estado-datos.ts` | `obtenerEstadoDatos()` (fuente real de la fecha) y `CADA_HORAS`. Sin datos que refrescar: devolver `null` |
@@ -107,6 +107,14 @@ export function PersonalizacionModulos() {
 5. `app/globals.css`: dejar solo lo propio después de `@import "./shell.css"`.
 6. `app/(dashboard)/layout.tsx`: usar `<AppShell>`; borrar el sidebar/topbar viejos si quedaron sin uso.
 7. `npx tsc --noEmit`, lint y revisar en Chrome (claro, oscuro, sidebar colapsado).
+
+## Perfiles (opcional)
+
+Una plataforma con públicos distintos (ej. gerencia y vendedor en seguimiento_ventas_inx) define
+el perfil de cada persona en el servidor y lo publica en `UsuarioActual.perfil` desde
+`app/(dashboard)/layout.tsx`. Los ítems del menú con `perfiles` solo se muestran a esos perfiles
+(`visibleEnMenu` y `menuPara` en `lib/nav-base.ts`; un administrador ve todo). El menú solo oculta:
+cada ruta debe protegerse en el servidor (layout o página) con la misma regla.
 
 ## Configuración (modelo del mockup, opción A)
 

@@ -15,7 +15,7 @@ import { useUsuarioActual } from "@/components/user-context";
 import { cn } from "@/lib/cn";
 import { esAdmin } from "@/lib/roles";
 import { useBreadcrumbContext } from "@/components/breadcrumb-context";
-import { NAV_ITEMS, isNavActive, migasDe } from "@/lib/nav";
+import { NAV_ITEMS, isNavActive, menuPara, migasDe } from "@/lib/nav";
 
 const claseMiga = "font-label text-xs tracking-[0.08em] uppercase truncate";
 
@@ -27,7 +27,7 @@ export function TopBar() {
   const pathname = usePathname();
   const { state: drilldown } = useBreadcrumbContext();
   const user = useUsuarioActual();
-  const items = NAV_ITEMS.filter((item) => !item.adminOnly || esAdmin(user?.role));
+  const items = menuPara(NAV_ITEMS, { admin: esAdmin(user?.role), perfil: user?.perfil });
 
   const migas = migasDe(pathname);
   const niveles = drilldown?.items ?? [];
