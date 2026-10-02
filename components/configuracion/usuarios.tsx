@@ -18,6 +18,8 @@ import { etiquetaRol, type Rol } from "@/lib/roles";
 interface Persona {
   correo: string;
   nombre: string;
+  cargo: string;
+  empresa: string;
   area: string;
 }
 
@@ -32,26 +34,26 @@ const ROLES: { valor: Rol; texto: string }[] = [
   { valor: "member", texto: "Miembro" },
 ];
 
-/** Maestro de colaboradores de ejemplo (en una plataforma real: lib/colaboradores-db.ts). */
+/** Maestro de colaboradores de ejemplo (en una plataforma real: lib/colaboradores-db.ts). Empresas ficticias. */
 const MAESTRO: Persona[] = [
-  { correo: "crojas@flesan.cl", nombre: "Camila Rojas Fuentes", area: "Contabilidad" },
-  { correo: "dmunoz@flesan.cl", nombre: "Diego Muñoz Torres", area: "Finanzas" },
-  { correo: "jaraya@flesan.cl", nombre: "Josefa Araya Pino", area: "Personas" },
-  { correo: "vsoto@flesan.cl", nombre: "Valentina Soto Lagos", area: "Control de Gestión" },
-  { correo: "mfuentes@flesan.cl", nombre: "Matías Fuentes Rivas", area: "Operaciones" },
-  { correo: "bperez@flesan.cl", nombre: "Benjamín Pérez Olave", area: "Obras" },
-  { correo: "fdiaz@flesan.cl", nombre: "Florencia Díaz Cortés", area: "Contabilidad" },
-  { correo: "tsilva@flesan.cl", nombre: "Tomás Silva Herrera", area: "Tecnología" },
-  { correo: "areyes@flesan.cl", nombre: "Antonia Reyes Molina", area: "Personas" },
-  { correo: "ivera@flesan.cl", nombre: "Ignacio Vera Campos", area: "Finanzas" },
-  { correo: "esalgado@flesan.cl", nombre: "Esteban Andrés Salgado Mujica", area: "Contabilidad" },
-  { correo: "cnavarro@flesan.cl", nombre: "Catalina Navarro Ibáñez", area: "Comercial" },
-  { correo: "rcontreras@flesan.cl", nombre: "Rodrigo Contreras Vidal", area: "Obras" },
-  { correo: "pmorales@flesan.cl", nombre: "Paula Morales Sepúlveda", area: "Control de Gestión" },
-  { correo: "jgonzalez@flesan.cl", nombre: "Joaquín González Parra", area: "Ingeniería" },
-  { correo: "mcastro@flesan.cl", nombre: "María José Castro Lillo", area: "Comercial" },
-  { correo: "slopez@flesan.cl", nombre: "Sebastián López Gajardo", area: "Tecnología" },
-  { correo: "nvalenzuela@flesan.cl", nombre: "Nicolás Valenzuela Ruiz", area: "Operaciones" },
+  { correo: "crojas@flesan.cl", nombre: "Camila Rojas Fuentes", cargo: "Jefa de Contabilidad", empresa: "Flesan Servicios Compartidos", area: "Contabilidad" },
+  { correo: "dmunoz@flesan.cl", nombre: "Diego Muñoz Torres", cargo: "Analista Financiero", empresa: "Flesan Constructora", area: "Finanzas" },
+  { correo: "jaraya@flesan.cl", nombre: "Josefa Araya Pino", cargo: "Generalista de Personas", empresa: "Flesan Servicios Compartidos", area: "Personas" },
+  { correo: "vsoto@flesan.cl", nombre: "Valentina Soto Lagos", cargo: "Subgerenta de Control de Gestión", empresa: "Flesan Constructora", area: "Control de Gestión" },
+  { correo: "mfuentes@flesan.cl", nombre: "Matías Fuentes Rivas", cargo: "Jefe de Operaciones", empresa: "Flesan Minería", area: "Operaciones" },
+  { correo: "bperez@flesan.cl", nombre: "Benjamín Pérez Olave", cargo: "Administrador de Obra", empresa: "Flesan Constructora", area: "Obras" },
+  { correo: "fdiaz@flesan.cl", nombre: "Florencia Díaz Cortés", cargo: "Contadora", empresa: "Flesan Inmobiliaria", area: "Contabilidad" },
+  { correo: "tsilva@flesan.cl", nombre: "Tomás Silva Herrera", cargo: "Ingeniero de Datos", empresa: "Flesan Servicios Compartidos", area: "Tecnología" },
+  { correo: "areyes@flesan.cl", nombre: "Antonia Reyes Molina", cargo: "Analista de Remuneraciones", empresa: "Flesan Servicios Compartidos", area: "Personas" },
+  { correo: "ivera@flesan.cl", nombre: "Ignacio Vera Campos", cargo: "Tesorero", empresa: "Flesan Inmobiliaria", area: "Finanzas" },
+  { correo: "esalgado@flesan.cl", nombre: "Esteban Andrés Salgado Mujica", cargo: "Analista Contable", empresa: "Flesan Constructora", area: "Contabilidad" },
+  { correo: "cnavarro@flesan.cl", nombre: "Catalina Navarro Ibáñez", cargo: "Ejecutiva Comercial", empresa: "Flesan Inmobiliaria", area: "Comercial" },
+  { correo: "rcontreras@flesan.cl", nombre: "Rodrigo Contreras Vidal", cargo: "Jefe de Terreno", empresa: "Flesan Minería", area: "Obras" },
+  { correo: "pmorales@flesan.cl", nombre: "Paula Morales Sepúlveda", cargo: "Analista de Control de Gestión", empresa: "Flesan Minería", area: "Control de Gestión" },
+  { correo: "jgonzalez@flesan.cl", nombre: "Joaquín González Parra", cargo: "Ingeniero de Proyectos", empresa: "Flesan Constructora", area: "Ingeniería" },
+  { correo: "mcastro@flesan.cl", nombre: "María José Castro Lillo", cargo: "Jefa Comercial", empresa: "Flesan Inmobiliaria", area: "Comercial" },
+  { correo: "slopez@flesan.cl", nombre: "Sebastián López Gajardo", cargo: "Desarrollador", empresa: "Flesan Servicios Compartidos", area: "Tecnología" },
+  { correo: "nvalenzuela@flesan.cl", nombre: "Nicolás Valenzuela Ruiz", cargo: "Supervisor de Operaciones", empresa: "Flesan Minería", area: "Operaciones" },
 ];
 
 const INICIALES: { correo: string; rol: Rol; ultimoAcceso: number | null }[] = [
@@ -106,7 +108,7 @@ export function UsuariosRoles() {
   const visibles = useMemo(
     () =>
       usuarios
-        .filter((u) => (!filtroRol || u.rol === filtroRol) && coincide(busqueda, u.nombre, u.correo, u.area))
+        .filter((u) => (!filtroRol || u.rol === filtroRol) && coincide(busqueda, u.nombre, u.correo, u.cargo, u.empresa, u.area))
         .sort((a, b) => Number(b.rol === "admin") - Number(a.rol === "admin") || a.nombre.localeCompare(b.nombre, "es")),
     [usuarios, filtroRol, busqueda],
   );
@@ -140,13 +142,13 @@ export function UsuariosRoles() {
       <AvisoMaqueta tablas="la tabla usuarios (db/001_usuarios_roles.sql), y busca en el maestro de colaboradores de la base transaccional (solo lectura)," />
 
       <div className="flex flex-wrap items-center gap-3">
-        <label className="relative w-full sm:w-80">
+        <label className="relative w-full sm:w-96">
           <span className="sr-only">Buscar usuario</span>
           <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-faint" aria-hidden />
           <input
             value={busqueda}
             onChange={(e) => setBusqueda(e.target.value)}
-            placeholder="Buscar por nombre, correo o área…"
+            placeholder="Buscar por nombre, cargo, empresa o área…"
             className="field-input rounded-full! pl-10! w-full!"
           />
         </label>
@@ -169,7 +171,7 @@ export function UsuariosRoles() {
           <table className="w-full text-sm">
             <thead>
               <tr className="text-left border-b border-border bg-surface-2">
-                {["Nombre", "Área", "Rol", "Último acceso", ""].map((h, i) => (
+                {["Nombre", "Cargo", "Empresa", "Área", "Rol", "Último acceso", ""].map((h, i) => (
                   <th key={i} className="px-4 py-2.5 font-label text-[0.6875rem] tracking-[0.1em] uppercase text-muted font-semibold whitespace-nowrap">
                     {h}
                   </th>
@@ -198,6 +200,8 @@ export function UsuariosRoles() {
                         </span>
                       </span>
                     </td>
+                    <td className="px-4 py-2.5 text-text">{u.cargo}</td>
+                    <td className="px-4 py-2.5 text-muted">{u.empresa}</td>
                     <td className="px-4 py-2.5 text-muted whitespace-nowrap">{u.area}</td>
                     <td className="px-4 py-2.5">
                       <span title={ultimo ? "Es el único administrador: no se puede cambiar." : undefined}>
@@ -241,7 +245,7 @@ export function UsuariosRoles() {
               })}
               {!visibles.length && (
                 <tr>
-                  <td colSpan={5} className="px-4 py-8 text-center text-muted">
+                  <td colSpan={7} className="px-4 py-8 text-center text-muted">
                     {usuarios.length ? "Nadie coincide con la búsqueda." : "Nadie tiene acceso todavía."}
                   </td>
                 </tr>
@@ -269,7 +273,7 @@ function PanelAgregar({ existentes, onAgregar, onCerrar }: { existentes: Usuario
   const [rol, setRol] = useState<Rol>("member");
   const buscador = useRef<HTMLInputElement>(null);
   const ya = new Set(existentes.map((u) => u.correo));
-  const resultados = busqueda.trim() ? MAESTRO.filter((p) => coincide(busqueda, p.nombre, p.correo, p.area)).slice(0, 8) : [];
+  const resultados = busqueda.trim() ? MAESTRO.filter((p) => coincide(busqueda, p.nombre, p.correo, p.cargo, p.empresa, p.area)).slice(0, 8) : [];
 
   useEffect(() => {
     buscador.current?.focus();
@@ -309,7 +313,7 @@ function PanelAgregar({ existentes, onAgregar, onCerrar }: { existentes: Usuario
                 setBusqueda(e.target.value);
                 setElegida(null);
               }}
-              placeholder="Nombre, apellido, correo o área…"
+              placeholder="Nombre, apellido, cargo, empresa o área…"
               className="field-input rounded-full! pl-10! w-full!"
             />
           </label>
@@ -344,7 +348,7 @@ function PanelAgregar({ existentes, onAgregar, onCerrar }: { existentes: Usuario
                       <span className="flex flex-col min-w-0 flex-1">
                         <span className="text-sm font-semibold text-text truncate">{p.nombre}</span>
                         <span className="text-xs text-muted truncate">
-                          {p.correo} · {p.area}
+                          {p.cargo} · {p.empresa} · {p.area}
                         </span>
                       </span>
                       {tiene && <span className="text-[0.6875rem] text-faint shrink-0">Ya tiene acceso</span>}
@@ -359,7 +363,7 @@ function PanelAgregar({ existentes, onAgregar, onCerrar }: { existentes: Usuario
         <footer className="mt-auto flex flex-col gap-3 p-5 border-t border-border shrink-0">
           {elegida ? (
             <p className="text-sm text-text">
-              <b className="font-semibold">{elegida.nombre}</b> <span className="text-muted">· {elegida.area}</span>
+              <b className="font-semibold">{elegida.nombre}</b> <span className="text-muted">· {elegida.cargo} · {elegida.empresa}</span>
             </p>
           ) : (
             <p className="text-sm text-faint">Elige a una persona de los resultados.</p>
