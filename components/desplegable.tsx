@@ -122,8 +122,13 @@ export function Desplegable(props: PropsDesplegable) {
   const vacio = props.multiple ? false : !opciones.some((o) => o.valor === props.valor);
 
   const visibles = useMemo(() => {
-    const q = normalizar(filtro.trim());
-    return q ? opciones.filter((o) => normalizar(`${o.texto} ${o.detalle ?? ""}`).includes(q)) : opciones;
+    // Cada palabra debe aparecer, en cualquier orden: «esteban salgado» encuentra «Esteban Andrés Salgado».
+    const palabras = normalizar(filtro).split(/\s+/).filter(Boolean);
+    if (!palabras.length) return opciones;
+    return opciones.filter((o) => {
+      const texto = normalizar(`${o.texto} ${o.detalle ?? ""}`);
+      return palabras.every((p) => texto.includes(p));
+    });
   }, [opciones, filtro]);
 
   function abrir() {
@@ -402,5 +407,5 @@ export function Desplegable(props: PropsDesplegable) {
 }
 
 function normalizar(s: string) {
-  return s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+  return s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().trim();
 }

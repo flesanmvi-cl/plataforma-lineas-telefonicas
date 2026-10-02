@@ -45,10 +45,15 @@ export function UsuariosClient() {
   const [guardando, setGuardando] = useState(false);
   const [revocando, setRevocando] = useState<string | null>(null);
 
+  // Cada palabra buscada debe aparecer en el nombre o el correo, en cualquier orden y sin
+  // importar tildes ni mayúsculas: «Esteban Salgado» encuentra a «Esteban Andrés Salgado Mujica».
   const colaboradoresFiltrados = useMemo(() => {
-    const q = busqueda.trim().toLowerCase();
-    if (!q) return colaboradores;
-    return colaboradores.filter((c) => c.nombre.toLowerCase().includes(q) || c.correo.toLowerCase().includes(q));
+    const palabras = normalizar(busqueda).split(/\s+/).filter(Boolean);
+    if (!palabras.length) return colaboradores;
+    return colaboradores.filter((c) => {
+      const texto = normalizar(`${c.nombre} ${c.correo}`);
+      return palabras.every((p) => texto.includes(p));
+    });
   }, [colaboradores, busqueda]);
 
   function seleccionarColaborador(c: Colaborador) {
@@ -103,15 +108,21 @@ export function UsuariosClient() {
       <div className="card flex flex-col md:flex-row overflow-hidden">
         <div className="md:w-96 md:border-r border-border flex flex-col">
           <div className="p-3 border-b border-border">
-            <div className="relative">
-              <Search className="w-3.5 h-3.5 absolute left-2.5 top-1/2 -translate-y-1/2 text-faint" />
+            <label className="relative block">
+              <span className="sr-only">Buscar colaborador</span>
+              <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-faint" aria-hidden />
               <input
-                className="field-input !pl-8 !py-2 text-sm"
+                className="field-input rounded-full! pl-10! w-full!"
                 placeholder="Buscar por nombre o correo…"
                 value={busqueda}
                 onChange={(e) => setBusqueda(e.target.value)}
               />
-            </div>
+            </label>
+            {busqueda.trim() && !cargandoColaboradores && (
+              <p className="text-xs text-faint mt-2 px-1">
+                {colaboradoresFiltrados.length} {colaboradoresFiltrados.length === 1 ? "coincidencia" : "coincidencias"}
+              </p>
+            )}
           </div>
           <div className="flex-1 max-h-96 overflow-y-auto">
             {cargandoColaboradores ? (
@@ -212,4 +223,9 @@ export function UsuariosClient() {
       </div>
     </div>
   );
+}
+
+/** Minúsculas y sin tildes, para comparar nombres como los escribe la gente. */
+function normalizar(texto: string) {
+  return texto.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
 }
