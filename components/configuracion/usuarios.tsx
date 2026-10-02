@@ -158,7 +158,7 @@ export function UsuariosRoles() {
           onCambio={setFiltroRol}
           opciones={[{ valor: "", texto: "Todos" }, ...ROLES.map((r) => ({ valor: r.valor, texto: r.texto, detalle: String(usuarios.filter((u) => u.rol === r.valor).length) }))]}
         />
-        <button type="button" onClick={() => setAgregando(true)} className="btn-flesan btn-flesan-primary btn-flesan-sm ml-auto">
+        <button type="button" onClick={() => setAgregando(true)} className="btn-flesan btn-flesan-primary btn-flesan-sm rounded-flesan ml-auto">
           <UserPlus className="w-4 h-4" aria-hidden />
           Agregar usuario
         </button>
@@ -216,10 +216,10 @@ export function UsuariosRoles() {
                       {quitando === u.correo ? (
                         <span className="inline-flex items-center gap-2 text-xs text-muted">
                           ¿Quitar acceso?
-                          <button type="button" onClick={() => quitar(u)} className="btn-flesan btn-flesan-primary btn-flesan-sm">
+                          <button type="button" onClick={() => quitar(u)} className="btn-flesan btn-flesan-primary btn-flesan-sm rounded-flesan">
                             Quitar
                           </button>
-                          <button type="button" onClick={() => setQuitando(null)} className="btn-flesan btn-flesan-ghost btn-flesan-sm">
+                          <button type="button" onClick={() => setQuitando(null)} className="btn-flesan btn-flesan-ghost btn-flesan-sm rounded-flesan">
                             Cancelar
                           </button>
                         </span>
@@ -374,7 +374,7 @@ function PanelAgregar({ existentes, onAgregar, onCerrar }: { existentes: Usuario
                 onAgregar(elegida, rol);
                 onCerrar();
               }}
-              className="btn-flesan btn-flesan-primary ml-auto disabled:opacity-40"
+              className="btn-flesan btn-flesan-primary rounded-flesan ml-auto disabled:opacity-40"
             >
               Agregar
             </button>
