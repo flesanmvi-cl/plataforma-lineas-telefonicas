@@ -26,8 +26,11 @@ const nextConfig: NextConfig = {
       // Presentaciones pasó a Configuración (abierta a todos los usuarios).
       { source: "/presentaciones", destination: "/configuracion/presentaciones", permanent: false },
       // Costos y la ficha de obra pasaron a ser los Reportes Tipo 4 y 5.
-      { source: "/pruebas/reportes/costos", destination: "/pruebas/reportes/tipo-4", permanent: false },
-      { source: "/pruebas/reportes/obra", destination: "/pruebas/reportes/tipo-5", permanent: false },
+      { source: "/pruebas/reportes/costos", destination: "/plantillas/reportes/tipo-4", permanent: false },
+      { source: "/pruebas/reportes/obra", destination: "/plantillas/reportes/tipo-5", permanent: false },
+      // «Pruebas» pasó a llamarse «Plantillas» (2026-10-20).
+      { source: "/pruebas", destination: "/plantillas", permanent: false },
+      { source: "/pruebas/:ruta*", destination: "/plantillas/:ruta*", permanent: false },
     ];
   },
 };

@@ -1,4 +1,5 @@
-import { FlaskConical, LayoutGrid, Palette, Settings } from "lucide-react";
+import { LayoutGrid, LayoutTemplate, Palette, Settings } from "lucide-react";
+import { PLANTILLAS } from "@/components/portada/datos";
 import { crearMigas, type NavItem } from "@/lib/nav-base";
 
 export * from "@/lib/nav-base";
@@ -15,24 +16,9 @@ export const NOMBRE_PLATAFORMA = { texto: "Nombre", destacado: "Plataforma" };
 export const NAV_ITEMS: NavItem[] = [
   { href: "/", label: "Inicio", icon: LayoutGrid },
   { href: "/ui-kit", label: "Guía de Estilo", icon: Palette },
-  {
-    // Pantallas de prueba armadas solo con el estándar vigente (lib/estandar/estandar.ts):
-    // sirven para ver cómo queda una plataforma real con lo elegido.
-    href: "/pruebas",
-    label: "Pruebas",
-    icon: FlaskConical,
-    children: [
-      { href: "/pruebas/reportes/tipo-1", label: "Reporte Tipo 1 (Contratación)", grupo: "Reportes" },
-      { href: "/pruebas/reportes/tipo-2", label: "Reporte Tipo 2 (Ventas)", grupo: "Reportes" },
-      { href: "/pruebas/reportes/tipo-3", label: "Reporte Tipo 3 (RRHH)", grupo: "Reportes" },
-      { href: "/pruebas/reportes/tipo-4", label: "Reporte Tipo 4 (Costos)", grupo: "Reportes" },
-      { href: "/pruebas/reportes/tipo-5", label: "Reporte Tipo 5 (Ficha de obra)", grupo: "Reportes" },
-      { href: "/pruebas/formularios/tipo-1", label: "Formulario Tipo 1", grupo: "Formularios" },
-      { href: "/pruebas/formularios/tipo-2", label: "Formulario Tipo 2", grupo: "Formularios" },
-      { href: "/pruebas/formularios/tipo-3", label: "Formulario Tipo 3", grupo: "Formularios" },
-      { href: "/pruebas/maquetas", label: "Constructor de maquetas", grupo: "Maquetas" },
-    ],
-  },
+  // Portada con la lista de pantallas tipo (components/portada/plantillas.tsx); cada plantilla se
+  // abre desde ahí y su nombre se agrega a la ruta de migas (migasDe, abajo).
+  { href: "/plantillas", label: "Plantillas", icon: LayoutTemplate },
 ];
 
 /** Configuración no va en el menú principal: vive en el pie del sidebar. Está abierta a todos y
@@ -56,7 +42,10 @@ export const NAV_CONFIG: NavItem = {
   ],
 };
 
-/** Ruta de migas según la URL: Inicio › Sección › Subpanel. */
+/** Ruta de migas según la URL: Inicio › Sección › Subpanel. Dentro de Plantillas se agrega el
+ * nombre de la plantilla abierta (no son subpaneles del menú). */
 export function migasDe(pathname: string) {
-  return crearMigas(pathname, NAV_ITEMS, NAV_CONFIG);
+  const migas = crearMigas(pathname, NAV_ITEMS, NAV_CONFIG);
+  const plantilla = PLANTILLAS.find((p) => pathname === p.href || pathname.startsWith(`${p.href}/`));
+  return plantilla ? [...migas, { label: `${plantilla.nombre} · ${plantilla.ejemplo}`, href: plantilla.href }] : migas;
 }

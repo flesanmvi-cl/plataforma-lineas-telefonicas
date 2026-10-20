@@ -29,7 +29,7 @@ import {
 } from "@/components/estandar/graficos/campos/componentes";
 import { OBRAS, PROVEEDORES } from "@/components/estandar/graficos/campos/datos";
 import { useTutorial } from "@/components/tutorial/tutorial";
-import { PASOS_FORMULARIO_3 } from "@/components/pruebas/tutoriales";
+import { PASOS_FORMULARIO_3 } from "@/components/plantillas/tutoriales";
 
 /*
  * Formulario Tipo 3: maestro-detalle («Estado de pago»). Encabezado del documento con campos,

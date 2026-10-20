@@ -12,7 +12,7 @@ import { ALTOS, ANCHOS, nuevoId, type Ancho, type Bloque, type Maqueta, type Tip
 import { ELEMENTOS, elementoPorId, GRUPOS, type ElementoConstructor } from "./elementos";
 import { Desplegable } from "@/components/desplegable";
 
-// Constructor de maquetas en /pruebas/maquetas: la ruta no puede llamarse «constructor», porque
+// Constructor de maquetas en /plantillas/maquetas: la ruta no puede llamarse «constructor», porque
 // las herramientas de desarrollo de Next guardan las rutas en un objeto y el segmento choca con
 // Object.prototype.constructor (la página se cae en dev). Tres paneles: catálogo a la izquierda (textos, piezas de
 // reportería y piezas del estándar), lienzo de 12 columnas al centro y propiedades del bloque a

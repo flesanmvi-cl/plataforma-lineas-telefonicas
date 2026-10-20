@@ -1,16 +1,16 @@
 # Reportes tipo
 
-Pantallas de referencia en el menú «Pruebas» del sidebar. Para armar un reporte en una
+Pantallas de referencia en «Plantillas» del sidebar. Para armar un reporte en una
 plataforma, se copia el tipo que corresponde y se cambian sus datos de ejemplo por la consulta
 real: los bloques no cambian.
 
 | Tipo (menú) | Para qué | Pantalla | Piezas |
 |---|---|---|---|
-| 1 (Contratación) | Resumen ejecutivo del período, con filtros cruzados | `components/pruebas/reporte-ejecutivo.tsx` | `components/reporte/` |
-| 2 (Ventas) | Ventas con meta: mensual, acumulado, categoría, ciudad, vendedor y proyecto, en tres vistas (Tablero, Territorio, Vendedor × mes) | `components/pruebas/ventas/` | `components/reporte/` |
-| 3 (RRHH) | Dotación (RR.HH.): stock al cierre, movimientos y rotación de 12 meses, composición por edad, sexo, antigüedad y contrato | `components/pruebas/personas/` | `components/reporte/` |
-| 4 (Costos) | Costos por obra con drilldown (Línea → Obra → Partida) | `components/pruebas/reporte-costos.tsx` | estándar + ECharts |
-| 5 (Ficha de obra) | Ficha de una entidad (una obra) | `components/pruebas/reporte-obra.tsx` | estándar |
+| 1 (Contratación) | Resumen ejecutivo del período, con filtros cruzados | `components/plantillas/reporte-ejecutivo.tsx` | `components/reporte/` |
+| 2 (Ventas) | Ventas con meta: mensual, acumulado, categoría, ciudad, vendedor y proyecto, en tres vistas (Tablero, Territorio, Vendedor × mes) | `components/plantillas/ventas/` | `components/reporte/` |
+| 3 (RRHH) | Dotación (RR.HH.): stock al cierre, movimientos y rotación de 12 meses, composición por edad, sexo, antigüedad y contrato | `components/plantillas/personas/` | `components/reporte/` |
+| 4 (Costos) | Costos por obra con drilldown (Línea → Obra → Partida) | `components/plantillas/reporte-costos.tsx` | estándar + ECharts |
+| 5 (Ficha de obra) | Ficha de una entidad (una obra) | `components/plantillas/reporte-obra.tsx` | estándar |
 
 ## Reporte Tipo 1
 
@@ -67,7 +67,7 @@ La tabla usa `<table className="rep-tabla">`, y los formatos de cifra (es-CL, MM
 
 ## Reporte Tipo 2 (ventas)
 
-Las tres vistas se calculan desde las mismas filas y comparten los filtros: `components/pruebas/ventas/calculos.ts`. Se usa **una fila por unidad vendida** más la **meta mensual por vendedor**.
+Las tres vistas se calculan desde las mismas filas y comparten los filtros: `components/plantillas/ventas/calculos.ts`. Se usa **una fila por unidad vendida** más la **meta mensual por vendedor**.
 
 - **Período:** «Acumulado» suma de enero al mes elegido y «Mes» muestra solo ese mes. Un clic en un mes de cualquier gráfico cambia a «Mes».
 - **Meta:** existe por vendedor. La de una ciudad reparte la de cada vendedor según dónde vendió. No hay meta por categoría: con una categoría elegida se muestra «sin meta».
@@ -77,7 +77,7 @@ Las tres vistas se calculan desde las mismas filas y comparten los filtros: `com
 
 Se usa **una fila por persona y contrato** (gerencia, nivel, contrato, sexo, año de nacimiento,
 mes de ingreso y, si salió, mes y motivo de egreso) más los **cupos autorizados por gerencia**.
-Cálculos en `components/pruebas/personas/calculos.ts`.
+Cálculos en `components/plantillas/personas/calculos.ts`.
 
 - **Corte:** un mes de cierre. La dotación es quien está vigente al cierre, y los movimientos y la rotación son de los 12 meses hasta ese mes.
 - **Rotación:** egresos de los 12 meses sobre la dotación promedio de esos meses. La voluntaria cuenta solo las renuncias.
@@ -94,7 +94,7 @@ de la opción activa, la lupa del buscador).
 
 ## Constructor de maquetas
 
-En `/pruebas/maquetas` (menú Pruebas › Constructor de maquetas) se arma la maqueta de un reporte o
+En `/plantillas/maquetas` (Plantillas › Constructor de maquetas) se arma la maqueta de un reporte o
 formulario sin escribir código. Tiene tres paneles: el catálogo, el lienzo de 12 columnas y las
 propiedades del bloque. Código en `components/constructor/` y modelo en `lib/constructor/tipos.ts`.
 

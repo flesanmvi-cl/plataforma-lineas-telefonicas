@@ -1,5 +1,5 @@
 /**
- * Datos ficticios para las muestras y pantallas de prueba de formularios (sin personas reales).
+ * Datos ficticios para las muestras y Formularios Tipo (sin personas reales).
  */
 import type { OpcionCampo } from "./campo-select";
 import { normalizar } from "./comun";

@@ -1,4 +1,4 @@
-import { ReporteCostos } from "@/components/pruebas/reporte-costos";
+import { ReporteCostos } from "@/components/plantillas/reporte-costos";
 
 // Reporte Tipo 4: patrón de drilldown (Línea → Obra → Partida).
 

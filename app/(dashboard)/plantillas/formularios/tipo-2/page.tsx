@@ -27,7 +27,7 @@ import {
 } from "@/components/estandar/graficos/campos/componentes";
 import { CENTROS_COSTO, OBRAS } from "@/components/estandar/graficos/campos/datos";
 import { useTutorial } from "@/components/tutorial/tutorial";
-import { PASOS_FORMULARIO_2 } from "@/components/pruebas/tutoriales";
+import { PASOS_FORMULARIO_2 } from "@/components/plantillas/tutoriales";
 
 /*
  * Formulario Tipo 2: formulario por pasos («Solicitud de compra»). Stepper arriba, avanzar y

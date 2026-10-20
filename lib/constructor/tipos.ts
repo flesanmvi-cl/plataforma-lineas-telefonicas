@@ -1,4 +1,4 @@
-// Modelo de una maqueta del constructor (/pruebas/constructor). Se guarda en el navegador y se
+// Modelo de una maqueta del constructor (/plantillas/constructor). Se guarda en el navegador y se
 // exporta como JSON: por eso solo lleva datos planos (el elemento va por su id de catálogo).
 
 export const ANCHOS = [3, 4, 6, 8, 12] as const;

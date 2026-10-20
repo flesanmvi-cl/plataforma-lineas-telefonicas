@@ -95,7 +95,7 @@ Por cada pantalla, una fila. Si una pantalla no responde una pregunta concreta, 
 |---|---|---|---|---|
 | ej. Dotación | ¿Cuánta gente hay y cuánto rota? | Gerencia de Personas | Reporte Tipo 3 | Maestro de colaboradores |
 
-Plantillas disponibles (ver `/pruebas` y `docs/REPORTES.md`):
+Plantillas disponibles (ver `/plantillas` y `docs/REPORTES.md`):
 
 - **Reporte Tipo 1**: resumen ejecutivo con filtros cruzados.
 - **Reporte Tipo 2**: venta contra meta, con varias vistas.
@@ -105,7 +105,7 @@ Plantillas disponibles (ver `/pruebas` y `docs/REPORTES.md`):
 - **Formulario Tipo 1**: una página.
 - **Formulario Tipo 2**: por pasos.
 - **Formulario Tipo 3**: con líneas (detalle editable).
-- **Constructor de maquetas** (`/pruebas/maquetas`): para bocetear lo que no calza con ninguna.
+- **Constructor de maquetas** (`/plantillas/maquetas`): para bocetear lo que no calza con ninguna.
 
 ## G. Despliegue
 
@@ -137,5 +137,5 @@ Sin decidir:  <…>
 
 ---
 
-**Después del arranque:** se copia el mockup sin `/pruebas`, se aplican las
+**Después del arranque:** se copia el mockup sin `/plantillas`, se aplican las
 decisiones y se sigue «Crear una plataforma nueva» del `README.md`.

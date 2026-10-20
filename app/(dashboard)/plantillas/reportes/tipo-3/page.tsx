@@ -1,4 +1,4 @@
-import { ReporteDotacion } from "@/components/pruebas/personas/reporte";
+import { ReporteDotacion } from "@/components/plantillas/personas/reporte";
 
 export default function ReporteTipo3Page() {
   return <ReporteDotacion />;

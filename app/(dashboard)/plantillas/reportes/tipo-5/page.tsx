@@ -1,4 +1,4 @@
-import { ReporteObra } from "@/components/pruebas/reporte-obra";
+import { ReporteObra } from "@/components/plantillas/reporte-obra";
 
 // Reporte Tipo 5: ficha de una entidad (una obra).
 

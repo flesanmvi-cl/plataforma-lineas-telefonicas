@@ -1,6 +1,6 @@
 import type { PasoTutorial } from "@/components/tutorial/tutorial";
 
-// Recorridos guiados de las pantallas de prueba (el del Tipo 3 está en personas/tutorial.ts). Son
+// Recorridos guiados de las plantillas (el del Tipo 3 está en personas/tutorial.ts). Son
 // también ejemplos para copiar: cada uno sigue el orden de lectura de su pantalla y reutiliza el
 // data-bloque de las tarjetas o un data-tutorial puesto a propósito.
 

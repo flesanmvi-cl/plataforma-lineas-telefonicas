@@ -1,6 +1,6 @@
 /**
  * Campos de formulario reutilizables (los usan las muestras del laboratorio y las pantallas de
- * prueba /pruebas/formularios/*). Todos leen t.campo del tema: estilo de caja, posición de la
+ * prueba /plantillas/formularios/*). Todos leen t.campo del tema: estilo de caja, posición de la
  * etiqueta, alto, radio y colores por estado.
  */
 export { CampoTexto, CampoArea, type PropsCampoComun, type PropsCampoTexto, type PropsCampoArea } from "./campo-texto";

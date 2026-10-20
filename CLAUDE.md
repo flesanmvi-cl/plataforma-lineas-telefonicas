@@ -34,7 +34,7 @@ archivo y los puntos de referencia abajo.
    es otro proyecto: `proyectos/_prototipos/laboratorio-diseno` (galería, comparador y panel
    «Tema» por sección). Aquí solo está lo vigente: la Guía de estilo (`/ui-kit`), las piezas de
    `components/estandar/` y `lib/estandar/` (tema fijo en `lib/estandar/estandar.ts`, hoy
-   provisorio) y las de `components/reporte/`; se ven aplicadas en el menú «Pruebas» del
+   provisorio) y las de `components/reporte/`; se ven aplicadas en «Plantillas» del
    sidebar (Reportes Tipo 1-5, Formularios Tipo 1-3 y el constructor de maquetas). Para traer
    algo del laboratorio, sigue «Cómo llega algo nuevo desde el laboratorio» en
    `docs/UI-KIT-CATALOG.md`; no reinstales aquí sus librerías de exploración.

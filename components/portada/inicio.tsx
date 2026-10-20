@@ -1,13 +1,12 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { PageHeader } from "@/components/page-header";
-import { GRUPOS_PLANTILLAS, MUNDOS, PASOS_ARRANQUE, PLANTILLAS } from "./datos";
-import { Esquema } from "./esquema";
+import { MUNDOS, PASOS_ARRANQUE } from "./datos";
 
-// Opción A · Tarjetas. Inicio: una tarjeta grande por mundo y los pasos para crear una
-// plataforma. Plantillas: tarjetas agrupadas, cada una con el esquema de su pantalla.
+// Inicio de la plantilla: una tarjeta por mundo (qué es y qué trae) y los pasos para crear una
+// plataforma nueva. Opción A de las portadas, elegida el 2026-10-20.
 
-export function InicioA() {
+export function Inicio() {
   return (
     <div className="page-shell py-6 lg:py-8 flex flex-col gap-6">
       <PageHeader
@@ -51,42 +50,6 @@ export function InicioA() {
           ))}
         </ol>
       </section>
-    </div>
-  );
-}
-
-export function PlantillasA() {
-  return (
-    <div className="page-shell py-6 lg:py-8 flex flex-col gap-6">
-      <PageHeader
-        title="Plantillas"
-        description="Pantallas tipo armadas solo con el estándar vigente. Para usar una en una plataforma, se copia y se cambian sus datos de ejemplo por la consulta real."
-      />
-      {GRUPOS_PLANTILLAS.map((g) => (
-        <section key={g.id} className="flex flex-col gap-3">
-          <div className="flex flex-wrap items-baseline gap-x-3">
-            <h2 className="label-eyebrow brand-bullet">{g.id}</h2>
-            <p className="text-sm text-muted">{g.texto}</p>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-5 gap-4">
-            {PLANTILLAS.filter((p) => p.grupo === g.id).map((p) => (
-              <Link key={p.href} href={p.href} className="card card-hover dens-card flex flex-col gap-3">
-                <Esquema bloques={p.esquema} />
-                <div>
-                  <p className="font-label font-600 text-[0.9375rem] text-text">
-                    {p.nombre} <span className="text-muted font-400">· {p.ejemplo}</span>
-                  </p>
-                  <p className="text-sm text-muted leading-snug mt-1">{p.proposito}</p>
-                </div>
-                <p className="mt-auto text-xs text-text leading-snug pt-2 border-t border-border">
-                  <span className="label-meta text-faint">Úsala cuando </span>
-                  {p.cuando.charAt(0).toLowerCase() + p.cuando.slice(1)}
-                </p>
-              </Link>
-            ))}
-          </div>
-        </section>
-      ))}
     </div>
   );
 }

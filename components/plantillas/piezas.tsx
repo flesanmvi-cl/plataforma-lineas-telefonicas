@@ -16,7 +16,7 @@ import {
 import { useInteraccion } from "@/components/estandar/graficos/botones/use-interaccion";
 import { moverConFlechas } from "@/components/estandar/graficos/controles/comun";
 
-// Piezas comunes de las pantallas de prueba (/pruebas/*): el bloque de tablero y los controles
+// Piezas comunes de las plantillas (/plantillas/*): el bloque de tablero y los controles
 // de filtro, controlados desde afuera. Todo color, letra y radio sale de los tokens del estándar.
 
 /** Tarjeta de tablero con título de bloque, detalle a la derecha y acciones opcionales. */

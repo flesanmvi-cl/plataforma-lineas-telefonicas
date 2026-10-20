@@ -35,10 +35,10 @@ export function ejemplosNotificaciones(ahora: number): Notificacion[] {
     creadaEn: hace(min),
   });
   return [
-    n(12, "rechazo", "Entrega rechazada", "Conciliación bancaria · FAI Central", 4, false, "/pruebas/reportes/tipo-1", "Falta el respaldo del ítem 4.2: la cartola no cuadra con el mayor."),
-    n(11, "aprobacion", "Entrega aprobada", "Provisión de vacaciones · Inex", 65, false, "/pruebas/reportes/tipo-1"),
-    n(10, "recordatorio", "Vence el día hábil 5", "Quedan 3 entregas pendientes de tu área", 190, false, "/pruebas/reportes/tipo-3"),
-    n(9, "comentario", "Nuevo comentario", "Comentaron en el ítem 3.1 · Activo fijo", 60 * 22, true, "/pruebas/reportes/tipo-1", "¿Podemos usar el tipo de cambio del cierre y no el del día?"),
+    n(12, "rechazo", "Entrega rechazada", "Conciliación bancaria · FAI Central", 4, false, "/plantillas/reportes/tipo-1", "Falta el respaldo del ítem 4.2: la cartola no cuadra con el mayor."),
+    n(11, "aprobacion", "Entrega aprobada", "Provisión de vacaciones · Inex", 65, false, "/plantillas/reportes/tipo-1"),
+    n(10, "recordatorio", "Vence el día hábil 5", "Quedan 3 entregas pendientes de tu área", 190, false, "/plantillas/reportes/tipo-3"),
+    n(9, "comentario", "Nuevo comentario", "Comentaron en el ítem 3.1 · Activo fijo", 60 * 22, true, "/plantillas/reportes/tipo-1", "¿Podemos usar el tipo de cambio del cierre y no el del día?"),
     n(8, "carga", "Carga de datos terminada", "Facturación: 22.310 filas cargadas sin errores", 60 * 26, true, "/configuracion/fuentes-datos"),
     n(7, "aprobacion", "Entrega aprobada", "Remuneraciones · Back-Office", 60 * 50, true),
     n(6, "alerta", "Carga con advertencias", "Costos: 14 filas sin centro de gestión", 60 * 75, true, "/configuracion/fuentes-datos"),
