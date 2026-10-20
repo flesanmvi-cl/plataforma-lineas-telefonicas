@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, type ReactNode } from "react";
 import Link from "next/link";
 import { ArrowDown, ArrowUpRight, Search } from "lucide-react";
 import { useFiltrosUrl } from "@/components/presentaciones/use-filtros-url";
@@ -20,6 +20,27 @@ import { CONTRATOS, NIVELES, TIPOS, UNIDADES, UNIVERSO, type Contrato, type Tipo
 import { AvisoEjemplo } from "./piezas";
 import { useTutorial } from "@/components/tutorial/tutorial";
 import { PASOS_TIPO_1 } from "./tutoriales";
+import { Espacio, type DefEspacio } from "./espacios";
+
+/** Espacios del Reporte Tipo 1, en orden: el laboratorio de diseño los usa para probar piezas. */
+export const ESPACIOS_TIPO_1 = [
+  { id: "kpi", nombre: "KPI principal", seccion: "kpis", actual: "KpiPrincipal", alto: 220 },
+  { id: "cifras", nombre: "Cifras de contexto", seccion: "kpis", actual: "PanelCifras", alto: 220 },
+  { id: "bloque-1", nombre: "Tipo de contrato", seccion: "graficos", actual: "DonaLeyenda", alto: 260 },
+  { id: "bloque-2", nombre: "Nivel de aprobación", seccion: "graficos", actual: "Piramide", alto: 260 },
+  { id: "bloque-3", nombre: "Unidad de negocio", seccion: "graficos", actual: "DonaLeyenda (compacta)", alto: 260 },
+  { id: "bloque-4", nombre: "Monto por año", seccion: "graficos", actual: "BarrasApiladas", alto: 260 },
+  { id: "tabla", nombre: "Detalle", seccion: "tablas", actual: "tabla rep-tabla", alto: 380 },
+] as const satisfies readonly DefEspacio[];
+
+export type EspacioTipo1 = (typeof ESPACIOS_TIPO_1)[number]["id"];
+
+interface PropsReporte {
+  /** Lo que reemplaza a la pieza de cada espacio (sin esto, la plantilla se ve igual). */
+  espacios?: Partial<Record<EspacioTipo1, ReactNode>>;
+  /** Numera los espacios sobre la pantalla. */
+  marcas?: boolean;
+}
 
 // Reporte Tipo 1 · tablero ejecutivo con filtros cruzados (look & feel del panel de Conflicto
 // de Interés, opción A aprobada). Todos los bloques se calculan desde una lista de filas: en una
@@ -92,7 +113,15 @@ function porSubcontratista(filas: Contrato[]): FilaSubcontratista[] {
   });
 }
 
-export function ReporteEjecutivo() {
+export function ReporteEjecutivo({ espacios = {}, marcas }: PropsReporte = {}) {
+  const espacio = (id: EspacioTipo1, contenido: ReactNode, className?: string) => {
+    const i = ESPACIOS_TIPO_1.findIndex((e) => e.id === id);
+    return (
+      <Espacio n={i + 1} nombre={ESPACIOS_TIPO_1[i].nombre} marcas={marcas} reemplazado={id in espacios} className={className}>
+        {espacios[id] ?? contenido}
+      </Espacio>
+    );
+  };
   useTutorial(PASOS_TIPO_1);
   const [filtros, setFiltros] = useFiltrosUrl({ vista: "historico", tipo: "", unidad: "", nivel: "", tabla: "subcontratista" });
   const vista = filtros.vista as Vista;
@@ -256,149 +285,168 @@ export function ReporteEjecutivo() {
 
       <div className="flex flex-col gap-4">
         <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1.72fr)_minmax(0,1fr)] gap-4">
-          <KpiPrincipal
-            rotulo="Monto contratado"
-            valor={total}
-            contraste={{
-              valor: facturado,
-              etiqueta: "MM facturado",
-              avance: total ? Math.round((facturado / total) * 1000) / 10 : 0,
-              etiquetaAvance: "facturado",
-            }}
-            chips={[
-              { valor: distintos(filtradas, "unidad"), etiqueta: "unidades" },
-              { valor: distintos(filtradas, "subcontratista"), etiqueta: "subcontratistas" },
-              { valor: filtradas.length, etiqueta: "contratos" },
-            ]}
-            tendencia={tendencia}
-          />
-          <PanelCifras rotulo="Universo en revisión" insignia="Fijo" cifras={UNIVERSO} />
+          {espacio(
+            "kpi",
+            <KpiPrincipal
+              rotulo="Monto contratado"
+              valor={total}
+              contraste={{
+                valor: facturado,
+                etiqueta: "MM facturado",
+                avance: total ? Math.round((facturado / total) * 1000) / 10 : 0,
+                etiquetaAvance: "facturado",
+              }}
+              chips={[
+                { valor: distintos(filtradas, "unidad"), etiqueta: "unidades" },
+                { valor: distintos(filtradas, "subcontratista"), etiqueta: "subcontratistas" },
+                { valor: filtradas.length, etiqueta: "contratos" },
+              ]}
+              tendencia={tendencia}
+            />,
+          )}
+          {espacio("cifras", <PanelCifras rotulo="Universo en revisión" insignia="Fijo" cifras={UNIVERSO} />)}
         </div>
 
         <BarraFiltros filtros={activos} onLimpiar={() => setFiltros({ tipo: "", unidad: "", nivel: "" })} />
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-          <TarjetaReporte numero={1} titulo="Tipo de contrato" detalle="monto contratado">
-            <DonaLeyenda items={itemsTipo} seleccion={filtros.tipo || null} onSeleccion={(c) => alternar("tipo", c)} />
-          </TarjetaReporte>
-          <TarjetaReporte numero={2} titulo="Nivel de aprobación" detalle="quién firmó · contratos · monto">
-            <Piramide niveles={niveles} seleccion={filtros.nivel ? Number(filtros.nivel) : null} onSeleccion={(n) => alternar("nivel", String(n))} />
-          </TarjetaReporte>
-          <TarjetaReporte numero={3} titulo="Unidad de negocio" detalle="donde se contrató">
-            <DonaLeyenda items={itemsUnidad} seleccion={filtros.unidad || null} onSeleccion={(c) => alternar("unidad", c)} compacta />
-          </TarjetaReporte>
-          <TarjetaReporte numero={4} titulo="Monto por año" detalle="año de adjudicación">
-            <BarrasApiladas categorias={anios.map((a) => `'${String(a).slice(2)}`)} series={series} seleccion={filtros.tipo || null} alto={220} />
-          </TarjetaReporte>
+          <Espacio n={3} nombre={ESPACIOS_TIPO_1[2].nombre} marcas={marcas} reemplazado={"bloque-1" in espacios}>
+            <TarjetaReporte numero={1} titulo="Tipo de contrato" detalle="monto contratado">
+              {espacios["bloque-1"] ?? <DonaLeyenda items={itemsTipo} seleccion={filtros.tipo || null} onSeleccion={(c) => alternar("tipo", c)} />}
+            </TarjetaReporte>
+          </Espacio>
+          <Espacio n={4} nombre={ESPACIOS_TIPO_1[3].nombre} marcas={marcas} reemplazado={"bloque-2" in espacios}>
+            <TarjetaReporte numero={2} titulo="Nivel de aprobación" detalle="quién firmó · contratos · monto">
+              {espacios["bloque-2"] ?? <Piramide niveles={niveles} seleccion={filtros.nivel ? Number(filtros.nivel) : null} onSeleccion={(n) => alternar("nivel", String(n))} />}
+            </TarjetaReporte>
+          </Espacio>
+          <Espacio n={5} nombre={ESPACIOS_TIPO_1[4].nombre} marcas={marcas} reemplazado={"bloque-3" in espacios}>
+            <TarjetaReporte numero={3} titulo="Unidad de negocio" detalle="donde se contrató">
+              {espacios["bloque-3"] ?? <DonaLeyenda items={itemsUnidad} seleccion={filtros.unidad || null} onSeleccion={(c) => alternar("unidad", c)} compacta />}
+            </TarjetaReporte>
+          </Espacio>
+          <Espacio n={6} nombre={ESPACIOS_TIPO_1[5].nombre} marcas={marcas} reemplazado={"bloque-4" in espacios}>
+            <TarjetaReporte numero={4} titulo="Monto por año" detalle="año de adjudicación">
+              {espacios["bloque-4"] ?? <BarrasApiladas categorias={anios.map((a) => `'${String(a).slice(2)}`)} series={series} seleccion={filtros.tipo || null} alto={220} />}
+            </TarjetaReporte>
+          </Espacio>
         </div>
 
-        <section data-bloque="detalle" data-bloque-titulo="Detalle" className="card overflow-hidden min-w-0">
-          <div className="flex flex-wrap items-center gap-x-5 gap-y-3 px-5 py-4">
-            <Pildoras etiqueta="Agrupar tabla" opciones={VISTAS_TABLA} valor={vistaTabla} onCambio={(v) => setFiltros({ tabla: v })} />
-            <span className="inline-flex items-baseline gap-1.5">
-              <b className="rep-cifra text-xl font-extrabold">{vistaTabla === "unidad" ? unidadesTabla.length : subcontratistas.length}</b>
-              <span className="text-[0.8125rem] text-muted">{vistaTabla === "unidad" ? "unidades" : "subcontratistas"} ·</span>
-              <b className="rep-cifra text-xl font-extrabold">$ {cifra(total)} MM</b>
-            </span>
-            <BotonExcel onDescargar={exportar} />
-            <label className="relative ml-auto w-full sm:w-80">
-              <span className="sr-only">Buscar en la tabla</span>
-              <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-faint" aria-hidden />
-              <input
-                value={busqueda}
-                onChange={(e) => setBusqueda(e.target.value)}
-                placeholder={vistaTabla === "unidad" ? "Buscar unidad…" : "Buscar subcontratista, giro, unidad…"}
-                className="field-input rounded-full! pl-10! w-full!"
-              />
-            </label>
-          </div>
-          <div className="overflow-x-auto">
-            {vistaTabla === "unidad" ? (
-              <table className="rep-tabla">
-                <thead>
-                  <tr>
-                    <th>Unidad</th>
-                    <th className="text-right!">Subcontratistas</th>
-                    <th className="text-right!">Contratos</th>
-                    {encabezadoOrden("monto", "Contratado")}
-                    {encabezadoOrden("facturado", "Facturado")}
-                  </tr>
-                </thead>
-                <tbody>
-                  {unidadesTabla.map((f) => (
-                    <tr key={f.unidad}>
-                      <td>
-                        <span className="inline-flex items-center gap-2 font-semibold">
-                          <span aria-hidden className="w-2.5 h-2.5 rounded-full" style={{ background: colorUnidad(grupoUnidad(f.unidad)) }} />
-                          {f.unidad}
-                        </span>
-                      </td>
-                      <td className="text-right rep-cifra">{cifra(f.subcontratistas)}</td>
-                      <td className="text-right rep-cifra">{cifra(f.contratos)}</td>
-                      <td>
-                        <CeldaMonto valor={f.monto} max={maxTabla} total={total} />
-                      </td>
-                      <td className="text-right rep-cifra text-muted">$ {cifra(f.facturado)}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            ) : (
-              <table className="rep-tabla">
-                <thead>
-                  <tr>
-                    <th>Subcontratista</th>
-                    <th>Unidad</th>
-                    <th>Nivel</th>
-                    <th>Tipo</th>
-                    <th className="max-xl:hidden">Vigencia</th>
-                    {encabezadoOrden("monto", "Contratado")}
-                    {encabezadoOrden("facturado", "Facturado")}
-                  </tr>
-                </thead>
-                <tbody>
-                  {visibles.map((f) => (
-                    <tr key={f.nombre}>
-                      <td className="min-w-64">
-                        <CeldaNombre nombre={f.nombre} detalle={`${f.giro} · ${f.contratos} contratos`} color={colorTipo(f.tipo)} />
-                      </td>
-                      <td>
-                        <ValorConMas valor={f.unidad} mas={f.masUnidades} />
-                      </td>
-                      <td>
-                        <NumeroCaja n={f.nivel} />
-                      </td>
-                      <td>
-                        <InsigniaSerie texto={TIPOS.find((t) => t.clave === f.tipo)!.nombre} color={colorTipo(f.tipo)} />
-                      </td>
-                      <td className="rep-cifra text-muted whitespace-nowrap max-xl:hidden">
-                        {f.desde} → {f.hasta}
-                      </td>
-                      <td>
-                        <CeldaMonto valor={f.monto} max={maxTabla} total={total} />
-                      </td>
-                      <td className="text-right rep-cifra text-muted whitespace-nowrap">$ {cifra(f.facturado)}</td>
-                    </tr>
-                  ))}
-                  {!visibles.length && (
-                    <tr>
-                      <td colSpan={7} className="text-center text-muted py-8!">
-                        No hay subcontratistas con esos filtros.
-                      </td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
-            )}
-          </div>
-          {vistaTabla === "subcontratista" && subcontratistas.length > LIMITE && (
-            <div className="border-t border-border px-5 py-3">
-              <button type="button" onClick={() => setTodas((t) => !t)} className="text-[0.8125rem] font-semibold text-muted hover:text-text cursor-pointer">
-                {todas ? "Ver menos" : `Ver los ${subcontratistas.length} subcontratistas`}
-              </button>
-            </div>
+        <Espacio n={7} nombre={ESPACIOS_TIPO_1[6].nombre} marcas={marcas} reemplazado={"tabla" in espacios}>
+          {espacios.tabla ? (
+            <section data-bloque="detalle" data-bloque-titulo="Detalle" className="card p-5 min-w-0">
+              {espacios.tabla}
+            </section>
+          ) : (
+            <section data-bloque="detalle" data-bloque-titulo="Detalle" className="card overflow-hidden min-w-0">
+              <div className="flex flex-wrap items-center gap-x-5 gap-y-3 px-5 py-4">
+                <Pildoras etiqueta="Agrupar tabla" opciones={VISTAS_TABLA} valor={vistaTabla} onCambio={(v) => setFiltros({ tabla: v })} />
+                <span className="inline-flex items-baseline gap-1.5">
+                  <b className="rep-cifra text-xl font-extrabold">{vistaTabla === "unidad" ? unidadesTabla.length : subcontratistas.length}</b>
+                  <span className="text-[0.8125rem] text-muted">{vistaTabla === "unidad" ? "unidades" : "subcontratistas"} ·</span>
+                  <b className="rep-cifra text-xl font-extrabold">$ {cifra(total)} MM</b>
+                </span>
+                <BotonExcel onDescargar={exportar} />
+                <label className="relative ml-auto w-full sm:w-80">
+                  <span className="sr-only">Buscar en la tabla</span>
+                  <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-faint" aria-hidden />
+                  <input
+                    value={busqueda}
+                    onChange={(e) => setBusqueda(e.target.value)}
+                    placeholder={vistaTabla === "unidad" ? "Buscar unidad…" : "Buscar subcontratista, giro, unidad…"}
+                    className="field-input rounded-full! pl-10! w-full!"
+                  />
+                </label>
+              </div>
+              <div className="overflow-x-auto">
+                {vistaTabla === "unidad" ? (
+                  <table className="rep-tabla">
+                    <thead>
+                      <tr>
+                        <th>Unidad</th>
+                        <th className="text-right!">Subcontratistas</th>
+                        <th className="text-right!">Contratos</th>
+                        {encabezadoOrden("monto", "Contratado")}
+                        {encabezadoOrden("facturado", "Facturado")}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {unidadesTabla.map((f) => (
+                        <tr key={f.unidad}>
+                          <td>
+                            <span className="inline-flex items-center gap-2 font-semibold">
+                              <span aria-hidden className="w-2.5 h-2.5 rounded-full" style={{ background: colorUnidad(grupoUnidad(f.unidad)) }} />
+                              {f.unidad}
+                            </span>
+                          </td>
+                          <td className="text-right rep-cifra">{cifra(f.subcontratistas)}</td>
+                          <td className="text-right rep-cifra">{cifra(f.contratos)}</td>
+                          <td>
+                            <CeldaMonto valor={f.monto} max={maxTabla} total={total} />
+                          </td>
+                          <td className="text-right rep-cifra text-muted">$ {cifra(f.facturado)}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                ) : (
+                  <table className="rep-tabla">
+                    <thead>
+                      <tr>
+                        <th>Subcontratista</th>
+                        <th>Unidad</th>
+                        <th>Nivel</th>
+                        <th>Tipo</th>
+                        <th className="max-xl:hidden">Vigencia</th>
+                        {encabezadoOrden("monto", "Contratado")}
+                        {encabezadoOrden("facturado", "Facturado")}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {visibles.map((f) => (
+                        <tr key={f.nombre}>
+                          <td className="min-w-64">
+                            <CeldaNombre nombre={f.nombre} detalle={`${f.giro} · ${f.contratos} contratos`} color={colorTipo(f.tipo)} />
+                          </td>
+                          <td>
+                            <ValorConMas valor={f.unidad} mas={f.masUnidades} />
+                          </td>
+                          <td>
+                            <NumeroCaja n={f.nivel} />
+                          </td>
+                          <td>
+                            <InsigniaSerie texto={TIPOS.find((t) => t.clave === f.tipo)!.nombre} color={colorTipo(f.tipo)} />
+                          </td>
+                          <td className="rep-cifra text-muted whitespace-nowrap max-xl:hidden">
+                            {f.desde} → {f.hasta}
+                          </td>
+                          <td>
+                            <CeldaMonto valor={f.monto} max={maxTabla} total={total} />
+                          </td>
+                          <td className="text-right rep-cifra text-muted whitespace-nowrap">$ {cifra(f.facturado)}</td>
+                        </tr>
+                      ))}
+                      {!visibles.length && (
+                        <tr>
+                          <td colSpan={7} className="text-center text-muted py-8!">
+                            No hay subcontratistas con esos filtros.
+                          </td>
+                        </tr>
+                      )}
+                    </tbody>
+                  </table>
+                )}
+              </div>
+              {vistaTabla === "subcontratista" && subcontratistas.length > LIMITE && (
+                <div className="border-t border-border px-5 py-3">
+                  <button type="button" onClick={() => setTodas((t) => !t)} className="text-[0.8125rem] font-semibold text-muted hover:text-text cursor-pointer">
+                    {todas ? "Ver menos" : `Ver los ${subcontratistas.length} subcontratistas`}
+                  </button>
+                </div>
+              )}
+            </section>
           )}
-        </section>
+        </Espacio>
       </div>
     </div>
   );
