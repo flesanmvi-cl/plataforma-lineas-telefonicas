@@ -114,3 +114,156 @@
   border-color: var(--color-text);
   color: var(--color-bg);
 }
+
+/* ===== Sección Movimiento ===== */
+
+/* Borde con haz (efecto-borde-haz, contorno del botón con brillo). */
+@property --mv-ang {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+.mv-haz {
+  position: relative;
+  border: 1px solid var(--color-border);
+}
+.mv-haz.is-fijo {
+  border-color: var(--mv-acento);
+}
+.mv-haz.is-activo {
+  border-color: transparent;
+}
+.mv-haz.is-activo::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1.5px;
+  background: conic-gradient(from var(--mv-ang), transparent 0 62%, var(--mv-acento) 82%, transparent 100%),
+    linear-gradient(var(--color-border), var(--color-border));
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  animation: mv-giro var(--mv-haz-s, 3.6s) linear infinite;
+  pointer-events: none;
+}
+@keyframes mv-giro {
+  to {
+    --mv-ang: 360deg;
+  }
+}
+
+/* Foco que sigue al mouse (efecto-foco-mouse). */
+.mv-foco {
+  position: relative;
+  border: 1px solid var(--color-border);
+  overflow: hidden;
+  isolation: isolate;
+  transition: border-color 200ms ease;
+}
+.mv-foco:hover,
+.mv-foco:focus-visible {
+  border-color: var(--color-border-strong);
+}
+.mv-foco.is-activo::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: radial-gradient(220px circle at var(--mx, 50%) var(--my, 50%), var(--mv-foco), transparent 65%);
+  opacity: 0;
+  transition: opacity 250ms ease;
+}
+.mv-foco.is-activo:hover::before {
+  opacity: 1;
+}
+.mv-foco.is-activo:hover {
+  border-color: var(--mv-foco-borde);
+}
+
+/* Destello que cruza el botón (efecto-boton-brillo). */
+.mv-brillo {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+.mv-brillo.is-activo::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(105deg, transparent 35%, rgb(255 255 255 / 0.45) 50%, transparent 65%);
+  transform: translateX(-120%);
+  animation: mv-destello var(--mv-brillo-s, 3s) ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes mv-destello {
+  0%,
+  55% {
+    transform: translateX(-120%);
+  }
+  100% {
+    transform: translateX(120%);
+  }
+}
+
+/* View Transitions locales: solo se animan los elementos con nombre, no la página entera. */
+:root.mv-vt-local::view-transition-old(root),
+:root.mv-vt-local::view-transition-new(root) {
+  animation: none;
+}
+:root.mv-vt-local::view-transition-group(*),
+:root.mv-vt-local::view-transition-old(*),
+:root.mv-vt-local::view-transition-new(*) {
+  animation-duration: var(--mv-vt-ms, 400ms);
+  animation-timing-function: cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+:root.mv-dir-der::view-transition-old(*.mv-panel) {
+  animation-name: mv-salir-izq;
+}
+:root.mv-dir-der::view-transition-new(*.mv-panel) {
+  animation-name: mv-entrar-der;
+}
+:root.mv-dir-izq::view-transition-old(*.mv-panel) {
+  animation-name: mv-salir-der;
+}
+:root.mv-dir-izq::view-transition-new(*.mv-panel) {
+  animation-name: mv-entrar-izq;
+}
+@keyframes mv-salir-izq {
+  to {
+    transform: translateX(-30%);
+    opacity: 0;
+  }
+}
+@keyframes mv-salir-der {
+  to {
+    transform: translateX(30%);
+    opacity: 0;
+  }
+}
+@keyframes mv-entrar-der {
+  from {
+    transform: translateX(30%);
+    opacity: 0;
+  }
+}
+@keyframes mv-entrar-izq {
+  from {
+    transform: translateX(-30%);
+    opacity: 0;
+  }
+}
+
+/* Cambio de tema con círculo: la captura nueva se recorta con clip-path desde JS. */
+:root.mv-vt-tema::view-transition-old(root),
+:root.mv-vt-tema::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mv-haz.is-activo::before,
+  .mv-brillo.is-activo::after {
+    animation: none;
+  }
+}

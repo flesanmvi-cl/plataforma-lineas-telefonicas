@@ -30,5 +30,7 @@ export const ESTANDAR: Estandar = {
     tablas: "tabla-estados-acciones",
     botones: "botones-variantes",
     formularios: "campos-texto",
+    // Movimiento todavía no tiene muestra elegida.
+    movimiento: "",
   },
 };

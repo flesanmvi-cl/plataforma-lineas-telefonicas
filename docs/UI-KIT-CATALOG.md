@@ -8,7 +8,7 @@
   (tema + muestra elegida por sección). La comparación de escalas sigue en `/ui-kit/escala`,
   enlazada desde su tarjeta.
 - **Laboratorio de diseño** — `/ui-kit/laboratorio/<sección>` para **gráficos, KPIs, tablas,
-  botones y formularios**, más `En contexto`. Es el método para elegir el estándar visual.
+  botones, formularios y movimiento**, más `En contexto`. Es el método para elegir el estándar visual.
 
 Además, el menú **Pruebas** del sidebar (`/pruebas/reportes/tipo-1..3` y
 `/pruebas/formularios/tipo-1..3`) tiene pantallas de plataforma armadas solo con el estándar
@@ -48,7 +48,35 @@ actual»**, para compararlo con lo nuevo (filtro «Origen» en la galería). Las
 - Datos sintéticos deterministas en `lib/lab-graficos/datos.ts`. Letras extra en
   `app/fonts/lab/`, mapa de regiones en `public/lab/chile-regiones.json` y worker de MapLibre en
   `public/lab/maplibre/`.
-- Librerías instaladas para el laboratorio: ECharts, Nivo, visx, motion y MapLibre.
+- Librerías instaladas para el laboratorio: ECharts, Nivo, visx, motion, MapLibre, three.js y
+  React Three Fiber (estas dos solo para la escena 3D, cargadas con `next/dynamic`).
+
+## Sección Movimiento
+
+Tres familias en `/ui-kit/laboratorio/movimiento`:
+
+- **Efectos** (`graficos/efectos/`): borde con haz, foco que sigue al mouse, inclinación 3D,
+  título palabra por palabra, retícula animada, lista de avisos, botón con brillo y cifras que
+  ruedan. Son efectos al estilo de Magic UI, Aceternity y React Bits reescritos con los tokens
+  y el rojo como único acento; no se copió código de esas librerías. Las clases `.mv-*` viven en
+  `app/(dashboard)/ui-kit/laboratorio/lab.css`.
+- **View Transitions** (`graficos/transiciones/`): de la lista a la ficha, cambio de tema con
+  círculo, grilla que se reordena y pestañas que se deslizan. Usan `document.startViewTransition`
+  con `flushSync` (helper `transicionLocal` en `comun.ts`): solo se animan los elementos con
+  nombre, sin el fundido de toda la página. No se usa `<ViewTransition>` de React porque en
+  Next 15 sigue experimental. Sin soporte del navegador, el cambio es instantáneo.
+- **Escena de marca 3D** (`graficos/escena/`): la Sinapsis en 3D (misma geometría que
+  `components/cia-logo.tsx`) y una red neuronal de fondo para portada o login.
+
+Todas siguen la animación del tema («Sin» las detiene) y respetan «reducir movimiento» del
+sistema operativo (`useMovimiento` en `graficos/efectos/comun.ts`).
+
+**Spline**: no se instaló. Su runtime (`@splinetool/runtime`) es propietario, pesa 36 MB
+desempaquetado y por defecto pide wasm y decodificadores a `cdn.spline.design`, `unpkg.com` y
+`gstatic.com`, además de enviar eventos a `hooks.spline.design`, todo bloqueado o indeseable en
+la red corporativa. Se puede usar si una escena diseñada en Spline lo justifica: exportar el
+`.splinecode`, servirlo desde `public/` y pasar `wasmPath` a una copia local de su carpeta
+`build/`.
 
 ## Al definir el estándar
 

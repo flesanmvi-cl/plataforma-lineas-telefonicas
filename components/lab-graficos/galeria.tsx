@@ -6,7 +6,7 @@ import { CATALOGO } from "@/components/lab-graficos/catalogo";
 import { LabCard } from "@/components/lab-graficos/lab-card";
 import { FAMILIAS, SECCIONES, type Familia, type Libreria, type Seccion } from "@/components/lab-graficos/tipos";
 
-const LIBRERIAS: Libreria[] = ["ECharts", "Nivo", "visx", "SVG", "MapLibre", "HTML"];
+const LIBRERIAS: Libreria[] = ["ECharts", "Nivo", "visx", "SVG", "MapLibre", "HTML", "Motion", "CSS", "View Transitions", "three.js"];
 type Origen = "todos" | "nuevos" | "plantilla";
 
 /** Galería de una sección del laboratorio, con filtros; cada muestra lleva al comparador. */

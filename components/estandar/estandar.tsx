@@ -356,7 +356,7 @@ function MuestraElegida({ seccion, nombre }: { seccion: Seccion; nombre: string 
           </div>
         )}
       </div>
-      <span className="text-xs text-muted truncate">{g ? `${g.nombre} · ${g.libreria}` : ESTANDAR.muestras[seccion]}</span>
+      <span className="text-xs text-muted truncate">{g ? `${g.nombre} · ${g.libreria}` : ESTANDAR.muestras[seccion] || "Sin elegir"}</span>
     </section>
   );
 }

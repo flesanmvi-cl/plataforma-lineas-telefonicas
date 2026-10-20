@@ -56,6 +56,14 @@ const COMUNES = {
       Object.entries(FUENTES).map(([id, d]) => [id as TemaLab["fuente"], d.nombre]),
     ),
   },
+  animacion: {
+    id: "animacion",
+    nombre: "Animación",
+    variantes: opciones(
+      "animacion",
+      Object.entries(ANIMACIONES).map(([id, d]) => [id as TemaLab["animacion"], d.nombre]),
+    ),
+  },
   densidad: {
     id: "densidad",
     nombre: "Densidad",
@@ -81,14 +89,7 @@ const DIMENSIONES: Record<Seccion, Dimension[]> = {
         ["escalonada", "Escalonada"],
       ]),
     },
-    {
-      id: "animacion",
-      nombre: "Animación",
-      variantes: opciones(
-        "animacion",
-        Object.entries(ANIMACIONES).map(([id, d]) => [id as TemaLab["animacion"], d.nombre]),
-      ),
-    },
+    COMUNES.animacion,
   ],
   kpis: [
     {
@@ -203,6 +204,7 @@ const DIMENSIONES: Record<Seccion, Dimension[]> = {
     COMUNES.densidad,
     COMUNES.fuente,
   ],
+  movimiento: [COMUNES.animacion, COMUNES.superficie, COMUNES.paleta, COMUNES.fuente],
 };
 
 /** Una muestra, todas las variantes de una dimensión del tema, lado a lado. */

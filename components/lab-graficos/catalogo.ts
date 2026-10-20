@@ -11,6 +11,9 @@ import { GRAFICOS_BOTONES } from "@/components/lab-graficos/graficos/botones";
 import { GRAFICOS_CONTROLES } from "@/components/lab-graficos/graficos/controles";
 import { GRAFICOS_CAMPOS } from "@/components/lab-graficos/graficos/campos";
 import { GRAFICOS_BASE } from "@/components/lab-graficos/graficos/base";
+import { GRAFICOS_EFECTOS } from "@/components/lab-graficos/graficos/efectos";
+import { GRAFICOS_TRANSICIONES } from "@/components/lab-graficos/graficos/transiciones";
+import { GRAFICOS_ESCENA } from "@/components/lab-graficos/graficos/escena";
 
 /** Catálogo completo del laboratorio, en el orden de las familias. */
 export const CATALOGO: GraficoLab[] = [
@@ -26,6 +29,9 @@ export const CATALOGO: GraficoLab[] = [
   ...GRAFICOS_CONTROLES,
   ...GRAFICOS_CAMPOS,
   ...GRAFICOS_BASE,
+  ...GRAFICOS_EFECTOS,
+  ...GRAFICOS_TRANSICIONES,
+  ...GRAFICOS_ESCENA,
 ];
 
 export function graficoPorId(id: string | null | undefined): GraficoLab | undefined {

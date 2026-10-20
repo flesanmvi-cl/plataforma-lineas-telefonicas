@@ -12,9 +12,12 @@ export type Familia =
   | "botones"
   | "controles"
   | "campos"
-  | "base";
-export type Libreria = "ECharts" | "Nivo" | "visx" | "MapLibre" | "HTML" | "SVG";
-export type Seccion = "graficos" | "kpis" | "tablas" | "botones" | "formularios";
+  | "base"
+  | "efectos"
+  | "transiciones"
+  | "escena";
+export type Libreria = "ECharts" | "Nivo" | "visx" | "MapLibre" | "HTML" | "SVG" | "Motion" | "CSS" | "View Transitions" | "three.js";
+export type Seccion = "graficos" | "kpis" | "tablas" | "botones" | "formularios" | "movimiento";
 
 export const SECCIONES: { id: Seccion; nombre: string; familias: Familia[] }[] = [
   { id: "graficos", nombre: "Gráficos", familias: ["comparacion", "composicion", "tiempo", "flujos", "distribucion", "mapas"] },
@@ -22,6 +25,7 @@ export const SECCIONES: { id: Seccion; nombre: string; familias: Familia[] }[] =
   { id: "tablas", nombre: "Tablas", familias: ["tablas"] },
   { id: "botones", nombre: "Botones", familias: ["botones", "controles"] },
   { id: "formularios", nombre: "Formularios", familias: ["campos", "base"] },
+  { id: "movimiento", nombre: "Movimiento", familias: ["efectos", "transiciones", "escena"] },
 ];
 
 export function seccionDe(familia: Familia): Seccion {
@@ -41,6 +45,9 @@ export const FAMILIAS: { id: Familia; nombre: string }[] = [
   { id: "controles", nombre: "Grupos y controles" },
   { id: "campos", nombre: "Campos" },
   { id: "base", nombre: "Chips, insignias, tarjetas y carga" },
+  { id: "efectos", nombre: "Efectos (Magic UI y afines)" },
+  { id: "transiciones", nombre: "View Transitions" },
+  { id: "escena", nombre: "Escena de marca 3D" },
 ];
 
 /** Propiedades que recibe todo gráfico del laboratorio. */

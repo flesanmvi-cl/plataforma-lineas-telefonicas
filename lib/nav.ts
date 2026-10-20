@@ -25,6 +25,7 @@ export const NAV_ITEMS: NavItem[] = [
       { href: "/ui-kit/laboratorio/tablas", label: "Tablas", grupo: "Laboratorio" },
       { href: "/ui-kit/laboratorio/botones", label: "Botones", grupo: "Laboratorio" },
       { href: "/ui-kit/laboratorio/formularios", label: "Formularios", grupo: "Laboratorio" },
+      { href: "/ui-kit/laboratorio/movimiento", label: "Movimiento", grupo: "Laboratorio" },
       { href: "/ui-kit/laboratorio/contexto", label: "En contexto", grupo: "Laboratorio" },
     ],
   },
