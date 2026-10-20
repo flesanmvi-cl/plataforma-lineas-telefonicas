@@ -224,6 +224,17 @@ body {
    TYPE UTILITIES
    ============================================================ */
 
+/* Título de vista (PageHeader): la marca en Barlow Condensed ExtraBold itálica, también dentro de
+   los reportes (no lo cambia data-estilo="reporte", a diferencia de .display-title). */
+.titulo-vista {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-style: italic;
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+  line-height: 1;
+}
+
 .display-title {
   font-family: var(--font-display);
   font-weight: 800;

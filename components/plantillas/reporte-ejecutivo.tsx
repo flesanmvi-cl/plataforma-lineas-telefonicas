@@ -278,9 +278,11 @@ export function ReporteEjecutivo({ espacios = {}, marcas }: PropsReporte = {}) {
               Análisis por obra
               <ArrowUpRight className="w-3.5 h-3.5" aria-hidden />
             </Link>
-            <Pildoras etiqueta="Vista" opciones={VISTAS} valor={vista} onCambio={(v) => setFiltros({ vista: v })} />
           </>
         }
+        subvistas={VISTAS}
+        subvista={vista}
+        onSubvista={(v) => setFiltros({ vista: v })}
       />
 
       <div className="flex flex-col gap-4">

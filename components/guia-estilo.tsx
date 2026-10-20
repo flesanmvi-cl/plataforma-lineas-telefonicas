@@ -673,21 +673,17 @@ function usePartes(): Parte[] {
         {
           id: "encabezado",
           nombre: "Encabezado de vista",
-          cuando: "armes cualquier vista: título en una línea, la descripción detrás del (i) y las acciones a la derecha. Sin eyebrow ni párrafo bajo el título.",
-          archivo: "components/page-header.tsx (PageHeader)",
-          usos: [P(1), F(1)],
-          muestra: () => (
-            <PageHeader
-              title="Resumen de contratación"
-              description="Qué muestra la vista y cómo se usa, en una o dos frases."
-              actions={
-                <BotonLab variante="contorno" tamano="sm">
-                  Exportar
-                </BotonLab>
-              }
-              className="mb-0!"
-            />
+          cuando: (
+            <>
+              armes cualquier vista: título en Barlow Condensed itálica, la descripción detrás del
+              (i) y las acciones a la derecha. Si la vista tiene subdashboards, el activo va en el
+              paralelogramo rojo y sus botones sobre la regla (<code>subvistas</code>,{" "}
+              <code>subvista</code>, <code>onSubvista</code>). Sin eyebrow ni párrafo bajo el título.
+            </>
           ),
+          archivo: "components/page-header.tsx (PageHeader) · .titulo-vista en app/shell.css",
+          usos: [P(1), P(2), F(1)],
+          muestra: () => <MuestraEncabezado />,
         },
         {
           id: "filtros",
@@ -797,6 +793,29 @@ function Fila({ titulo, nota, children }: { titulo: string; nota: string; childr
       {children}
       <span className="text-xs text-muted">{nota}</span>
     </div>
+  );
+}
+
+function MuestraEncabezado() {
+  const [vista, setVista] = useState("tablero");
+  return (
+    <PageHeader
+      title="Ventas"
+      description="Qué muestra la vista y cómo se usa, en una o dos frases."
+      subvistas={[
+        { id: "tablero", texto: "Tablero" },
+        { id: "territorio", texto: "Territorio" },
+        { id: "matriz", texto: "Vendedor × mes" },
+      ]}
+      subvista={vista}
+      onSubvista={setVista}
+      actions={
+        <BotonLab variante="contorno" tamano="sm">
+          Exportar
+        </BotonLab>
+      }
+      className="mb-0!"
+    />
   );
 }
 

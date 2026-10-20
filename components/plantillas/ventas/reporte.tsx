@@ -92,15 +92,13 @@ export function ReporteVentas() {
             <Pildoras etiqueta="Período" opciones={PERIODOS} valor={f.periodo} onCambio={(v) => setFiltros({ periodo: v })} />
           </>
         }
+        subvistas={VISTAS}
+        subvista={vista}
+        onSubvista={(v) => setFiltros({ vista: v })}
       />
 
       <div className="flex flex-col gap-4">
-        <div className="flex flex-wrap items-center gap-3">
-          <Pildoras etiqueta="Vista del reporte" opciones={VISTAS} valor={vista} onCambio={(v) => setFiltros({ vista: v })} />
-          <div className="flex-1 min-w-72">
-            <BarraFiltros filtros={activos} onLimpiar={() => setFiltros({ periodo: "acum", mes: String(ULTIMO_MES), categoria: "", ciudad: "", vendedor: "" })} />
-          </div>
-        </div>
+        <BarraFiltros filtros={activos} onLimpiar={() => setFiltros({ periodo: "acum", mes: String(ULTIMO_MES), categoria: "", ciudad: "", vendedor: "" })} />
 
         {vista === "tablero" && <VistaTablero {...props} />}
         {vista === "territorio" && <VistaTerritorio {...props} />}
