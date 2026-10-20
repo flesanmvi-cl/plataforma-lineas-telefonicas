@@ -30,16 +30,14 @@ archivo y los puntos de referencia abajo.
    `.toggle-pill` (+ `.toggle-pill-option.is-active`) y `.page-shell` — este último es el
    contenedor de ancho de todas las páginas (hasta 120rem + padding), no reintroducir `max-w-5xl`
    suelto en cada page.
-   **Gráficos, KPIs, tablas, botones y formularios se eligen en el laboratorio de diseño**
-   (`/ui-kit/laboratorio/<sección>`, más «En contexto»); lo vigente está en la pestaña
-   «Estándar» (`/ui-kit`, datos en `lib/lab-graficos/estandar.ts`) y se ve aplicado en el menú
-   «Pruebas» del sidebar (reportes y formularios tipo 1-3). En el laboratorio hay galería por
-   sección, comparador de variantes y panel «Tema» cuyo «Exportar tema» entrega los tokens.
-   Los códigos de catálogo (GL-201, KP-101, TB-101, BT-109…) se retiraron: lo que existía quedó
-   en el laboratorio marcado «Plantilla actual». Cuando el usuario elija, lo elegido se promueve
-   a componente estándar (con código nuevo) y lo demás se borra. Ver `docs/UI-KIT-CATALOG.md`.
-   Si el usuario pide una muestra del laboratorio, está en
-   `components/lab-graficos/graficos/<familia>/` (id en su `index.ts`); reutilízala.
+   **Gráficos, KPIs, tablas, botones y formularios se eligen en el laboratorio de diseño**, que
+   es otro proyecto: `proyectos/_prototipos/laboratorio-diseno` (galería, comparador y panel
+   «Tema» por sección). Aquí solo está lo vigente: la Guía de estilo (`/ui-kit`), las piezas de
+   `components/estandar/` y `lib/estandar/` (tema fijo en `lib/estandar/estandar.ts`, hoy
+   provisorio) y las de `components/reporte/`; se ven aplicadas en el menú «Pruebas» del
+   sidebar (Reportes Tipo 1-5, Formularios Tipo 1-3 y el constructor de maquetas). Para traer
+   algo del laboratorio, sigue «Cómo llega algo nuevo desde el laboratorio» en
+   `docs/UI-KIT-CATALOG.md`; no reinstales aquí sus librerías de exploración.
 2. Si necesitas un color o tamaño que no está en `app/shell.css` (`@theme`), agrégalo ahí como
    variable CSS — no hardcodees hex sueltos en componentes ni reintroduzcas un
    `tailwind.config.js`.
@@ -78,7 +76,7 @@ administrados, `db/003_notificaciones.sql` si hay campanita); todo SQL se muestr
   consumen `.btn-flesan`, `.field-input`, `.dens-card`, `.dens-gap`, `.dens-control`, `.dens-tabla`
   y las celdas de TB-1xx. Para un formulario largo, `data-densidad="comoda"` en su contenedor.
   En tarjetas nuevas usar `dens-card` en vez de `p-5`/`p-6`.
-- Comparación de alternativas en `/ui-kit/escala`.
+- La comparación de alternativas de escala quedó en el laboratorio de diseño.
 
 ## Skill de marca completa
 

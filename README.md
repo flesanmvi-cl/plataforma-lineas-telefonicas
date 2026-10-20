@@ -112,8 +112,9 @@ Dockerfile, docker-compose.yml, .dockerignore  ← build/despliegue en contenedo
 7. **Comentarios CIA**: el botón lo dibuja el shell y envía por `/api/feedback`. Coordina con el
    equipo CIA el registro del token de la plataforma en `CIA_SERVICE_TOKENS` del `feedback-api`
    central (repo `servicios-compartidos`); sin eso el envío falla.
-8. **Componentes y estilo**: reutiliza lo del estándar (`/ui-kit` y el laboratorio de diseño) antes
-   de crear estilos nuevos. Logos en `public/brand/`.
+8. **Componentes y estilo**: reutiliza lo del estándar (`/ui-kit`, `components/estandar/` y
+   `components/reporte/`) antes de crear estilos nuevos. Lo que aún se prueba vive en el
+   laboratorio de diseño (`proyectos/_prototipos/laboratorio-diseno`). Logos en `public/brand/`.
 9. **Roles**: `admin`/`member` por `CIA_ADMIN_EMAILS` sin tocar nada; roles propios en
    `lib/roles.ts` (ver `plataforma_auditorias`).
 10. **Revisión**: `npx tsc --noEmit`, lint, y revisar en Chrome en claro, oscuro y con el sidebar

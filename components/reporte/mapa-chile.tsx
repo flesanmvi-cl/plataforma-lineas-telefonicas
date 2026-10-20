@@ -24,7 +24,7 @@ interface Coleccion {
 // GeoJSON de regiones (el mismo del laboratorio). Se pide una vez por sesión.
 let pedido: Promise<Coleccion> | null = null;
 function cargarRegiones() {
-  pedido ??= fetch("/lab/chile-regiones.json")
+  pedido ??= fetch("/mapas/chile-regiones.json")
     .then((r) => {
       if (!r.ok) throw new Error(String(r.status));
       return r.json() as Promise<Coleccion>;

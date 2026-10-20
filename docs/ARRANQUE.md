@@ -137,5 +137,5 @@ Sin decidir:  <…>
 
 ---
 
-**Después del arranque:** se copia el mockup sin `/pruebas` ni el laboratorio, se aplican las
+**Después del arranque:** se copia el mockup sin `/pruebas`, se aplican las
 decisiones y se sigue «Crear una plataforma nueva» del `README.md`.

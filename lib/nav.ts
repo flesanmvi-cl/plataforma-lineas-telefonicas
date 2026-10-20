@@ -14,23 +14,9 @@ export const NOMBRE_PLATAFORMA = { texto: "Nombre", destacado: "Plataforma" };
 
 export const NAV_ITEMS: NavItem[] = [
   { href: "/", label: "Inicio", icon: LayoutGrid },
+  { href: "/ui-kit", label: "Guía de Estilo", icon: Palette },
   {
-    href: "/ui-kit",
-    label: "Guía de Estilo",
-    icon: Palette,
-    children: [
-      { href: "/ui-kit", label: "Estándar", grupo: "Vigente" },
-      { href: "/ui-kit/laboratorio/graficos", label: "Gráficos", grupo: "Laboratorio" },
-      { href: "/ui-kit/laboratorio/kpis", label: "KPIs", grupo: "Laboratorio" },
-      { href: "/ui-kit/laboratorio/tablas", label: "Tablas", grupo: "Laboratorio" },
-      { href: "/ui-kit/laboratorio/botones", label: "Botones", grupo: "Laboratorio" },
-      { href: "/ui-kit/laboratorio/formularios", label: "Formularios", grupo: "Laboratorio" },
-      { href: "/ui-kit/laboratorio/movimiento", label: "Movimiento", grupo: "Laboratorio" },
-      { href: "/ui-kit/laboratorio/contexto", label: "En contexto", grupo: "Laboratorio" },
-    ],
-  },
-  {
-    // Pantallas de prueba armadas solo con el estándar vigente (lib/lab-graficos/estandar.ts):
+    // Pantallas de prueba armadas solo con el estándar vigente (lib/estandar/estandar.ts):
     // sirven para ver cómo queda una plataforma real con lo elegido.
     href: "/pruebas",
     label: "Pruebas",

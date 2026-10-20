@@ -1,8 +1,10 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { CATALOGO } from "@/components/lab-graficos/catalogo";
-import { FAMILIAS, SECCIONES, seccionDe } from "@/components/lab-graficos/tipos";
+import { CurvaS } from "@/components/estandar/graficos/tiempo/curva-s";
+import { GanttObra } from "@/components/estandar/graficos/tiempo/gantt-obra";
+import { LineaHitos } from "@/components/estandar/graficos/tiempo/linea-hitos";
+import { BurbujasObras } from "@/components/estandar/graficos/mapas/burbujas-obras";
 import { PageHeader } from "@/components/page-header";
 import { KpiPrincipal } from "@/components/reporte/kpi-principal";
 import { KpiTarjeta } from "@/components/reporte/kpi-tarjeta";
@@ -26,7 +28,7 @@ import { SERIES } from "@/components/reporte/formato";
 import type { Ancho, Bloque } from "@/lib/constructor/tipos";
 
 // Catálogo del constructor de maquetas: textos, las piezas estándar de reportería
-// (components/reporte, con datos de ejemplo) y todo el laboratorio de diseño. Cada elemento sabe
+// (components/reporte, con datos de ejemplo) y las piezas del estándar (components/estandar). Cada elemento sabe
 // dibujarse con un alto dado; el constructor pone el marco, el ancho y el título.
 
 export interface ElementoConstructor {
@@ -466,28 +468,26 @@ const REPORTE: ElementoConstructor[] = [
   },
 ];
 
-// ---- Laboratorio: todo el catálogo, agrupado por sección y familia ----
+// ---- Piezas del estándar (components/estandar): las mismas de la Guía de estilo ----
 
-const LABORATORIO: ElementoConstructor[] = CATALOGO.map((g) => {
-  const seccion = seccionDe(g.familia);
-  const familia = FAMILIAS.find((f) => f.id === g.familia)?.nombre ?? g.familia;
-  const nombreSeccion = SECCIONES.find((s) => s.id === seccion)?.nombre ?? seccion;
-  const Componente = g.Componente;
-  return {
-    id: `lab:${g.id}`,
-    nombre: g.nombre,
-    grupo: `${nombreSeccion} · ${familia}`,
-    marco: "tarjeta" as const,
-    ancho: (g.ancho ? 12 : seccion === "kpis" ? 6 : 6) as Ancho,
-    alto: g.alto ?? 260,
-    crece: seccion === "botones" || seccion === "formularios",
-    titulo: g.nombre,
-    detalle: "",
-    render: ({ alto }) => <Componente alto={alto} />,
-  };
-});
+const ESTANDAR_PIEZAS: ElementoConstructor[] = [
+  { id: "est-curva-s", nombre: "Curva S", Componente: CurvaS, ancho: 6 },
+  { id: "est-linea-hitos", nombre: "Línea de hitos", Componente: LineaHitos, ancho: 6 },
+  { id: "est-gantt", nombre: "Gantt de obra", Componente: GanttObra, ancho: 12 },
+  { id: "est-mapa-obras", nombre: "Mapa de obras", Componente: BurbujasObras, ancho: 12 },
+].map(({ id, nombre, Componente, ancho }) => ({
+  id,
+  nombre,
+  grupo: "Estándar",
+  marco: "tarjeta" as const,
+  ancho: ancho as Ancho,
+  alto: 260,
+  titulo: nombre,
+  detalle: "",
+  render: ({ alto }) => <Componente alto={alto} />,
+}));
 
-export const ELEMENTOS: ElementoConstructor[] = [...TEXTO, ...REPORTE, ...LABORATORIO];
+export const ELEMENTOS: ElementoConstructor[] = [...TEXTO, ...REPORTE, ...ESTANDAR_PIEZAS];
 
 export const elementoPorId = (id: string) => ELEMENTOS.find((e) => e.id === id);
 

@@ -9,8 +9,8 @@ real: los bloques no cambian.
 | 1 (Contratación) | Resumen ejecutivo del período, con filtros cruzados | `components/pruebas/reporte-ejecutivo.tsx` | `components/reporte/` |
 | 2 (Ventas) | Ventas con meta: mensual, acumulado, categoría, ciudad, vendedor y proyecto, en tres vistas (Tablero, Territorio, Vendedor × mes) | `components/pruebas/ventas/` | `components/reporte/` |
 | 3 (RRHH) | Dotación (RR.HH.): stock al cierre, movimientos y rotación de 12 meses, composición por edad, sexo, antigüedad y contrato | `components/pruebas/personas/` | `components/reporte/` |
-| 4 (Costos) | Costos por obra con drilldown (Línea → Obra → Partida) | `components/pruebas/reporte-costos.tsx` | laboratorio + ECharts |
-| 5 (Ficha de obra) | Ficha de una entidad (una obra) | `components/pruebas/reporte-obra.tsx` | laboratorio |
+| 4 (Costos) | Costos por obra con drilldown (Línea → Obra → Partida) | `components/pruebas/reporte-costos.tsx` | estándar + ECharts |
+| 5 (Ficha de obra) | Ficha de una entidad (una obra) | `components/pruebas/reporte-obra.tsx` | estándar |
 
 ## Reporte Tipo 1
 
@@ -96,10 +96,10 @@ de la opción activa, la lupa del buscador).
 
 En `/pruebas/maquetas` (menú Pruebas › Constructor de maquetas) se arma la maqueta de un reporte o
 formulario sin escribir código. Tiene tres paneles: el catálogo, el lienzo de 12 columnas y las
-propiedades o el tema. Código en `components/constructor/` y modelo en `lib/constructor/tipos.ts`.
+propiedades del bloque. Código en `components/constructor/` y modelo en `lib/constructor/tipos.ts`.
 
-- **Catálogo:** textos y estructura, las piezas de `components/reporte/` con datos de ejemplo y todo el laboratorio de diseño. Para sumar una pieza nueva, se agrega en `components/constructor/elementos.tsx`.
+- **Catálogo:** textos y estructura, las piezas de `components/reporte/` con datos de ejemplo y las piezas de `components/estandar/` (Curva S, Gantt, hitos, mapa de obras). Para sumar una pieza nueva, se agrega en `components/constructor/elementos.tsx`.
 - **Bloques:** se arrastran o se agregan con clic, entran después del bloque elegido y se reordenan arrastrando su manilla. Cada uno tiene elemento, título, detalle, ancho (3, 4, 6, 8 o 12), alto y número de bloque.
-- **Tema:** el panel del laboratorio, guardado dentro de cada maqueta. Cambia los elementos del laboratorio; las piezas estándar siguen los tokens de la plataforma.
+- **Tema:** fijo, el del estándar (`ESTANDAR.tema`). Para probar otro tema, se usa el laboratorio de diseño.
 - **Guardar:** en este navegador (conveniencia). Para compartir, «Exportar JSON» e «Importar».
 - **Ruta:** no puede llamarse `constructor`. Las herramientas de desarrollo de Next guardan las rutas en un objeto y ese segmento choca con `Object.prototype.constructor`, lo que bota la página en dev.

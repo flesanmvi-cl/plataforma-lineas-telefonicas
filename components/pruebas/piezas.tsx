@@ -4,17 +4,17 @@ import { useId, useRef, useState, type CSSProperties, type ReactNode } from "rea
 import { motion } from "motion/react";
 import { Check, FlaskConical } from "lucide-react";
 import { cn } from "@/lib/cn";
-import { useTokens } from "@/components/lab-graficos/tema-context";
-import { conAlfa, type TokensLab } from "@/lib/lab-graficos/tema";
+import { useTokens } from "@/components/estandar/tema-context";
+import { conAlfa, type TokensLab } from "@/lib/estandar/tema";
 import {
   anilloFoco,
   estiloPista,
   radioInterno,
   transicionCss,
   transicionMotion,
-} from "@/components/lab-graficos/graficos/botones/comun";
-import { useInteraccion } from "@/components/lab-graficos/graficos/botones/use-interaccion";
-import { moverConFlechas } from "@/components/lab-graficos/graficos/controles/comun";
+} from "@/components/estandar/graficos/botones/comun";
+import { useInteraccion } from "@/components/estandar/graficos/botones/use-interaccion";
+import { moverConFlechas } from "@/components/estandar/graficos/controles/comun";
 
 // Piezas comunes de las pantallas de prueba (/pruebas/*): el bloque de tablero y los controles
 // de filtro, controlados desde afuera. Todo color, letra y radio sale de los tokens del estándar.

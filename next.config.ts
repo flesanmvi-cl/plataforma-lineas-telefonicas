@@ -16,19 +16,18 @@ const nextConfig: NextConfig = {
     );
     return config;
   },
-  // Las pestañas de componentes de /ui-kit se reemplazaron por el laboratorio de diseño.
   async redirects() {
-    const lab = "/ui-kit/laboratorio";
     return [
-      ...["graficos", "kpis", "tablas", "botones", "formularios"].map((s) => ({ source: `/ui-kit/${s}`, destination: `${lab}/${s}`, permanent: false })),
-      { source: "/ui-kit/laboratorio-graficos", destination: `${lab}/graficos`, permanent: false },
+      // El laboratorio de diseño pasó a ser otro proyecto (_prototipos/laboratorio-diseno): sus
+      // rutas viejas caen en la Guía de estilo.
+      ...["/ui-kit/:seccion(graficos|kpis|tablas|botones|formularios|escala)", "/ui-kit/laboratorio/:ruta*", "/ui-kit/laboratorio-graficos/:ruta*"].map(
+        (source) => ({ source, destination: "/ui-kit", permanent: false }),
+      ),
       // Presentaciones pasó a Configuración (abierta a todos los usuarios).
       { source: "/presentaciones", destination: "/configuracion/presentaciones", permanent: false },
-      { source: "/ui-kit/laboratorio-graficos/comparador", destination: `${lab}/graficos/comparador`, permanent: false },
       // Costos y la ficha de obra pasaron a ser los Reportes Tipo 4 y 5.
       { source: "/pruebas/reportes/costos", destination: "/pruebas/reportes/tipo-4", permanent: false },
       { source: "/pruebas/reportes/obra", destination: "/pruebas/reportes/tipo-5", permanent: false },
-      { source: "/ui-kit/laboratorio-graficos/contexto", destination: `${lab}/contexto`, permanent: false },
     ];
   },
 };

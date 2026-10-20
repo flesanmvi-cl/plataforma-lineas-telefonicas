@@ -2,9 +2,9 @@
  * Datos de ejemplo del Reporte Tipo 4 (costos por obra con drilldown): obras sintéticas del laboratorio y
  * sus partidas, deterministas (misma semilla, mismos números en servidor y cliente).
  */
-import { azar, LINEAS } from "@/lib/lab-graficos/datos";
-import { registrosObras, type Registro } from "@/components/lab-graficos/graficos/tablas/datos-tablas";
-import type { Estado } from "@/components/lab-graficos/graficos/tablas/comun";
+import { azar, LINEAS } from "@/lib/estandar/datos";
+import { registrosObras, type Registro } from "@/components/estandar/graficos/tablas/datos-tablas";
+import type { Estado } from "@/components/estandar/graficos/tablas/comun";
 
 export const PARTIDAS = ["Obra gruesa", "Terminaciones", "Instalaciones", "Mano de obra directa", "Equipos y maquinaria", "Gastos generales"];
 

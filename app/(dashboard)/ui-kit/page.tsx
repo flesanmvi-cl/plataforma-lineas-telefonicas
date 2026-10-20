@@ -1,8 +1,7 @@
-import { Estandar } from "@/components/estandar/estandar";
+import { Estandar } from "@/components/guia-estilo";
 
-// Pestaña «Estándar»: resumen de lo vigente (lib/lab-graficos/estandar.ts). Reemplaza a la
-// antigua vitrina «Fundamentos»; lo que mostraba (inputs, chips, badges, cards, skeleton) quedó
-// en el laboratorio, sección Formularios, como «Plantilla actual».
+// Guía de estilo: lo vigente para toda plataforma nueva (lib/estandar/estandar.ts). Lo que se
+// está probando vive en el laboratorio de diseño (proyectos/_prototipos/laboratorio-diseno).
 export default function UiKitPage() {
   return <Estandar />;
 }

@@ -4,11 +4,11 @@ import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { ArrowLeft, ArrowRight, Check, ClipboardList, Pencil, Plus, Send, Trash2, UserCheck } from "lucide-react";
 import { PageHeader } from "@/components/page-header";
-import { useTokens } from "@/components/lab-graficos/tema-context";
-import { conAlfa } from "@/lib/lab-graficos/tema";
-import { BotonLab } from "@/components/lab-graficos/graficos/botones/boton-lab";
-import { colorSobre } from "@/components/lab-graficos/graficos/botones/comun";
-import { Aviso, Insignia, estiloTarjeta } from "@/components/lab-graficos/graficos/base/componentes";
+import { useTokens } from "@/components/estandar/tema-context";
+import { conAlfa } from "@/lib/estandar/tema";
+import { BotonLab } from "@/components/estandar/graficos/botones/boton-lab";
+import { colorSobre } from "@/components/estandar/graficos/botones/comun";
+import { Aviso, Insignia, estiloTarjeta } from "@/components/estandar/graficos/base/componentes";
 import {
   CampoArea,
   CampoBuscable,
@@ -24,8 +24,8 @@ import {
   formatoNumero,
   formatoPesos,
   type ErrorResumen,
-} from "@/components/lab-graficos/graficos/campos/componentes";
-import { CENTROS_COSTO, OBRAS } from "@/components/lab-graficos/graficos/campos/datos";
+} from "@/components/estandar/graficos/campos/componentes";
+import { CENTROS_COSTO, OBRAS } from "@/components/estandar/graficos/campos/datos";
 import { useTutorial } from "@/components/tutorial/tutorial";
 import { PASOS_FORMULARIO_2 } from "@/components/pruebas/tutoriales";
 

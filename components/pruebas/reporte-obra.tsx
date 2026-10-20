@@ -4,12 +4,12 @@ import { useState, type ReactNode } from "react";
 import { ClipboardPlus, Download, Share2 } from "lucide-react";
 import { PageHeader } from "@/components/page-header";
 import { usePublicarVista } from "@/components/presentaciones/vista-actual";
-import { useTokens } from "@/components/lab-graficos/tema-context";
-import { BotonLab } from "@/components/lab-graficos/graficos/botones/boton-lab";
-import { GanttObra } from "@/components/lab-graficos/graficos/tiempo/gantt-obra";
-import { CurvaS } from "@/components/lab-graficos/graficos/tiempo/curva-s";
-import { LineaHitos } from "@/components/lab-graficos/graficos/tiempo/linea-hitos";
-import { BurbujasObras } from "@/components/lab-graficos/graficos/mapas/burbujas-obras";
+import { useTokens } from "@/components/estandar/tema-context";
+import { BotonLab } from "@/components/estandar/graficos/botones/boton-lab";
+import { GanttObra } from "@/components/estandar/graficos/tiempo/gantt-obra";
+import { CurvaS } from "@/components/estandar/graficos/tiempo/curva-s";
+import { LineaHitos } from "@/components/estandar/graficos/tiempo/linea-hitos";
+import { BurbujasObras } from "@/components/estandar/graficos/mapas/burbujas-obras";
 import {
   estiloCelda,
   estiloCeldaNum,
@@ -20,10 +20,10 @@ import {
   fondoFila,
   rellenoBarra,
   type Estado,
-} from "@/components/lab-graficos/graficos/tablas/comun";
-import { InsigniaEstado } from "@/components/lab-graficos/graficos/tablas/insignia-estado";
-import { formato, TAREAS } from "@/lib/lab-graficos/datos";
-import { conAlfa, type TokensLab } from "@/lib/lab-graficos/tema";
+} from "@/components/estandar/graficos/tablas/comun";
+import { InsigniaEstado } from "@/components/estandar/graficos/tablas/insignia-estado";
+import { formato, TAREAS } from "@/lib/estandar/datos";
+import { conAlfa, type TokensLab } from "@/lib/estandar/tema";
 import { BotonExcel } from "@/components/boton-excel";
 import { descargarExcel } from "@/lib/exportar/excel";
 import { AvisoEjemplo, Bloque } from "./piezas";

@@ -8,9 +8,9 @@ import { ArrowLeft, ChevronRight, Download, Share2, X } from "lucide-react";
 import { cn } from "@/lib/cn";
 import { PageHeader } from "@/components/page-header";
 import { useBreadcrumbContext } from "@/components/breadcrumb-context";
-import { EChart } from "@/components/lab-graficos/echart";
-import { useTokens } from "@/components/lab-graficos/tema-context";
-import { BotonLab } from "@/components/lab-graficos/graficos/botones/boton-lab";
+import { EChart } from "@/components/estandar/echart";
+import { useTokens } from "@/components/estandar/tema-context";
+import { BotonLab } from "@/components/estandar/graficos/botones/boton-lab";
 import {
   ESTADOS,
   estiloCampo,
@@ -23,11 +23,11 @@ import {
   fondoFila,
   rellenoBarra,
   type Estado,
-} from "@/components/lab-graficos/graficos/tablas/comun";
-import { InsigniaEstado } from "@/components/lab-graficos/graficos/tablas/insignia-estado";
-import { formato, LINEAS, REGIONES_CORTAS } from "@/lib/lab-graficos/datos";
-import { conAlfa, type TokensLab } from "@/lib/lab-graficos/tema";
-import { baseEcharts, ejeCategoriaEcharts, ejeValorEcharts, gridEcharts, leyendaEcharts, rellenoBloqueEcharts } from "@/lib/lab-graficos/estilos";
+} from "@/components/estandar/graficos/tablas/comun";
+import { InsigniaEstado } from "@/components/estandar/graficos/tablas/insignia-estado";
+import { formato, LINEAS, REGIONES_CORTAS } from "@/lib/estandar/datos";
+import { conAlfa, type TokensLab } from "@/lib/estandar/tema";
+import { baseEcharts, ejeCategoriaEcharts, ejeValorEcharts, gridEcharts, leyendaEcharts, rellenoBloqueEcharts } from "@/lib/estandar/estilos";
 import {
   desviacion,
   FACTOR_PERIODO,

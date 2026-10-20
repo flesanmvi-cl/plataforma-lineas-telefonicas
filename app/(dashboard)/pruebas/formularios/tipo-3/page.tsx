@@ -7,10 +7,10 @@ import { toast } from "sonner";
 import { PageHeader } from "@/components/page-header";
 import { BotonExcel } from "@/components/boton-excel";
 import { descargarExcel } from "@/lib/exportar/excel";
-import { useTokens } from "@/components/lab-graficos/tema-context";
-import { BotonLab } from "@/components/lab-graficos/graficos/botones/boton-lab";
-import { Aviso, BarraProgreso, EstadoVacio, Insignia, estiloTarjeta } from "@/components/lab-graficos/graficos/base/componentes";
-import { estiloEncabezado } from "@/components/lab-graficos/graficos/tablas/comun";
+import { useTokens } from "@/components/estandar/tema-context";
+import { BotonLab } from "@/components/estandar/graficos/botones/boton-lab";
+import { Aviso, BarraProgreso, EstadoVacio, Insignia, estiloTarjeta } from "@/components/estandar/graficos/base/componentes";
+import { estiloEncabezado } from "@/components/estandar/graficos/tablas/comun";
 import {
   CampoArchivo,
   CampoArea,
@@ -26,8 +26,8 @@ import {
   type ArchivoCargado,
   type ErrorResumen,
   type RangoFechas,
-} from "@/components/lab-graficos/graficos/campos/componentes";
-import { OBRAS, PROVEEDORES } from "@/components/lab-graficos/graficos/campos/datos";
+} from "@/components/estandar/graficos/campos/componentes";
+import { OBRAS, PROVEEDORES } from "@/components/estandar/graficos/campos/datos";
 import { useTutorial } from "@/components/tutorial/tutorial";
 import { PASOS_FORMULARIO_3 } from "@/components/pruebas/tutoriales";
 

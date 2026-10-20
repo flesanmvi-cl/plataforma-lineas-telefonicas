@@ -601,19 +601,9 @@ select:not([multiple]):not([size]):not([style*="appearance"]) {
 
 /* ============================================================
    ESCALA Y DENSIDAD
-   La raíz fluida suave y los tokens de densidad viven arriba (RESET + BASE). Aquí:
-   variantes de raíz que solo usa el laboratorio /ui-kit/escala para comparar, y las
+   La raíz fluida suave y los tokens de densidad viven arriba (RESET + BASE). Aquí: las
    utilidades que consumen los tokens de densidad.
    ============================================================ */
-
-/* Lab · A: fija en 16px (o el default del navegador). */
-html[data-escala="fija"] {
-  font-size: 100%;
-}
-/* Lab · C: la raíz anterior, proporcional al viewport. */
-html[data-escala="anterior"] {
-  font-size: clamp(13px, 1.05vw, 20px);
-}
 
 .dens-card {
   padding: var(--densidad-card);

@@ -5,20 +5,18 @@ import { ArrowDown, ArrowUp, Copy, Download, Eye, GripVertical, Plus, Search, Tr
 import { cn } from "@/lib/cn";
 import { PageHeader } from "@/components/page-header";
 import { Pildoras, TarjetaReporte } from "@/components/reporte/tarjeta";
-import { LabTemaControlado, useTokens } from "@/components/lab-graficos/tema-context";
-import { PanelTema } from "@/components/lab-graficos/panel-tema";
-import { LimiteError } from "@/components/lab-graficos/lab-card";
-import { ESTANDAR } from "@/lib/lab-graficos/estandar";
-import { TEMA_INICIAL } from "@/lib/lab-graficos/tema";
+import { LabTemaFijo, useTokens } from "@/components/estandar/tema-context";
+import { LimiteError } from "@/components/estandar/limite-error";
+import { ESTANDAR } from "@/lib/estandar/estandar";
 import { ALTOS, ANCHOS, nuevoId, type Ancho, type Bloque, type Maqueta, type TipoMaqueta } from "@/lib/constructor/tipos";
 import { ELEMENTOS, elementoPorId, GRUPOS, type ElementoConstructor } from "./elementos";
 import { Desplegable } from "@/components/desplegable";
 
 // Constructor de maquetas en /pruebas/maquetas: la ruta no puede llamarse «constructor», porque
 // las herramientas de desarrollo de Next guardan las rutas en un objeto y el segmento choca con
-// Object.prototype.constructor (la página se cae en dev). Opción A, tres paneles): catálogo a la izquierda (textos, piezas de
-// reportería y todo el laboratorio), lienzo de 12 columnas al centro y propiedades del bloque o
-// tema de la maqueta a la derecha. Las maquetas se guardan en este navegador y se comparten
+// Object.prototype.constructor (la página se cae en dev). Tres paneles: catálogo a la izquierda (textos, piezas de
+// reportería y piezas del estándar), lienzo de 12 columnas al centro y propiedades del bloque a
+// la derecha. Todo se dibuja con el tema fijo del estándar. Las maquetas se guardan en este navegador y se comparten
 // exportando e importando JSON.
 
 const CLAVE = "cia-constructor-maquetas";
@@ -49,7 +47,6 @@ function maquetaEjemplo(): Maqueta {
     id: nuevoId(),
     nombre: "Maqueta de ejemplo",
     tipo: "reporte",
-    tema: { ...ESTANDAR.tema },
     actualizada: new Date().toISOString(),
     bloques: [
       b("texto-titulo", { titulo: "Resumen de contratación" }),
@@ -66,7 +63,7 @@ function maquetaEjemplo(): Maqueta {
 }
 
 function maquetaVacia(n: number): Maqueta {
-  return { id: nuevoId(), nombre: `Maqueta ${n}`, tipo: "reporte", tema: { ...ESTANDAR.tema }, actualizada: new Date().toISOString(), bloques: [] };
+  return { id: nuevoId(), nombre: `Maqueta ${n}`, tipo: "reporte", actualizada: new Date().toISOString(), bloques: [] };
 }
 
 /** Maquetas guardadas en este navegador (conveniencia: se comparten exportando JSON). */
@@ -78,7 +75,7 @@ function useMaquetas() {
     let guardadas: Maqueta[] = [];
     try {
       const v = JSON.parse(localStorage.getItem(CLAVE) ?? "null");
-      if (Array.isArray(v)) guardadas = v.map((m: Maqueta) => ({ ...m, tema: { ...TEMA_INICIAL, ...m.tema } }));
+      if (Array.isArray(v)) guardadas = v;
     } catch {}
     setMaquetas(guardadas.length ? guardadas : [maquetaEjemplo()]);
     setMontado(true);
@@ -98,7 +95,6 @@ export function Constructor() {
   const { maquetas, setMaquetas, montado } = useMaquetas();
   const [actualId, setActualId] = useState<string | null>(null);
   const [seleccion, setSeleccion] = useState<string | null>(null);
-  const [panel, setPanel] = useState<"bloque" | "tema">("bloque");
   const [vistaPrevia, setVistaPrevia] = useState(false);
   const [aviso, setAviso] = useState<string | null>(null);
   const archivo = useRef<HTMLInputElement>(null);
@@ -124,7 +120,6 @@ export function Constructor() {
       return [...bs.slice(0, pos), nuevo, ...bs.slice(pos)];
     });
     setSeleccion(nuevo.id);
-    setPanel("bloque");
     requestAnimationFrame(() => document.getElementById(`bloque-${nuevo.id}`)?.scrollIntoView({ behavior: "smooth", block: "nearest" }));
   }
 
@@ -205,7 +200,7 @@ export function Constructor() {
       const m = JSON.parse(await f.text()) as Maqueta;
       if (!Array.isArray(m.bloques)) throw new Error();
       const bloques = m.bloques.filter((b) => elementoPorId(b.elemento)).map((b) => ({ ...b, id: nuevoId() }));
-      const importada: Maqueta = { ...m, id: nuevoId(), tema: { ...TEMA_INICIAL, ...m.tema }, bloques, actualizada: new Date().toISOString() };
+      const importada: Maqueta = { ...m, id: nuevoId(), bloques, actualizada: new Date().toISOString() };
       setMaquetas((todas) => [...todas, importada]);
       setActualId(importada.id);
       setAviso(bloques.length < m.bloques.length ? `Se importó «${m.nombre}»; ${m.bloques.length - bloques.length} bloques no existen en este catálogo.` : `Se importó «${m.nombre}».`);
@@ -223,11 +218,11 @@ export function Constructor() {
   }
 
   return (
-    <LabTemaControlado tema={maqueta.tema} onCambio={(tema) => cambiarMaqueta({ tema })}>
+    <LabTemaFijo tema={ESTANDAR.tema}>
       <div className="animate-fade-in px-4 lg:px-6 py-6">
         <PageHeader
           title="Constructor de maquetas"
-          description="Arma la maqueta de un reporte o formulario con las piezas de la guía de estilo: arrastra o haz clic en un elemento del catálogo, y ajusta su ancho, alto, título y el tema a la derecha. Las maquetas se guardan en este navegador; para compartirlas, exporta el JSON."
+          description="Arma la maqueta de un reporte o formulario con las piezas de la guía de estilo: arrastra o haz clic en un elemento del catálogo, y ajusta su ancho, alto y título a la derecha. Todo se dibuja con el estándar vigente. Las maquetas se guardan en este navegador; para compartirlas, exporta el JSON."
           className="mb-4!"
         />
 
@@ -305,23 +300,7 @@ export function Constructor() {
 
           {!vistaPrevia && (
             <aside className="flex flex-col gap-3 min-w-0 lg:sticky lg:top-4 lg:max-h-[calc(100dvh-6rem)] lg:overflow-y-auto">
-              <Pildoras
-                etiqueta="Panel"
-                opciones={[
-                  { id: "bloque", texto: "Bloque" },
-                  { id: "tema", texto: "Tema" },
-                ]}
-                valor={panel}
-                onCambio={setPanel}
-              />
-              {panel === "tema" ? (
-                <>
-                  <p className="text-xs text-muted px-1">
-                    El tema cambia los elementos del laboratorio. Las piezas de reportería estándar siguen los tokens de la plataforma.
-                  </p>
-                  <PanelTema />
-                </>
-              ) : bloque ? (
+              {bloque ? (
                 <Propiedades
                   bloque={bloque}
                   indice={maqueta.bloques.indexOf(bloque)}
@@ -343,7 +322,7 @@ export function Constructor() {
           )}
         </div>
       </div>
-    </LabTemaControlado>
+    </LabTemaFijo>
   );
 }
 

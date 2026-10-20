@@ -1,5 +1,5 @@
-import { LabTemaFijo } from "@/components/lab-graficos/tema-context";
-import { ESTANDAR } from "@/lib/lab-graficos/estandar";
+import { LabTemaFijo } from "@/components/estandar/tema-context";
+import { ESTANDAR } from "@/lib/estandar/estandar";
 
 // Las pantallas de prueba se dibujan solo con el estándar vigente, no con lo que se esté
 // probando en el laboratorio.

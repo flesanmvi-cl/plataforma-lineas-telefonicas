@@ -5,9 +5,9 @@ import { Banknote, Building2, MapPin, Save, Settings2 } from "lucide-react";
 import { toast } from "sonner";
 import { useTutorial, type PasoTutorial } from "@/components/tutorial/tutorial";
 import { PageHeader } from "@/components/page-header";
-import { useTokens } from "@/components/lab-graficos/tema-context";
-import { BotonLab } from "@/components/lab-graficos/graficos/botones/boton-lab";
-import { Aviso, Insignia } from "@/components/lab-graficos/graficos/base/componentes";
+import { useTokens } from "@/components/estandar/tema-context";
+import { BotonLab } from "@/components/estandar/graficos/botones/boton-lab";
+import { Aviso, Insignia } from "@/components/estandar/graficos/base/componentes";
 import {
   CampoArchivo,
   CampoArea,
@@ -23,8 +23,8 @@ import {
   formatoPesos,
   type ArchivoCargado,
   type ErrorResumen,
-} from "@/components/lab-graficos/graficos/campos/componentes";
-import { REGIONES, UF_REFERENCIAL } from "@/components/lab-graficos/graficos/campos/datos";
+} from "@/components/estandar/graficos/campos/componentes";
+import { REGIONES, UF_REFERENCIAL } from "@/components/estandar/graficos/campos/datos";
 
 /*
  * Formulario Tipo 1: formulario simple para crear un registro («Nueva obra»). Grupos en una o
