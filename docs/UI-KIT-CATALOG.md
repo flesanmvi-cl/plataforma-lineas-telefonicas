@@ -6,10 +6,14 @@ diseño**, que es otro proyecto: `proyectos/_prototipos/laboratorio-diseno` (sep
 
 ## Qué hay aquí
 
-- **Guía de estilo** (`/ui-kit`, `components/guia-estilo.tsx`): identidad y color,
-  tipografía, escala y densidad, superficie y forma, formularios y las piezas del estándar
-  dibujadas vivas. Cada tarjeta tiene «Ver tokens» copiables y «Copiar tokens CSS» entrega el
-  tema completo.
+- **Guía de estilo** (`/ui-kit`, `components/guia-estilo.tsx`): un documento con índice en cuatro
+  partes: **Marca** (color, dos capas, logos, voz), **Fundamentos** (tipografía, escala, superficie,
+  paleta de datos), **Componentes** (botones del contenido y del cascarón, campos, desplegable,
+  avisos, estado vacío, KPIs, gráficos, tabla) y **Patrones** (encabezado, filtros cruzados, bloque
+  numerado, drilldown, acciones al pie, Excel, tutorial). Cada pieza tiene muestra viva, «Úsala
+  cuando», archivo, tokens copiables y las plantillas donde se ve. Las piezas de reportería se
+  dibujan con los datos de ejemplo del constructor (`components/constructor/elementos.tsx`), para
+  no duplicarlos. Para sumar una pieza, se agrega en `usePartes()`.
 - **Piezas del estándar** (`components/estandar/`, `lib/estandar/`): lo que usan las
   Plantillas (Reportes y Formularios Tipo) y el constructor de maquetas.
   - Tokens: `lib/estandar/tema.ts` (`TokensLab`) y el proveedor fijo `LabTemaFijo` de
