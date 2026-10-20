@@ -19,5 +19,8 @@ export const ESTANDAR: Estandar = {
   provisorio: true,
   vigenteDesde: null,
   version: 0,
-  tema: { ...TEMA_INICIAL },
+  // Tableau 10 en el contenido (gráficos y botones del estándar), decidido el 2026-10-20 como
+  // prueba; el cascarón sigue con el rojo Flesan. Igual en el laboratorio, para que el
+  // experimento compare contra esto.
+  tema: { ...TEMA_INICIAL, paleta: "tableau" },
 };

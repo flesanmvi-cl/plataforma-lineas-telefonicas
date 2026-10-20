@@ -65,18 +65,19 @@
   --color-chart-5: #16a34a;
   --color-chart-grid: #e2e2e2;
 
-  /* Series de reportería (Reporte Tipo 1, components/reporte/): paleta amplia aprobada para
-     datos, tomada del panel de Conflicto de Interés. Distinguen categorías en gráficos y
-     tablas; nunca van en botones ni en llamados a la acción (ahí el rojo Flesan sigue siendo
-     el único acento). En oscuro suben de luminosidad. */
-  --color-serie-1: #2f6fdb; /* azul */
-  --color-serie-2: #c98a12; /* ámbar */
-  --color-serie-3: #d93a40; /* rojo de datos (no es el rojo de marca) */
-  --color-serie-4: #6f5ce0; /* morado */
-  --color-serie-5: #1e9160; /* verde */
-  --color-serie-6: #d9602a; /* naranjo */
-  --color-serie-7: #c93d74; /* rosado */
-  --color-serie-8: #7a7a82; /* gris: «Otras» */
+  /* Series de reportería (components/reporte/): Tableau 10, la misma paleta del tema del
+     estándar (lib/estandar/estandar.ts), para que todos los reportes y formularios se vean
+     iguales. Provisorio desde el 2026-10-20 (antes: paleta del panel de Conflicto de Interés).
+     El cascarón (sidebar, barra superior, títulos, Configuración) sigue con el rojo Flesan.
+     En oscuro, el azul sube de luminosidad para contrastar. */
+  --color-serie-1: #4e79a7; /* azul */
+  --color-serie-2: #f28e2b; /* naranjo */
+  --color-serie-3: #e15759; /* rojo de datos (no es el rojo de marca) */
+  --color-serie-4: #76b7b2; /* turquesa */
+  --color-serie-5: #59a14f; /* verde */
+  --color-serie-6: #edc948; /* amarillo */
+  --color-serie-7: #b07aa1; /* morado */
+  --color-serie-8: #bab0ac; /* gris: «Otras» */
 }
 
 /* Modo oscuro — premium dark surfaces */
@@ -95,14 +96,14 @@
   --color-chart-2: #f4f4f4;
   --color-chart-grid: #2c2c2c;
 
-  --color-serie-1: #4c8df6;
-  --color-serie-2: #f2b33d;
-  --color-serie-3: #e5484d;
-  --color-serie-4: #8b7cf6;
-  --color-serie-5: #22a06b;
-  --color-serie-6: #e0662f;
-  --color-serie-7: #d6457f;
-  --color-serie-8: #6b6b73;
+  --color-serie-1: #6f9bd1;
+  --color-serie-2: #f28e2b;
+  --color-serie-3: #e15759;
+  --color-serie-4: #76b7b2;
+  --color-serie-5: #59a14f;
+  --color-serie-6: #edc948;
+  --color-serie-7: #b07aa1;
+  --color-serie-8: #bab0ac;
 }
 
 /* ============================================================

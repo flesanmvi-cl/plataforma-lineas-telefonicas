@@ -17,7 +17,8 @@ real: los bloques no cambian.
 El look & feel se tomó del panel de Conflicto de Interés de debida-diligencia (opción A,
 aprobada el 29-09-2026). Tiene tarjetas redondeadas, cifras grandes en Inter Tight
 (`data-estilo="reporte"`), la paleta de series `--color-serie-1…8` de `app/shell.css` y el brillo
-rojo solo en la tarjeta principal.
+rojo solo en la tarjeta principal. Desde el 2026-10-20 la paleta de series es Tableau 10, a prueba,
+la misma del tema del estándar.
 
 ### Piezas (`components/reporte/`)
 
@@ -88,9 +89,10 @@ Cálculos en `components/plantillas/personas/calculos.ts`.
 
 ### Color
 
-La paleta de series es solo para **datos**: categorías en gráficos, insignias y avatares. En
-botones, enlaces de acción y selección, el rojo Flesan sigue siendo el único acento (el punto rojo
-de la opción activa, la lupa del buscador).
+La paleta de series (Tableau 10, a prueba desde el 2026-10-20) es para **datos**: categorías en
+gráficos, insignias y avatares. Los botones del contenido son los del estándar (`BotonLab`), con el
+primario en el azul de Tableau. Lo que es del cascarón (selector de vista con el punto rojo, la
+lupa del buscador, la barra de filtros) mantiene el rojo Flesan.
 
 ## Constructor de maquetas
 

@@ -93,9 +93,14 @@ agrégalos al bloque `@theme` de `app/shell.css`, igual que ya está hecho aquí
 
 ## Reglas de marca rápidas
 
-- Rojo Flesan `#E30613` — única marca de acento. No usar otros rojos para call-to-action.
-  En reportería, los datos usan la paleta de series `--color-serie-1…8` (aprobada con el Reporte
-  Tipo 1); nunca en botones ni acciones. Receta y piezas de los reportes tipo: `docs/REPORTES.md`.
+- Dos capas de color (decisión de Sebastián, 2026-10-20, a prueba):
+  - **Cascarón** (sidebar, barra superior, títulos, Configuración, portadas del mockup): rojo
+    Flesan `#E30613` como único acento, con `.btn-flesan`.
+  - **Contenido** (reportes, formularios, gráficos): **Tableau 10**. Los botones son los del
+    estándar (`BotonLab`, `components/estandar`) y su primario toma el azul `#4E79A7`; los datos
+    usan la misma paleta (`ESTANDAR.tema.paleta = "tableau"` y `--color-serie-1…8`).
+  - Esto reemplaza la regla anterior («rojo único acento también en el contenido» y la paleta de
+    series del panel de Conflicto de Interés). Receta y piezas de los reportes tipo: `docs/REPORTES.md`.
 - Copy en español (Chile), institucional, sin emojis, sin "líder/revolucionar/increíble".
 - Tagline oficial: "Confianza que construye" (no inventar otras).
 - Bullet de marca: cuadrado rojo (`.brand-bullet`), no usar viñetas redondas.
