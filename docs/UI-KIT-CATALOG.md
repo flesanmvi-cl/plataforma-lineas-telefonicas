@@ -47,6 +47,13 @@ laboratorio al mockup.
    `provisorio: false`, `vigenteDesde` y `version`.
 5. En el laboratorio, la sección se marca «Promovido» y se borra lo que no se eligió.
 
+**Experimento del laboratorio.** Antes de promover, el laboratorio prueba candidatas sobre
+plantillas reales del mockup (hoy Reporte Tipo 1 y Formulario Tipo 1, copiadas con
+`npm run traer-del-mockup` del laboratorio) y entrega un «Resumen para promover» con qué pieza
+reemplaza a cuál y qué cambia del tema. Para eso una plantilla declara sus **espacios**
+(`components/plantillas/espacios.tsx`; ejemplo `ESPACIOS_TIPO_1` en `reporte-ejecutivo.tsx`):
+props opcionales `espacios` y `marcas`, sin efecto visible si no se pasan.
+
 Las rutas viejas del laboratorio (`/ui-kit/laboratorio/*`, `/ui-kit/escala`, `/ui-kit/graficos`…)
 redirigen a `/ui-kit` (ver `next.config.ts`).
 
