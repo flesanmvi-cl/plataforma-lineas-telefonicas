@@ -5,9 +5,9 @@ import { Info } from "lucide-react";
 import { cn } from "@/lib/cn";
 
 /**
- * Encabezado estándar de cada vista (aprobado el 2026-10-20). Arriba: la subvista activa en un
- * paralelogramo rojo (la inclinación del logo Flesan), el título en la letra del reporte con
- * la descripción detrás de un ícono (i), y las acciones a la derecha. Abajo, una regla: si la
+ * Encabezado estándar de cada vista (aprobado el 2026-10-20). Arriba: el título en la letra del
+ * reporte con la descripción detrás de un ícono (i), a su derecha la subvista activa en un
+ * paralelogramo rojo (la inclinación del logo Flesan) y las acciones al final. Abajo, una regla: si la
  * vista tiene subvistas (subdashboards), sus botones van sobre la regla y la activa lleva el
  * tramo rojo inclinado; si no, la regla lleva el tramo rojo al inicio. La descripción se abre al
  * pasar el mouse, con foco de teclado o con un clic (táctil); Esc la cierra.
@@ -36,15 +36,16 @@ export function PageHeader<T extends string = string>({ title, description, acti
   return (
     <div data-page-header className={cn("flex flex-col gap-2 mb-6", className)}>
       <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+        <div className="flex items-center gap-2 min-w-0">
+          <h1 className="titulo-vista text-2xl sm:text-3xl text-text">{title}</h1>
+          {description && <InfoPopover label={`Acerca de ${title}`}>{description}</InfoPopover>}
+        </div>
+        {/* A la derecha del título: así el título no se mueve cuando cambia el largo de la subvista. */}
         {activa && (
           <span className="inline-flex -skew-x-[9deg] bg-flesan-red px-3 py-1">
             <span className="skew-x-[9deg] font-label text-xs font-semibold tracking-[0.14em] uppercase text-white">{activa.texto}</span>
           </span>
         )}
-        <div className="flex items-center gap-2 min-w-0">
-          <h1 className="titulo-vista text-2xl sm:text-3xl text-text">{title}</h1>
-          {description && <InfoPopover label={`Acerca de ${title}`}>{description}</InfoPopover>}
-        </div>
         {actions && <div className="ml-auto flex flex-wrap items-center gap-2">{actions}</div>}
       </div>
       <div className="relative flex flex-wrap items-center border-t border-border-strong">

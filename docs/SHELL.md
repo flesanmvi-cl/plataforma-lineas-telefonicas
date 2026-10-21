@@ -36,7 +36,7 @@ Versión vigente: **shell-v1.1** (en preparación; `VERSION_SHELL` en `lib/nav-b
 | `components/reporte/*` | Piezas del Reporte Tipo 1 (KPI principal, dona con leyenda, pirámide, barras apiladas, filtros cruzados, celdas de tabla). Sus estilos `.rep-*` y la paleta `--color-serie-*` están en `app/shell.css`. Receta en `docs/REPORTES.md` |
 | `components/breadcrumb-context.tsx` | Niveles de drilldown en la ruta de migas |
 | `components/cia-logo.tsx` | Símbolo CIA |
-| `components/section-tabs.tsx`, `components/page-header.tsx` | Pestañas de sección y encabezado de página: título en la letra del reporte, Inter Tight 700 (`.titulo-vista`), subvista activa en paralelogramo rojo y botones de subvistas sobre la regla (`subvistas`, `subvista`, `onSubvista`); sin subvistas, la regla lleva el tramo rojo |
+| `components/section-tabs.tsx`, `components/page-header.tsx` | Pestañas de sección y encabezado de página: título en la letra del reporte, Inter Tight 700 (`.titulo-vista`), subvista activa en paralelogramo rojo a la derecha del título y botones de subvistas sobre la regla (`subvistas`, `subvista`, `onSubvista`); sin subvistas, la regla lleva el tramo rojo |
 | `lib/nav-base.ts` | Tipos y funciones de navegación (`isNavActive`, `gruposDe`, `crearMigas`…) |
 | `lib/cn.ts` | `cn()` (clsx + tailwind-merge) |
 
