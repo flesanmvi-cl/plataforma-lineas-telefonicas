@@ -101,6 +101,9 @@ agrégalos al bloque `@theme` de `app/shell.css`, igual que ya está hecho aquí
     usan la misma paleta (`ESTANDAR.tema.paleta = "tableau"` y `--color-serie-1…8`).
   - Esto reemplaza la regla anterior («rojo único acento también en el contenido» y la paleta de
     series del panel de Conflicto de Interés). Receta y piezas de los reportes tipo: `docs/REPORTES.md`.
+- Títulos de vista y de sección en la letra del reporte (Inter Tight 700, recta, caja normal:
+  `.titulo-vista` / `.display-title`). Barlow Condensed itálica solo para el nombre de la
+  plataforma (sidebar y login). Decisión de Sebastián del 2026-10-21; difiere de la skill de marca.
 - Copy en español (Chile), institucional, sin emojis, sin "líder/revolucionar/increíble".
 - Tagline oficial: "Confianza que construye" (no inventar otras).
 - Bullet de marca: cuadrado rojo (`.brand-bullet`), no usar viñetas redondas.

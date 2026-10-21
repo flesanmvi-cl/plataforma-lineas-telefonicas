@@ -6,7 +6,7 @@ import { cn } from "@/lib/cn";
 
 /**
  * Encabezado estándar de cada vista (aprobado el 2026-10-20). Arriba: la subvista activa en un
- * paralelogramo rojo (la inclinación del logo Flesan), el título en Barlow Condensed itálica con
+ * paralelogramo rojo (la inclinación del logo Flesan), el título en la letra del reporte con
  * la descripción detrás de un ícono (i), y las acciones a la derecha. Abajo, una regla: si la
  * vista tiene subvistas (subdashboards), sus botones van sobre la regla y la activa lleva el
  * tramo rojo inclinado; si no, la regla lleva el tramo rojo al inicio. La descripción se abre al
@@ -42,7 +42,7 @@ export function PageHeader<T extends string = string>({ title, description, acti
           </span>
         )}
         <div className="flex items-center gap-2 min-w-0">
-          <h1 className="titulo-vista text-3xl sm:text-[2.5rem] text-text">{title}</h1>
+          <h1 className="titulo-vista text-2xl sm:text-3xl text-text">{title}</h1>
           {description && <InfoPopover label={`Acerca de ${title}`}>{description}</InfoPopover>}
         </div>
         {actions && <div className="ml-auto flex flex-wrap items-center gap-2">{actions}</div>}

@@ -381,18 +381,22 @@ function usePartes(): Parte[] {
         {
           id: "tipografia",
           nombre: "Tipografía",
-          cuando: "pongas texto: Barlow Condensed para títulos de vista, Barlow para leer y escribir, Semi Condensed para etiquetas y la letra de datos para cifras y gráficos.",
+          cuando: "pongas texto: Inter Tight en negrita para títulos de vista y de sección (la letra del reporte), Barlow para leer y escribir, Semi Condensed para etiquetas y la letra de datos para cifras. Barlow Condensed itálica solo en el nombre de la plataforma (sidebar y login).",
           archivo: "app/layout.tsx (next/font/local) · app/fonts/",
           tokens: [
-            ["--font-display", "Barlow Condensed 800 itálica"],
+            [".titulo-vista", "Inter Tight 700"],
+            ["--font-display", "Barlow Condensed 800 itálica (nombre de la plataforma)"],
             ["--font-body", "Barlow 400"],
             ["--font-label", "Barlow Semi Condensed 600"],
             ["--font-chart", FUENTES[tema.fuente].nombre],
           ],
           muestra: () => (
             <div className="flex flex-col gap-2">
-              <Tipo nota="Barlow Condensed">
-                <span className="display-title text-2xl">Título de vista</span>
+              <Tipo nota="Barlow Condensed · solo nombre de la plataforma">
+                <span className="font-display font-bold italic uppercase tracking-[0.04em] text-xl">Nombre plataforma</span>
+              </Tipo>
+              <Tipo nota="Inter Tight 700">
+                <span className="titulo-vista text-2xl">Título de vista</span>
               </Tipo>
               <Tipo nota="Barlow">
                 <span className="text-[0.9375rem]">Texto de lectura y formularios</span>
@@ -675,7 +679,7 @@ function usePartes(): Parte[] {
           nombre: "Encabezado de vista",
           cuando: (
             <>
-              armes cualquier vista: título en Barlow Condensed itálica, la descripción detrás del
+              armes cualquier vista: título en la letra del reporte, la descripción detrás del
               (i) y las acciones a la derecha. Si la vista tiene subdashboards, el activo va en el
               paralelogramo rojo y sus botones sobre la regla (<code>subvistas</code>,{" "}
               <code>subvista</code>, <code>onSubvista</code>). Sin eyebrow ni párrafo bajo el título.
