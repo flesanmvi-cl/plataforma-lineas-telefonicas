@@ -4,8 +4,10 @@
 -- producción.
 --
 -- Casos que cubre a propósito: un número de línea y un IMEI repetidos, una persona con dos líneas,
--- un registro de otra área, uno no vigente, líneas de Perú sin RUT ni fecha, un usuario inactivo y
--- uno de otra aplicación, y una entrada de historial de alta de dispositivo sin id (error E6).
+-- un registro de otra área, uno no vigente, líneas de Perú sin RUT ni fecha, una entrada de historial
+-- de alta de dispositivo sin id (error E6) y, en usuarios: uno inactivo, uno de otra aplicación, uno
+-- @flesan.com.pe con país CL (como los 4 reales) guardado con mayúsculas, un correo repetido con dos
+-- perfiles y uno sin área.
 -- Fechas con hora en UTC sin zona, como las graba el aplicativo antiguo.
 
 -- ── Catálogos (valores reales) ──────────────────────────────────────────────
@@ -166,7 +168,14 @@ INSERT INTO seguridadapp.rol_aplicacion (id_rol, id_aplicacion, nombre) VALUES
   (75, 23, 'ADMINISTRADOR PROCESOS'),
   (76, 23, 'ADMINISTRADOR SOPORTE');
 
--- Usuarios ficticios. dev@flesan.cl coincide con la sesión de prueba de AUTH_DISABLED (auth.ts).
+-- Usuarios ficticios. dev@flesan.cl es la sesión de prueba de AUTH_DISABLED (auth.ts); con
+-- DEV_CORREO se entra como cualquiera de los otros. Qué debe pasar con cada uno (lib/lineas/usuarios.ts):
+--   dev               administrador, área Procesos
+--   procesos.prueba   procesos (rol 75, área 1)          soporte.prueba   soporte (rol 76, área 2)
+--   inactivo.prueba   no entra (estado_sesion = 0)       otra.app         no entra (aplicación 22)
+--   peru.prueba       soporte; entra con el correo en minúsculas
+--   repetido.prueba   procesos: vale el registro de id más bajo (el 7), no el administrador (el 8)
+--   sinarea.prueba    no entra: sin área (sin perfil válido)
 INSERT INTO seguridadapp.aplicacion_usuario (
   id_aplicacion_usuario, id_aplicacion, username, name, nombres, pais, dni, estado_sesion, estado_validacion, fecha_ini
 ) VALUES
@@ -174,14 +183,22 @@ INSERT INTO seguridadapp.aplicacion_usuario (
   (2, 23, 'procesos.prueba@flesan.cl', 'Procesos Prueba', 'Procesos Prueba', 'CL', '1', 1, 1, '2026-10-26'),
   (3, 23, 'soporte.prueba@flesan.cl', 'Soporte Prueba', 'Soporte Prueba', 'CL', '2', 1, 1, '2026-10-26'),
   (4, 23, 'inactivo.prueba@flesan.cl', 'Inactivo Prueba', 'Inactivo Prueba', 'CL', '1', 0, 1, '2026-10-26'),
-  (5, 22, 'otra.app@flesan.cl', 'Otra Aplicación', 'Otra Aplicación', 'CL', NULL, 1, 1, '2026-10-26');
+  (5, 22, 'otra.app@flesan.cl', 'Otra Aplicación', 'Otra Aplicación', 'CL', NULL, 1, 1, '2026-10-26'),
+  (6, 23, 'Peru.Prueba@flesan.com.pe', 'Perú Prueba', 'Perú Prueba', 'CL', '2', 1, 1, '2026-10-26'),
+  (7, 23, 'repetido.prueba@flesan.cl', 'Repetido Prueba', 'Repetido Prueba', 'CL', '1', 1, 1, '2026-10-26'),
+  (8, 23, 'repetido.prueba@flesan.cl', 'Repetido Prueba', 'Repetido Prueba', 'CL', '1', 1, 1, '2026-10-26'),
+  (9, 23, 'sinarea.prueba@flesan.cl', 'Sin Área Prueba', 'Sin Área Prueba', 'CL', NULL, 1, 1, '2026-10-26');
 
 INSERT INTO seguridadapp.usuario_rol (id_aplicacion_usuario, id_rol, id_empresa, objeto_permitido, id_unidad_negocio, fecha_ini) VALUES
   (1, 74, '', '', '', '2026-10-26'),
   (2, 75, '', '', '', '2026-10-26'),
   (3, 76, '', '', '', '2026-10-26'),
   (4, 75, '', '', '', '2026-10-26'),
-  (5, 73, '', '', '', '2026-10-26');
+  (5, 73, '', '', '', '2026-10-26'),
+  (6, 76, '', '', '', '2026-10-26'),
+  (7, 75, '', '', '', '2026-10-26'),
+  (8, 74, '', '', '', '2026-10-26'),
+  (9, 75, '', '', '', '2026-10-26');
 
 -- ── Secuencias: el próximo id sigue al último cargado ───────────────────────
 
@@ -197,4 +214,4 @@ SELECT setval(pg_get_serial_sequence('s_lineas.sl_registro_linea_pro', 'sl_id_re
 SELECT setval(pg_get_serial_sequence('s_lineas.sl_dispositivo', 'sl_id_dispositivo'), 6);
 SELECT setval(pg_get_serial_sequence('seguridadapp.aplicacion', 'id_aplicacion'), 23);
 SELECT setval(pg_get_serial_sequence('seguridadapp.rol_aplicacion', 'id_rol'), 76);
-SELECT setval(pg_get_serial_sequence('seguridadapp.aplicacion_usuario', 'id_aplicacion_usuario'), 5);
+SELECT setval(pg_get_serial_sequence('seguridadapp.aplicacion_usuario', 'id_aplicacion_usuario'), 9);

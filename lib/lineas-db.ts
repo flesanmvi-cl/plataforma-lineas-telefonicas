@@ -65,7 +65,15 @@ declare global {
 function crearPool(): Pool | null {
   const url = process.env.DATABASE_URL_PLATAFORMA;
   if (!url) return null;
-  return new Pool({ connectionString: url, max: 5, options: "-c statement_timeout=15000", types: parsers });
+  // connectionTimeoutMillis: si la base no responde, falla a los 5 s en vez de esperar al sistema
+  // operativo. Cada petición resuelve aquí el acceso del usuario (lib/lineas/usuarios.ts).
+  return new Pool({
+    connectionString: url,
+    max: 5,
+    connectionTimeoutMillis: 5000,
+    options: "-c statement_timeout=15000",
+    types: parsers,
+  });
 }
 
 // Cacheado en globalThis para no abrir un pool nuevo en cada hot-reload de Next en dev.

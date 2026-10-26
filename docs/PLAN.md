@@ -32,6 +32,9 @@ Tomadas el 2026-10-26:
 6. **P8:** repositorio `flesanmvi-cl/plataforma-lineas-telefonicas`; nombre «Líneas
    **Telefónicas**»; slug `plataforma_lineas_telefonicas`, tomado del repositorio (se puede
    cambiar hasta registrarlo en el buzón CIA).
+7. **P2 = sí:** los 4 usuarios `@flesan.com.pe` entran desde ya, con la misma lista blanca
+   (`CIA_ALLOWED_DOMAINS=flesan.cl,flesan.com.pe`). Falta que CIA confirme que el cliente de
+   Google compartido acepta ese dominio (M10).
 
 Qué implica:
 
@@ -192,17 +195,39 @@ Verificado: tipos, lint y build de producción limpios; todas las pantallas resp
 responde 403; la verificación de estructura da `ok` contra la base de desarrollo y lista las 12
 tablas que faltan si se apunta a un esquema inexistente.
 
-### M2. Acceso y roles
+### M2. Acceso y roles — hecho el 2026-10-26
 
-- Login con Google de la plantilla, con `CIA_ALLOWED_DOMAINS` según P2.
-- Lista blanca, como hoy: solo entran los correos con usuario activo en la aplicación 23
-  (`estado_sesion = 1` y `estado_validacion = 1`). El resto ve «Sin acceso», con el correo que usó
-  y a quién pedir acceso.
-- Roles: 74 → `admin`; 75 y 76 → `member`; el área sale de `dni` y se guarda también el nombre del
-  perfil para mostrarlo. `lib/usuarios-db.ts` lee `seguridadapp` en lugar de la tabla `usuarios`
-  de la plantilla. `CIA_ADMIN_EMAILS` se mantiene como llave maestra.
-- Rol, área y habilitación se resuelven en cada petición (callback `session`).
-- Sin suplantaciones ni excepciones por correo.
+- Login con Google de la plantilla para `flesan.cl` y `flesan.com.pe` (P2). Con más de un
+  dominio, el selector de cuentas va sin `hd`: con `hd=flesan.cl` escondería las cuentas de Perú.
+  Además, el correo debe venir verificado por Google (`email_verified`).
+- Lista blanca, como hoy (`lib/lineas/usuarios.ts`): solo entran los correos con usuario activo en
+  la aplicación 23 (`estado_sesion = 1`, `estado_validacion = 1`) y un rol en `usuario_rol`. El
+  correo se compara sin distinguir mayúsculas. Quien no está registrado no llega a tener sesión:
+  el callback `signIn` lo devuelve a `/login` con el correo que usó, el motivo y a quién pedir
+  acceso.
+- Perfiles: rol 74 → `admin`; roles 75 y 76 → `procesos` o `soporte` según el área de `dni`, que es
+  lo que filtra lo que ven (el antiguo filtra por el área, no por el rol). La tarjeta de usuario
+  muestra el nombre del perfil («Administrador Procesos»). Sin rol 74, 75 o 76, o sin área 1 o 2:
+  sin acceso. Si un correo tiene más de un registro, vale el primero válido de id más bajo.
+- `CIA_ADMIN_EMAILS` sigue como llave maestra: entra como administrador aunque no esté registrado
+  o la base no responda.
+- Rol, área y habilitación se resuelven en cada petición (callback `session`, una consulta por
+  petición). Quien pierde el acceso con la sesión abierta va a `/sin-acceso` (con «Cerrar
+  sesión»), las APIs le responden 403 y su sesión queda sin correo para las piezas del shell. Si la
+  base no responde, se niega el acceso (con un tope de 5 s por conexión).
+- Para las páginas, `exigirAcceso()` y `exigirAdministrador()` devuelven correo, id, rol y área;
+  para las APIs, `requerirAcceso()`. M4 a M8 filtran por ese área.
+- Sin suplantaciones ni excepciones por correo. Quien hoy entra al antiguo con la identidad de otra
+  cuenta (`LoginController.php`, líneas 82-84) necesita su propio usuario.
+- Desarrollo: `AUTH_DISABLED` entra como `DEV_CORREO` y su perfil sale de la base de desarrollo,
+  que tiene un usuario de cada caso (`db/desarrollo/002_datos.sql`).
+
+Verificado contra la base de desarrollo: cada caso de prueba resuelve el perfil esperado (también
+el `@flesan.com.pe` guardado con mayúsculas, el correo repetido, el sin área, el inactivo y el de
+otra aplicación); un usuario desactivado con la sesión abierta pierde el acceso en su siguiente
+petición y lo recupera al reactivarlo; un `procesos` no ve Administración, recibe 403 en la API de
+administración y la página de administración redirige sin enviar su contenido; con la base caída
+nadie entra salvo la llave maestra. Tipos, lint y build limpios.
 
 **Listo cuando:** un correo no registrado no entra; uno desactivado pierde el acceso en su
 siguiente petición; cada rol ve el menú que le corresponde y las secciones de administración
@@ -287,6 +312,10 @@ aplicativos.
   antiguo no permite.
 - En el servidor: solo administradores; perfiles 74, 75 y 76; correo único dentro de la aplicación
   23; siempre queda al menos un administrador activo; nombres con tildes y ñ (E11, E12).
+- Reemplaza lo que la plantilla trae para su propia tabla `usuarios`, que en esta plataforma no
+  se usa: `lib/usuarios-db.ts`, `/api/configuracion/usuarios/*` y la maqueta de
+  `/configuracion/usuarios`. El acceso ya lee `seguridadapp` en `lib/lineas/usuarios.ts` (M2), que
+  suma aquí el listado, el alta y la edición.
 
 **Listo cuando:** un usuario creado aquí entra en ambos aplicativos con el mismo rol, y uno
 desactivado no entra en la nueva ni puede iniciar sesión en el antiguo.
@@ -328,7 +357,7 @@ Tamaño relativo: S chico, M mediano, L grande.
 |---|---|---|---|---|
 | En paralelo | M0 Contención en el antiguo | S | — | Pendiente |
 | 1 | M1 Base técnica | M | — | **Hecho** (2026-10-26) |
-| 2 | M2 Acceso y roles | S | M1 | Siguiente |
+| 2 | M2 Acceso y roles | S | M1 | **Hecho** (2026-10-26) |
 | 3 | M3 Datos maestros de Chile | S | M1 | Pendiente |
 | 4 | M4 Líneas de Chile | L | M2, M3 | Pendiente |
 | 5 | M5 Líneas de Perú (consulta) | S | M4 | Pendiente |
@@ -349,11 +378,10 @@ Hitos:
 
 ## 6. Decisiones pendientes
 
-P0, P1 y P8 quedaron resueltas el 2026-10-26 (§1).
+P0, P1, P2 y P8 quedaron resueltas el 2026-10-26 (§1).
 
 | # | Pregunta | Recomendación | Afecta |
 |---|---|---|---|
-| P2 | ¿Entran ya los 4 usuarios `@flesan.com.pe`? Hay que confirmar con CIA que el cliente de Google compartido acepta ese dominio | Sí, con lista blanca | M2 |
 | P3 | ¿Se aplica M0 en el antiguo? | Sí: con P1 = A, el antiguo sigue vivo para Perú | M0 |
 | P4 | Número de línea e IMEI repetidos: ¿aviso, como hoy, o bloqueo? | Bloquear entre los vigentes al crear o al cambiar el número; los 4 números y 8 IMEI ya repetidos se pueden seguir editando sin cambiarlos | M4, M6 |
 | P5 | Centros de costo: ¿solo activos, o todos como hoy? | Solo activos, conservando el valor actual de cada registro | M3 |

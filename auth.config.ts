@@ -19,7 +19,10 @@ export const authConfig = {
     Google({
       authorization: {
         params: {
-          hd: DOMINIOS_PERMITIDOS[0], // sugiere el Workspace en el selector
+          // `hd` sugiere el Workspace en el selector de cuentas y esconde las demás. Solo con un
+          // dominio: con varios, escondería las de los otros (y "*", las que no son de Workspace).
+          // El filtro real es el callback signIn de abajo.
+          ...(DOMINIOS_PERMITIDOS.length === 1 ? { hd: DOMINIOS_PERMITIDOS[0] } : {}),
           prompt: "select_account",
         },
       },
@@ -31,10 +34,10 @@ export const authConfig = {
   },
   session: { strategy: "jwt" },
   callbacks: {
-    /** Bloquea cualquier login que no sea de un dominio permitido. */
+    /** Bloquea cualquier login que no sea de un dominio permitido o cuyo correo Google no verificó. */
     signIn({ profile }) {
       const email = profile?.email?.toLowerCase();
-      if (!email) return false;
+      if (!email || profile?.email_verified !== true) return false;
       const domain = email.split("@")[1] ?? "";
       return DOMINIOS_PERMITIDOS.includes(domain);
     },

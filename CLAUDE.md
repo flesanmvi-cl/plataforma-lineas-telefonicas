@@ -27,10 +27,17 @@ Reglas propias. **Prevalecen** sobre «Base de datos de una plataforma nueva» (
 - Nunca se prueba escribiendo en `srvpd_bd`: es productiva en la práctica. Para desarrollar,
   `npm run db:dev` levanta una base local (Postgres embebido) con la misma estructura y datos de
   prueba (`db/desarrollo/`).
-- Todo route handler de negocio empieza con `requerirAcceso()` (`lib/auth-guard.ts`) y usa SQL
-  parametrizado con `tablaLineas()`/`tablaSeguridad()`. Toda página de administración llama a
-  `exigirAdministrador()` (`lib/acceso-paginas.ts`) antes de leer datos: el gate del layout solo no
+- Acceso (M2): solo entran los usuarios activos de la aplicación 23 de `seguridadapp`
+  (`lib/lineas/usuarios.ts`), resueltos de nuevo en cada petición. Perfiles: `admin` (rol 74),
+  `procesos` y `soporte` (roles 75 y 76, según el área de la columna `dni`); quien no es
+  administrador solo ve y escribe su área. `CIA_ADMIN_EMAILS` es la llave maestra.
+- Todo route handler de negocio empieza con `requerirAcceso()` (`lib/auth-guard.ts`), que devuelve
+  correo, id, rol y área, y usa SQL parametrizado con `tablaLineas()`/`tablaSeguridad()`. Toda
+  página que lee datos llama a `exigirAcceso()`, y las de administración a
+  `exigirAdministrador()` (`lib/acceso-paginas.ts`), antes de leer: el gate del layout solo no
   basta, porque Next renderiza layout y página en paralelo (`docs/PLAN.md` §3.2).
+- Para probar perfiles en desarrollo, `AUTH_DISABLED=true` con `DEV_CORREO` (un usuario de
+  `db/desarrollo/002_datos.sql`).
 - Solo Chile por ahora: Perú es de consulta, sin conexión a `grupo_flesan_pe`.
 - Las pruebas de estructura de una base van por `/api/estado-conexiones` (solo administradores),
   contra la lista de `lib/lineas/estructura.ts`.

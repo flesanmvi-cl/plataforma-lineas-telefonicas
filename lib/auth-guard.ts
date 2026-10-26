@@ -1,14 +1,16 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/auth";
+import type { UsuarioAcceso } from "@/lib/lineas/usuarios";
 import { esAdmin, type Rol } from "@/lib/roles";
 
-/** Solo para route handlers (runtime Node) — nunca importar desde un client component. */
+export type { UsuarioAcceso };
+
+/** Para los route handlers del shell (runtime Node) — nunca importar desde un client component. Sin
+ * acceso a la plataforma (auth.ts), null. */
 export async function sesionConRol(): Promise<{ email: string; role: Rol } | null> {
-  const session = await auth();
-  const email = session?.user?.email;
-  const role = session?.user?.role;
-  if (!email || !role) return null;
-  return { email: email.toLowerCase(), role };
+  const acceso = (await auth())?.acceso;
+  if (!acceso?.habilitado) return null;
+  return { email: acceso.correo, role: acceso.rol };
 }
 
 export function respuestaNoAutorizado(mensaje = "No autorizado.") {
@@ -16,13 +18,6 @@ export function respuestaNoAutorizado(mensaje = "No autorizado.") {
 }
 
 // ---------------------------------------------------------------- acceso a las APIs de negocio
-
-/** Quien hace la petición, según la sesión. Nunca se toma del cuerpo de la petición. El módulo M2
- * suma su habilitación en seguridadapp (aplicación 23), su área y su id (docs/PLAN.md). */
-export interface UsuarioAcceso {
-  correo: string;
-  rol: Rol;
-}
 
 export type ResultadoAcceso = { ok: true; usuario: UsuarioAcceso } | { ok: false; respuesta: NextResponse };
 
@@ -34,7 +29,10 @@ const METODOS_SIN_EFECTO = new Set(["GET", "HEAD", "OPTIONS"]);
  * 1. Las escrituras deben venir de la propia plataforma (encabezado Origin): protección CSRF que se
  *    suma a la cookie SameSite=Lax de Auth.js.
  * 2. Sesión válida (401 si no).
- * 3. Con `admin: true`, rol administrador (403 si no).
+ * 3. Usuario habilitado en la plataforma, resuelto en esta misma petición (403 si no).
+ * 4. Con `admin: true`, rol administrador (403 si no).
+ *
+ * Devuelve quién pide: correo, id, rol y área. Si no es administrador, solo ve su área.
  *
  * ```ts
  * const acceso = await requerirAcceso(req, { admin: true });
@@ -45,12 +43,17 @@ export async function requerirAcceso(req: Request, opciones: { admin?: boolean }
   if (!METODOS_SIN_EFECTO.has(req.method) && !origenPermitido(req)) {
     return { ok: false, respuesta: respuestaError(403, "Origen de la petición no permitido.") };
   }
-  const sesion = await sesionConRol();
-  if (!sesion) return { ok: false, respuesta: respuestaError(401, "Debes iniciar sesión.") };
-  if (opciones.admin && !esAdmin(sesion.role)) {
+  const session = await auth();
+  if (!session) return { ok: false, respuesta: respuestaError(401, "Debes iniciar sesión.") };
+  const { acceso } = session;
+  if (!acceso?.habilitado) {
+    return { ok: false, respuesta: respuestaError(403, "Tu usuario no tiene acceso a esta plataforma.") };
+  }
+  if (opciones.admin && !esAdmin(acceso.rol)) {
     return { ok: false, respuesta: respuestaError(403, "No tienes permiso para esta acción.") };
   }
-  return { ok: true, usuario: { correo: sesion.email, rol: sesion.role } };
+  const { correo, id, rol, area } = acceso;
+  return { ok: true, usuario: { correo, id, rol, area } };
 }
 
 /** El Origin debe ser la propia plataforma: su host (directo o detrás del proxy) o el de AUTH_URL.

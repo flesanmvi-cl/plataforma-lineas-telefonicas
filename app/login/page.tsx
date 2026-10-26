@@ -1,14 +1,20 @@
 import { signIn } from "@/auth";
 import { DOMINIOS_PERMITIDOS } from "@/auth.config";
-import { CiaLogo } from "@/components/cia-logo";
+import { AvisoSinAcceso, MOTIVOS_SIN_ACCESO } from "@/components/acceso/aviso-sin-acceso";
+import { MarcoAcceso } from "@/components/acceso/marco-acceso";
+import type { MotivoSinAcceso } from "@/lib/lineas/usuarios";
 
-// Auth.js manda errores a esta misma página (pages.error = "/login").
+// Auth.js manda errores a esta misma página (pages.error = "/login"). «SinAcceso» lo pone el
+// callback signIn de auth.ts, con el motivo y el correo, cuando la cuenta no está en la lista blanca.
 const ERRORES: Record<string, string> = {
   AccessDenied: "Tu cuenta no pertenece a un dominio autorizado.",
   Configuration: "El login aún no está configurado en el servidor (variables AUTH_*).",
   Verification: "El enlace de acceso expiró. Intenta de nuevo.",
   default: "No se pudo iniciar sesión. Intenta nuevamente.",
 };
+
+// El correo llega en la URL: solo se muestra si tiene forma de correo.
+const FORMA_CORREO = /^[^\s@]{1,64}@[^\s@]{1,190}$/;
 
 function GoogleIcon() {
   return (
@@ -24,68 +30,43 @@ function GoogleIcon() {
 export default async function LoginPage({
   searchParams,
 }: {
-  searchParams: Promise<{ callbackUrl?: string; error?: string }>;
+  searchParams: Promise<{ callbackUrl?: string; error?: string; motivo?: string; correo?: string }>;
 }) {
-  const { callbackUrl, error } = await searchParams;
-  const mensajeError = error ? (ERRORES[error] ?? ERRORES.default) : null;
+  const { callbackUrl, error, motivo, correo } = await searchParams;
+  const sinAcceso: MotivoSinAcceso | null =
+    error === "SinAcceso" ? (MOTIVOS_SIN_ACCESO.find((m) => m === motivo) ?? "no-registrado") : null;
+  const mensajeError = error && !sinAcceso ? (ERRORES[error] ?? ERRORES.default) : null;
 
   return (
-    <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[#0a0a0a] px-4">
-      {/* Glow ambiental de marca */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute -top-1/3 left-1/2 h-[600px] w-[600px] -translate-x-1/2 rounded-full opacity-20 blur-[120px]"
-        style={{ background: "radial-gradient(circle, #E30613 0%, transparent 70%)" }}
-      />
+    <MarcoAcceso>
+      <p className="font-body text-sm text-flesan-light">Ingresa con tu cuenta corporativa de Google</p>
+      <p className="mt-1 font-body text-xs text-flesan-steel">Dominios autorizados: {DOMINIOS_PERMITIDOS.join(", ")}</p>
 
-      <div className="relative z-10 w-full max-w-md">
-        <div className="rounded-2xl border border-white/[0.08] bg-[#161616]/80 p-10 shadow-2xl backdrop-blur-xl">
-          {/* Marca — TODO: reemplazar por el logo real de la plataforma (public/brand/) */}
-          <div className="flex flex-col items-center text-center">
-            <CiaLogo className="w-14 h-14 mb-5 text-white" />
-            <h1 className="font-display text-3xl font-extrabold italic uppercase tracking-tight text-text leading-none">
-              Líneas Telefónicas
-            </h1>
-            <p className="mt-2 font-label text-[11px] font-semibold uppercase tracking-[0.25em] text-flesan-warm">
-              Grupo Flesan
-            </p>
-            <div className="my-6 h-px w-16 bg-white/10" />
-            <p className="font-body text-sm text-flesan-light">
-              Ingresa con tu cuenta corporativa de Google
-            </p>
-            <p className="mt-1 font-body text-xs text-flesan-steel">
-              Dominios autorizados: {DOMINIOS_PERMITIDOS.join(", ")}
-            </p>
-          </div>
-
-          {/* Botón de Google */}
-          <div className="mt-8 flex flex-col items-center justify-center">
-            <form
-              action={async () => {
-                "use server";
-                await signIn("google", { redirectTo: callbackUrl || "/" });
-              }}
-            >
-              <button
-                type="submit"
-                className="flex items-center gap-3 rounded-full border border-white/15 bg-white/[0.04] px-6 py-3 font-label text-xs uppercase tracking-[0.1em] text-white hover:bg-white/[0.08] hover:border-white/25 transition-colors cursor-pointer"
-              >
-                <GoogleIcon />
-                Iniciar sesión con Google
-              </button>
-            </form>
-            {mensajeError && (
-              <p className="mt-4 font-body text-sm text-flesan-red text-center" role="alert">
-                {mensajeError}
-              </p>
-            )}
-          </div>
-        </div>
-
-        <p className="mt-6 text-center font-label text-[11px] tracking-wider text-flesan-steel">
-          Grupo Flesan
-        </p>
+      {/* Botón de Google */}
+      <div className="mt-8 flex w-full flex-col items-center justify-center">
+        <form
+          action={async () => {
+            "use server";
+            await signIn("google", { redirectTo: callbackUrl || "/" });
+          }}
+        >
+          <button
+            type="submit"
+            className="flex items-center gap-3 rounded-full border border-white/15 bg-white/[0.04] px-6 py-3 font-label text-xs uppercase tracking-[0.1em] text-white hover:bg-white/[0.08] hover:border-white/25 transition-colors cursor-pointer"
+          >
+            <GoogleIcon />
+            Iniciar sesión con Google
+          </button>
+        </form>
+        {sinAcceso && (
+          <AvisoSinAcceso motivo={sinAcceso} correo={correo && FORMA_CORREO.test(correo) ? correo : null} />
+        )}
+        {mensajeError && (
+          <p className="mt-4 font-body text-sm text-flesan-red text-center" role="alert">
+            {mensajeError}
+          </p>
+        )}
       </div>
-    </main>
+    </MarcoAcceso>
   );
 }

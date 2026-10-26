@@ -20,10 +20,14 @@ En `.env.local`, como mínimo:
 
 ```bash
 AUTH_SECRET=<openssl rand -hex 32>
-AUTH_DISABLED=true        # sesión de prueba dev@flesan.cl, solo en desarrollo
+AUTH_DISABLED=true        # entra sin Google, solo en desarrollo
+# DEV_CORREO=procesos.prueba@flesan.cl   # con qué usuario de prueba (por defecto dev@flesan.cl, administrador)
 DATABASE_URL_PLATAFORMA=postgresql://postgres:postgres@localhost:54329/lineas_dev
 # DATABASE_URL=...        # flesan (solo lectura), para los maestros de Chile
 ```
+
+Los usuarios de prueba y qué perfil tiene cada uno están en `db/desarrollo/002_datos.sql`. Si la
+base de desarrollo es anterior a un cambio de esos datos, recréala con `npm run db:dev -- --reset`.
 
 Luego `npm run dev` (Node 24 LTS) o, con Node 20, `npx dotenv -c -- next dev`. Nunca se apunta
 `DATABASE_URL_PLATAFORMA` a `srvpd_bd` para desarrollar: es productiva en la práctica.
