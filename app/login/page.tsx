@@ -1,12 +1,13 @@
 import { signIn } from "@/auth";
+import { DOMINIOS_PERMITIDOS } from "@/auth.config";
 import { CiaLogo } from "@/components/cia-logo";
 
 // Auth.js manda errores a esta misma página (pages.error = "/login").
 const ERRORES: Record<string, string> = {
   AccessDenied: "Tu cuenta no pertenece a un dominio autorizado.",
   Configuration: "El login aún no está configurado en el servidor (variables AUTH_*).",
-  Verification: "El enlace de acceso expiró. Intentá de nuevo.",
-  default: "No se pudo iniciar sesión. Intentá nuevamente.",
+  Verification: "El enlace de acceso expiró. Intenta de nuevo.",
+  default: "No se pudo iniciar sesión. Intenta nuevamente.",
 };
 
 function GoogleIcon() {
@@ -43,17 +44,17 @@ export default async function LoginPage({
           <div className="flex flex-col items-center text-center">
             <CiaLogo className="w-14 h-14 mb-5 text-white" />
             <h1 className="font-display text-3xl font-extrabold italic uppercase tracking-tight text-text leading-none">
-              Nombre Plataforma
+              Líneas Telefónicas
             </h1>
             <p className="mt-2 font-label text-[11px] font-semibold uppercase tracking-[0.25em] text-flesan-warm">
               Grupo Flesan
             </p>
             <div className="my-6 h-px w-16 bg-white/10" />
             <p className="font-body text-sm text-flesan-light">
-              Ingresá con tu cuenta corporativa de Google
+              Ingresa con tu cuenta corporativa de Google
             </p>
             <p className="mt-1 font-body text-xs text-flesan-steel">
-              Dominios autorizados: flesan.cl
+              Dominios autorizados: {DOMINIOS_PERMITIDOS.join(", ")}
             </p>
           </div>
 

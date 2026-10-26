@@ -1,8 +1,39 @@
 # Grupo Flesan — Contexto para Claude Code
 
-Este proyecto es la **plantilla base** de plataformas internas de Grupo Flesan. Ya trae el stack
-de frontend y el sistema de diseño de marca instalados — antes de escribir UI nueva, lee este
-archivo y los puntos de referencia abajo.
+Este proyecto es **Líneas Telefónicas**, una plataforma interna construida sobre la plantilla base
+de plataformas de Grupo Flesan (repositorio `flesanmvi-cl/plataforma-lineas-telefonicas`; la
+plantilla queda como remoto `mockup`). Ya trae el stack de frontend y el sistema de diseño de marca
+instalados — antes de escribir UI nueva, lee este archivo y los puntos de referencia abajo.
+
+## Esta plataforma: Líneas Telefónicas
+
+Reemplaza al aplicativo Laravel `gf_telefonia_grupoflesan`: registro de líneas telefónicas de
+Chile y Perú y de los dispositivos móviles asignados a colaboradores. Antes de tocar datos o
+pantallas, lee:
+
+- `docs/MIGRACION.md` — levantamiento del aplicativo antiguo: pantallas, campos, reglas, tablas y
+  errores conocidos (E1–E14).
+- `docs/PLAN.md` — decisiones, arquitectura, seguridad y módulos (M0–M10) con su estado.
+
+Reglas propias. **Prevalecen** sobre «Base de datos de una plataforma nueva» (desvío aprobado,
+`docs/PLAN.md` P0):
+
+- Se escribe en los esquemas del aplicativo antiguo, `s_lineas` y `seguridadapp` de `srvpd_bd`
+  (`DATABASE_URL_PLATAFORMA`, `lib/lineas-db.ts`), no en un esquema `cia_<slug>`. La transaccional
+  `flesan` (`DATABASE_URL`, `lib/db.ts`) solo se lee, y la conexión lo fuerza.
+- Mientras convivan los dos aplicativos, todo lo que se escribe queda con el formato del antiguo
+  (`docs/PLAN.md` §2.3): fechas en UTC sin zona (`AHORA_UTC`), `sl_area` `'1'`/`'2'`, mismo texto
+  de historial, usuarios en `aplicacion_usuario`/`usuario_rol` de la aplicación 23.
+- Nunca se prueba escribiendo en `srvpd_bd`: es productiva en la práctica. Para desarrollar,
+  `npm run db:dev` levanta una base local (Postgres embebido) con la misma estructura y datos de
+  prueba (`db/desarrollo/`).
+- Todo route handler de negocio empieza con `requerirAcceso()` (`lib/auth-guard.ts`) y usa SQL
+  parametrizado con `tablaLineas()`/`tablaSeguridad()`. Toda página de administración llama a
+  `exigirAdministrador()` (`lib/acceso-paginas.ts`) antes de leer datos: el gate del layout solo no
+  basta, porque Next renderiza layout y página en paralelo (`docs/PLAN.md` §3.2).
+- Solo Chile por ahora: Perú es de consulta, sin conexión a `grupo_flesan_pe`.
+- Las pruebas de estructura de una base van por `/api/estado-conexiones` (solo administradores),
+  contra la lista de `lib/lineas/estructura.ts`.
 
 ## Stack (no cambiar sin que el usuario lo pida)
 
@@ -34,8 +65,9 @@ archivo y los puntos de referencia abajo.
    es otro proyecto: `proyectos/_prototipos/laboratorio-diseno` (galería, comparador y panel
    «Tema» por sección). Aquí solo está lo vigente: la Guía de estilo (`/ui-kit`), las piezas de
    `components/estandar/` y `lib/estandar/` (tema fijo en `lib/estandar/estandar.ts`, hoy
-   provisorio) y las de `components/reporte/`; se ven aplicadas en «Plantillas» del
-   sidebar (Reportes Tipo 1-5, Formularios Tipo 1-3 y el constructor de maquetas). Para traer
+   provisorio) y las de `components/reporte/`. Las pantallas tipo (Reportes Tipo 1-5,
+   Formularios Tipo 1-3 y el constructor de maquetas) se quitaron de esta plataforma: se ven en
+   el mockup (remoto `mockup`). `/ui-kit` solo se publica en desarrollo. Para traer
    algo del laboratorio, sigue «Cómo llega algo nuevo desde el laboratorio» en
    `docs/UI-KIT-CATALOG.md`; no reinstales aquí sus librerías de exploración.
 2. Si necesitas un color o tamaño que no está en `app/shell.css` (`@theme`), agrégalo ahí como
@@ -60,6 +92,9 @@ después a las plataformas; lo propio de esta plantilla va en `lib/nav.ts`, `com
 `lib/estado-datos.ts` y `app/globals.css`.
 
 ## Base de datos de una plataforma nueva
+
+**En esta plataforma rige el desvío aprobado de «Esta plataforma», arriba.** Lo que sigue es la
+regla general del estándar.
 
 Reglas completas en README.md, «Base de datos de la plataforma». Lo esencial: **la base
 transaccional (`DATABASE_URL`, `lib/db.ts`) se usa solo para leer** (maestro de colaboradores,

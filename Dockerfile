@@ -1,5 +1,5 @@
 # ============================================================
-# Mockup Plataforma — Dockerfile (multi-stage)
+# Líneas Telefónicas — Dockerfile (multi-stage)
 # Node 20 alpine. Output standalone de Next.js (~150 MB).
 # ============================================================
 

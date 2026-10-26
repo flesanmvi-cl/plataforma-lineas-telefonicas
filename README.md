@@ -1,4 +1,42 @@
-# Mockup Plataforma — Base Grupo Flesan
+# Líneas Telefónicas — Grupo Flesan
+
+Registro de las líneas telefónicas corporativas de Chile y Perú y de los dispositivos móviles
+asignados a colaboradores. Reemplaza al aplicativo Laravel `gf_telefonia_grupoflesan` y trabaja
+sobre sus mismas tablas, así que ambos pueden convivir hasta el corte.
+
+- Qué hacía el aplicativo antiguo: [`docs/MIGRACION.md`](docs/MIGRACION.md)
+- Decisiones, seguridad y módulos: [`docs/PLAN.md`](docs/PLAN.md)
+- Conexiones, acceso y APIs: [`docs/ARQUITECTURA.md`](docs/ARQUITECTURA.md)
+
+## Desarrollo local
+
+```bash
+npm install
+npm run db:dev            # base local con datos de prueba (otra terminal; Ctrl+C la detiene)
+cp .env.example .env.local
+```
+
+En `.env.local`, como mínimo:
+
+```bash
+AUTH_SECRET=<openssl rand -hex 32>
+AUTH_DISABLED=true        # sesión de prueba dev@flesan.cl, solo en desarrollo
+DATABASE_URL_PLATAFORMA=postgresql://postgres:postgres@localhost:54329/lineas_dev
+# DATABASE_URL=...        # flesan (solo lectura), para los maestros de Chile
+```
+
+Luego `npm run dev` (Node 24 LTS) o, con Node 20, `npx dotenv -c -- next dev`. Nunca se apunta
+`DATABASE_URL_PLATAFORMA` a `srvpd_bd` para desarrollar: es productiva en la práctica.
+
+Antes de subir cambios: `npx tsc --noEmit`, `npm run lint` y `npx next build`.
+
+---
+
+Lo que sigue es la guía del estándar de plataformas CIA, heredada de la plantilla
+(`mockup_plataforma`). Donde choque con esta plataforma, mandan `CLAUDE.md` («Esta plataforma») y
+`docs/PLAN.md`.
+
+## Plantilla base
 
 Plantilla base y guía para crear nuevas plataformas internas de la CIA, con el stack, el sistema
 de diseño de Grupo Flesan y el **shell estándar** ya instalados: sidebar, barra superior,

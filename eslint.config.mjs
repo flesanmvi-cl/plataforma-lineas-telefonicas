@@ -10,6 +10,8 @@ const compat = new FlatCompat({
 });
 
 const eslintConfig = [
+  // Artefactos generados: sin esto, `npm run lint` después de un build revisa también .next/.
+  { ignores: [".next/**", "out/**", "build/**", "next-env.d.ts", ".db-dev/**"] },
   ...compat.extends("next/core-web-vitals", "next/typescript"),
 ];
 

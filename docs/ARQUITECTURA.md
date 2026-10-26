@@ -1,90 +1,117 @@
-# Arquitectura — Nombre Plataforma
+# Arquitectura — Líneas Telefónicas
 
-Referencia técnica para quien vaya a tocar backend/datos/auth de este proyecto. Para stack y cómo
-correr el proyecto, ver el [`README.md`](../README.md).
+Referencia técnica para quien vaya a tocar backend, datos o acceso. Qué hace el aplicativo antiguo:
+[`MIGRACION.md`](MIGRACION.md). Decisiones, seguridad y módulos: [`PLAN.md`](PLAN.md). Stack y
+cómo correr el proyecto: [`README.md`](../README.md).
 
-> Plantilla: completa cada sección a medida que la plataforma gane lógica de negocio propia.
-> Bórrala si al final no aporta más que el README.
+## Datos
 
-## Modelo de datos
+### Conexiones
 
-_(Sin Postgres activo por defecto — `lib/db.ts` ya trae el pool `pg` singleton listo para usar,
-inerte mientras no haya `DATABASE_URL` en `.env`. Si la plataforma necesita Postgres: define
-`DATABASE_URL`, aplica las migraciones de `db/*.sql` a mano contra esa BBDD, y documenta aquí las
-tablas/esquema propias del negocio.)_
+| Variable | Módulo | Base | Uso |
+|---|---|---|---|
+| `DATABASE_URL` | `lib/db.ts` | `flesan` (transaccional de Chile) | **Solo lectura**, forzada en la sesión (`default_transaction_read_only`): empresas (`public.maestro_rut`), unidades de negocio (`public.maestro_cc`), centros de costo (`public.centro_gestion_actividad`) y colaboradores (`flesan_rrhh.sap_maestro_colaborador`) |
+| `DATABASE_URL_PLATAFORMA` | `lib/lineas-db.ts` | `srvpd_bd` | Lectura y escritura sobre los esquemas del aplicativo antiguo: `s_lineas` y `seguridadapp` |
 
-Si activas roles persistidos en BBDD (ver más abajo), aplica `db/001_usuarios_roles.sql` — crea
-`flesan_procesos.cia_<slug>_usuarios` (reemplaza `<slug>` por el nombre de esta plataforma).
+- Los esquemas salen de `ESQUEMA_LINEAS` y `ESQUEMA_SEGURIDAD` (por defecto `s_lineas` y
+  `seguridadapp`) y se validan antes de interpolarlos. Las tablas se nombran solo con
+  `tablaLineas()` y `tablaSeguridad()`, que aceptan una lista cerrada de nombres.
+- No hay esquema `cia_<slug>` (desvío aprobado, `PLAN.md` P0): `ESQUEMA_PLATAFORMA` queda vacío y
+  `lib/configuracion-db.ts` del shell queda inerte (Mi personalización en el navegador, sin
+  avisos).
+- Perú (`grupo_flesan_pe`) no se conecta por ahora (`PLAN.md` P1).
+
+### Formato de escritura
+
+Mientras convivan los dos aplicativos, lo que escribe esta plataforma queda igual que lo que
+escribe el antiguo (`PLAN.md` §2.3). En `lib/lineas-db.ts`:
+
+- `AHORA_UTC`: la hora actual en UTC sin zona, como la graba Laravel.
+- Los `timestamp without time zone` se leen como UTC y las columnas `date` como texto
+  `AAAA-MM-DD`, sin importar la zona horaria del servidor.
+- `enTransaccion()`: un cambio y su historial se graban juntos o no se graba ninguno.
+
+### Estructura esperada
+
+`lib/lineas/estructura.ts` lista las tablas y columnas que la plataforma lee o escribe.
+`GET /api/estado-conexiones` (solo administradores) la compara con `information_schema` de cada
+base y responde `ok`, `incompleta` (con lo que falta), `sin conexión` o `sin configurar`. Se usa
+para validar la base de desarrollo y cada despliegue. Al empezar a usar una columna nueva, se
+agrega a esa lista.
+
+### Base de desarrollo
+
+`npm run db:dev` levanta un Postgres 16 embebido (paquete `embedded-postgres`, sin Docker ni
+permisos de administrador) en `localhost:54329`, base `lineas_dev`, con datos en `.db-dev/`
+(ignorado por git). La primera vez aplica `db/desarrollo/001_estructura.sql` (copia de la
+estructura real) y `002_datos.sql` (catálogos y roles reales; personas, líneas e IMEI ficticios).
+`npm run db:dev -- --reset` la recrea. Nunca se prueba escribiendo en `srvpd_bd`.
+
+### SQL aplicado en QA
+
+Ninguno. La plataforma usa las tablas existentes del aplicativo antiguo y no ejecuta DDL. Los
+archivos `db/001`–`003` son de la plantilla y no se aplican en esta plataforma.
 
 ## Autenticación y autorización
 
-Auth.js v5 heredado de `servicios-compartidos/login-estandar/nextjs` (plantilla compartida de
-login CIA):
+- **Login:** Auth.js v5 con Google (`auth.config.ts`, `auth.ts`), heredado de la plantilla
+  compartida de login CIA. `CIA_ALLOWED_DOMAINS` restringe los dominios.
+- **Rol (estado actual):** `admin` por `CIA_ADMIN_EMAILS`, el resto `member`. El módulo M2 lo
+  reemplaza por la lista de usuarios de `seguridadapp` (aplicación 23): solo entran los
+  habilitados; rol 74 → `admin`, 75 y 76 → `member` con su área.
+- **middleware.ts:** exige sesión en todo, salvo `/login`, `/api/auth/*`, `/api/health` y
+  estáticos.
+- **APIs:** todo route handler de negocio empieza con `requerirAcceso(req, { admin? })`
+  (`lib/auth-guard.ts`):
+  1. En métodos que escriben, el encabezado `Origin` debe ser la propia plataforma (host, el
+     host detrás del proxy o `AUTH_URL`).
+  2. Sesión válida.
+  3. Rol de administrador, si se pide.
 
-- **`auth.config.ts`** (edge-safe): provider Google, callback `signIn` rechaza emails fuera de
-  `CIA_ALLOWED_DOMAINS`. `pages.signIn`/`pages.error` → `/login`.
-- **`auth.ts`** (runtime Node, importa `auth.config.ts`): resuelve el rol en el callback
-  `session` (no `jwt`, para que un cambio de rol tenga efecto sin re-login) — si el email está en
-  `CIA_ADMIN_EMAILS` → `role: "admin"`; si no, y hay `DATABASE_URL` configurado, hace lookup a
-  `flesan_procesos.cia_<slug>_usuarios` vía `lib/usuarios-db.ts`; si no hay `DATABASE_URL`, queda
-  `"member"` (ver `lib/roles.ts`).
-- **`middleware.ts`**: protege *todas* las rutas excepto `api/auth/*`, `api/health`, `/login`,
-  estáticos de Next y `/brand/*`. Sin sesión, redirige a `/login?callbackUrl=<ruta original>`.
-- Secciones `adminOnly` (ver `lib/nav.ts` y `app/(dashboard)/configuracion/layout.tsx`): el gate
-  vive en un `layout.tsx` propio de la sección, no en el middleware, porque necesita el rol ya
-  resuelto en la sesión (el middleware corre en Edge y no puede consultar BBDD).
-- **Gestión de usuarios** (`/configuracion/usuarios`, solo `adminOnly`): asigna/revoca el rol
-  `admin`/`member` de cualquier colaborador de Flesan, buscándolo en el maestro corporativo
-  (`lib/colaboradores-db.ts` + `maestro_colaborador.sql`) y persistiendo en la tabla de arriba.
-  Requiere `DATABASE_URL` — sin BBDD, el rol solo se administra por `CIA_ADMIN_EMAILS`.
-- Cierre de sesión: Server Action `cerrarSesion()` en `lib/auth-actions.ts`.
-- Si la plataforma necesita más de 2 roles (más allá de `admin`/`member`) o alcance granular por
-  usuario (ej. acceso solo a un subconjunto de proyectos/empresas), extiende `Rol` en
-  `lib/roles.ts` y `lib/usuarios-db.ts` — `plataforma_auditorias` (3 roles) y
-  `seguimiento_proyectos_fai` (roles + acceso por proyecto) lo hicieron así y sirven de
-  referencia.
-- **Bypass de desarrollo**: `AUTH_DISABLED=true` (+ `DEV_ROLE=admin|member` opcional) en `.env`
-  hace que `auth()` devuelva una sesión falsa y que `middleware.ts` no redirija a `/login` —
-  pensado para iterar rápido en local/VM de pruebas sin pasar por Google. Solo tiene efecto si
-  `NODE_ENV !== "production"`; en un build de producción se ignora aunque el `.env` lo traiga.
+  Los errores inesperados salen con `respuestaErrorInterno()`: mensaje genérico al usuario y
+  detalle solo en el log.
+- **Páginas de administración:** viven en `app/(dashboard)/configuracion/(admin)/`, cuyo layout
+  redirige a quien no es administrador. Además, cada página llama a `exigirAdministrador()`
+  (`lib/acceso-paginas.ts`) antes de leer datos. Comprobado el 2026-10-26: sin esa llamada, Next
+  renderiza la página en paralelo al layout y su contenido igual viaja en la respuesta a un
+  `member`.
+- **Encabezados de seguridad** en `next.config.ts`: `nosniff`, `X-Frame-Options: DENY`,
+  `Referrer-Policy` y `Permissions-Policy`; sin `X-Powered-By`.
+- **Bypass de desarrollo:** `AUTH_DISABLED=true` (+ `DEV_ROLE`) usa la sesión falsa de
+  `dev@flesan.cl`, que existe en la base de desarrollo. Ignorado si `NODE_ENV=production`.
 
 ## API routes
 
 | Ruta | Método | Qué hace |
 |---|---|---|
-| `/api/auth/[...nextauth]` | GET, POST | Handlers estándar de Auth.js. |
-| `/api/health` | GET | Healthcheck de Docker, sin auth. |
-| `/api/feedback` | POST | BFF del widget CIA — reenvía el feedback del usuario autenticado al servicio central. |
-| `/api/feedback/mios` | GET | BFF del widget CIA — lista el feedback enviado por el usuario actual. |
-| `/api/configuracion/usuarios` | GET, POST | `adminOnly` — lista y asigna/actualiza rol de usuarios (requiere `DATABASE_URL`). |
-| `/api/configuracion/usuarios/[correo]` | DELETE | `adminOnly` — revoca el rol administrado (vuelve al default `member`). |
-| `/api/configuracion/colaboradores` | GET | `adminOnly` — busca colaboradores en el maestro corporativo para asignarles rol. |
+| `/api/auth/[...nextauth]` | GET, POST | Handlers estándar de Auth.js |
+| `/api/health` | GET | Healthcheck de Docker, sin auth |
+| `/api/estado-conexiones` | GET | Solo administradores. Estado y estructura de las dos bases |
+| `/api/feedback`, `/api/feedback/mios` | POST, GET | BFF del botón de comentarios CIA |
+| `/api/configuracion/*`, `/api/avisos`, `/api/notificaciones/*` | — | Del shell. Sin esquema `cia_<slug>` responden vacío o «sin base»; Usuarios y roles se reemplaza en M8 |
 
-Agrega tus rutas de negocio a esta tabla a medida que las crees.
+Las rutas de negocio (líneas, dispositivos, maestros, marcas y modelos, usuarios) se agregan aquí
+a medida que se construyen.
 
 ## Widget de feedback CIA
 
-`app/layout.tsx` carga un Web Component externo (`<cia-feedback>`, Shadow DOM) que muestra el
-badge "Desarrollado por CIA" + un buzón de sugerencias. Es compartido entre todas las plataformas
-CIA — el código fuente vive en el repo hermano `servicios-compartidos`
-(`servicios/widget-cia/` + `servicios/feedback-api/`), no en este proyecto.
-
-Patrón BFF: el widget hace `fetch` same-origin a `/api/feedback` (este proyecto, con la sesión del
-usuario), y ese route handler reenvía al servicio central con `CIA_SERVICE_TOKEN` vía header
-`X-CIA-Service-Token`.
-
-**Antes de ir a producción**: reemplaza `data-plataforma="nombre-plataforma"` en `app/layout.tsx`
-por el slug real de esta plataforma, y coordina con el equipo CIA para registrar
-`<slug>:<token>` en `CIA_SERVICE_TOKENS` del `feedback-api` central — si no, el widget se ve pero
-el envío de feedback falla en silencio.
+El botón de comentarios lo dibuja el shell (`components/comentarios/*`) y envía por
+`/api/feedback`, que reenvía al servicio central con `CIA_SERVICE_TOKEN`. Antes de producción,
+coordinar con el equipo CIA el registro del slug `plataforma_lineas_telefonicas` en
+`CIA_SERVICE_TOKENS` del `feedback-api` central.
 
 ## Docker
 
-`Dockerfile` multi-stage (deps → builder → runner), output `standalone` de Next
-(`next.config.ts`), usuario no-root, healthcheck contra `/api/health`. `docker-compose.yml` levanta
-solo el servicio `web`; si la plataforma necesita Postgres u otro servicio, agrégalo ahí.
+`Dockerfile` multi-stage (deps → builder → runner), output `standalone`, usuario no-root y
+healthcheck contra `/api/health`. `docker-compose.yml` levanta solo el servicio `web`
+(`plataforma-lineas-telefonicas`). La base de desarrollo no va en Docker: es `npm run db:dev`.
 
-## Estado conocido / pendientes
+## Estado conocido y pendientes
 
-_(Deja aquí notas para quien retome el proyecto: qué está a medio hacer, qué placeholder falta
-reemplazar, qué decisión de diseño quedó pendiente.)_
+- **M1 (base técnica): hecho el 2026-10-26.** Siguiente: M2 (acceso y roles con `seguridadapp`).
+- `npm run dev` y `npm run start` usan `NODE_OPTIONS=--use-system-ca`, que Node 20 no acepta. Con
+  Node 20 se puede correr `npx dotenv -c -- next dev`, que no usa los certificados del sistema;
+  lo recomendado es Node 24 LTS.
+- El control de origen de `requerirAcceso()` se prueba con la primera API que escriba (M4).
+- Pendiente de M2: la sesión falsa de desarrollo trae el rol fijo (`DEV_ROLE`). Cuando el rol
+  salga de `seguridadapp`, hará falta poder elegir con qué usuario de prueba se entra.

@@ -1,12 +1,13 @@
 {
-  "name": "mockup-plataforma",
+  "name": "plataforma-lineas-telefonicas",
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "cross-env NODE_OPTIONS=--use-system-ca dotenv -c -- next dev",
     "build": "next build",
     "start": "cross-env NODE_OPTIONS=--use-system-ca dotenv -c -- next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "db:dev": "node scripts/db-dev.mjs"
   },
   "dependencies": {
     "@visx/responsive": "^4.0.0",
@@ -14,8 +15,6 @@
     "clsx": "^2.1.1",
     "echarts": "^6.1.0",
     "exceljs": "^4.4.0",
-    "html-to-image": "^1.11.13",
-    "jspdf": "^4.2.1",
     "lucide-react": "^0.544.0",
     "motion": "^13.4.4",
     "next": "^15.3.3",
@@ -23,7 +22,6 @@
     "next-themes": "^0.4.6",
     "nodemailer": "^7.0.13",
     "pg": "^8.22.0",
-    "pptxgenjs": "^4.0.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "sonner": "^1.7.4",
@@ -40,6 +38,7 @@
     "@types/react-dom": "^19",
     "cross-env": "^10.1.0",
     "dotenv-cli": "^11.0.0",
+    "embedded-postgres": "16.14.0-beta.17",
     "eslint": "^9",
     "eslint-config-next": "^15.3.3",
     "tailwindcss": "^4.0.0",

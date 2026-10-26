@@ -41,6 +41,9 @@ next-env.d.ts
 # herramientas de verificacion (playwright-cli)
 .playwright-cli/
 
+# base de desarrollo local (npm run db:dev)
+/.db-dev/
+
 # Base CIA: secretos, respaldos de .env y artefactos (servicios-compartidos/plantillas/gitignore-base)
 .env.*
 !.env.example

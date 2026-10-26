@@ -1,17 +1,5 @@
 import Link from "next/link";
-import {
-  Activity,
-  Database,
-  Info,
-  Lock,
-  Mail,
-  Megaphone,
-  MessageSquare,
-  Presentation,
-  SlidersHorizontal,
-  Users,
-  type LucideIcon,
-} from "lucide-react";
+import { Info, Lock, MessageSquare, SlidersHorizontal, Tags, Users, type LucideIcon } from "lucide-react";
 import { auth } from "@/auth";
 import { esAdmin } from "@/lib/roles";
 import { PageHeader } from "@/components/page-header";
@@ -38,27 +26,25 @@ const PARA_TI: Seccion[] = [
     description: "Tema, tamaño, densidad y el acceso a portales.",
     icon: SlidersHorizontal,
   },
-  {
-    href: "/configuracion/presentaciones",
-    title: "Presentaciones",
-    description: "Activa «Agregar a presentación» y administra tus presentaciones.",
-    icon: Presentation,
-  },
   { href: "/configuracion/comentarios", title: "Mis comentarios", description: "Lo que enviaste con el botón de comentarios y en qué estado va.", icon: MessageSquare },
   { href: "/configuracion/acerca", title: "Acerca de", description: "Versión de la plataforma y del estándar, y contacto de soporte de la CIA.", icon: Info },
 ];
 
+// Sin las secciones del mockup que necesitan un esquema cia_<slug> (avisos, fuentes de datos,
+// actividad, notificaciones): esta plataforma escribe en los esquemas del aplicativo antiguo
+// (docs/PLAN.md, P0). «Usuarios y roles» llega con el módulo M8.
 const ADMINISTRACION: Seccion[] = [
   {
-    href: "/configuracion/usuarios",
+    href: "/configuracion/marcas-modelos",
+    title: "Marcas y modelos",
+    description: "Catálogo de marcas y modelos de celulares y equipos BAM.",
+    icon: Tags,
+  },
+  {
     title: "Usuarios y roles",
-    description: "Quién es administrador o miembro. Asigna o revoca roles.",
+    description: "Quién entra a la plataforma, con qué perfil y de qué área.",
     icon: Users,
   },
-  { href: "/configuracion/fuentes-datos", title: "Fuentes de datos", description: "Última carga de cada fuente, si falló y cada cuánto se espera.", icon: Database },
-  { href: "/configuracion/actividad", title: "Registro de actividad", description: "Quién hizo qué y cuándo: roles, cargas, exportaciones.", icon: Activity },
-  { href: "/configuracion/avisos", title: "Avisos", description: "Franja para toda la plataforma, con fecha de inicio y término.", icon: Megaphone },
-  { href: "/configuracion/notificaciones", title: "Notificaciones y correos", description: "Qué correos envía la plataforma, a quién y con qué plantilla.", icon: Mail },
 ];
 
 export default async function ConfiguracionPage() {

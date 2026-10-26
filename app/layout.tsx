@@ -72,7 +72,7 @@ const TITULO = `${[NOMBRE_PLATAFORMA.texto, NOMBRE_PLATAFORMA.destacado].filter(
 
 export const metadata: Metadata = {
   title: { default: TITULO, template: TITULO },
-  description: "Mockup base de plataforma — Grupo Flesan.",
+  description: "Registro de líneas telefónicas y dispositivos móviles de Grupo Flesan.",
 };
 
 export const viewport: Viewport = {
