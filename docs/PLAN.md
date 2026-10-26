@@ -113,7 +113,7 @@ tienen Docker. La base `flesan` se puede leer real, porque la conexión es de so
 | S1 | La API no exige sesión y el usuario llega en un campo oculto del formulario | `middleware.ts` exige sesión en todo. Cada route handler pasa por el guard y la identidad sale de la sesión (correo verificado por Google), nunca del cuerpo de la petición | M1, M2 |
 | S2 | La administración solo se oculta en el menú | Gate en el layout `(admin)`, control en cada página de administración (`exigirAdministrador()`) y guard de administrador en cada API de administración | M1, M2, M7, M8 |
 | S3 | Suplantación fija en el login | No existe, y una prueba lo verifica | M2, M9 |
-| S4 | Credenciales en el código | Solo en variables de entorno (`.env` fuera de git, `connections.env` en la VM). `ApiGF` no se porta. Las del antiguo se rotan | M0, M1 |
+| S4 | Credenciales en el código | Solo en variables de entorno (`.env` fuera de git, `connections.env` en la VM). `ApiGF` no se porta. Las del antiguo quedan como están (M0 no aplica) | M1 |
 | S5 | `APP_DEBUG=true`: trazas a la vista | Build de producción. El usuario ve un mensaje genérico y el detalle queda solo en el log del servidor | M1 |
 | S6 | Cualquiera abre o edita un registro de otra área cambiando el id en la URL | Cada lectura y escritura por id valida el área en el servidor; si no corresponde, responde «no encontrado» | M4, M5, M6 |
 | S7 | Sin protección CSRF en la API | Cookie de sesión `SameSite=Lax` de Auth.js, solo JSON y verificación del encabezado `Origin` en todo lo que escribe | M1 |
@@ -142,13 +142,18 @@ igual viaja en la respuesta a un `member`. Lo mismo vale para las páginas filtr
 ### 3.3 Mientras conviven
 
 El antiguo conserva sus vulnerabilidades hasta que se apague y comparte los datos con la nueva:
-una escritura por su API abierta afecta también a la plataforma nueva. Por eso existe M0.
+una escritura por su API abierta afecta también a la plataforma nueva. M0 proponía contenerlo, pero
+no aplica (P3, 2026-10-26): el antiguo no se modifica. El riesgo queda aceptado hasta el corte.
 
 ---
 
 ## 4. Módulos
 
-### M0. Contención en el aplicativo antiguo
+### M0. Contención en el aplicativo antiguo — no aplica (P3, 2026-10-26)
+
+Decisión: el aplicativo antiguo no se modifica (ni código, ni repositorio, ni servidor). Se
+conserva la propuesta como registro de los riesgos que quedan abiertos mientras conviven.
+
 
 Cambios mínimos en Laravel para que la convivencia no deje la puerta abierta:
 
@@ -233,7 +238,28 @@ nadie entra salvo la llave maestra. Tipos, lint y build limpios.
 siguiente petición; cada rol ve el menú que le corresponde y las secciones de administración
 rechazan a un `member` aunque escriba la URL.
 
-### M3. Datos maestros de Chile
+### M3. Datos maestros de Chile — hecho el 2026-10-26
+
+Implementado en `lib/lineas/maestros.ts` y `/api/maestros/*` (cualquier usuario habilitado):
+
+| Endpoint | Devuelve |
+|---|---|
+| `GET /api/maestros/empresas` | Las 110 empresas (`rut`, `razonSocial`) |
+| `GET /api/maestros/unidades?empresa=<rut>` | Unidades de esa empresa en `maestro_cc` |
+| `GET /api/maestros/centros?empresa=<rut>&unidad=<u>[&actual=<código>]` | Centros activos de esa empresa y unidad; con `actual`, además el centro que el registro ya tiene, aunque esté cerrado (`activo: false`) |
+| `GET /api/maestros/colaboradores?q=<texto>` | Hasta 20 activos por RUT (con o sin puntos) o por nombre (sin distinguir tildes), desde 3 caracteres |
+
+- Un centro repetido por empresa y código (19 casos en `centro_gestion_actividad`, 4 en
+  `maestro_cc`) sale una vez, la fila activa si la hay. Un colaborador con varias filas activas
+  (23 RUT) sale una vez, la de `user_id` más alto, como el antiguo.
+- Hay 45 centros activos sin fila en `maestro_cc`: no tienen unidad y, como en el antiguo, no se
+  ofrecen bajo ninguna.
+- Verificado con FLESAN S.A., FLESAN ANCLAJES S.A. y CONSTRUCTORA DE VICENTE S.A.: empresas y
+  unidades idénticas al antiguo; de los centros, todos los que ofrece la nueva los ofrecía el
+  antiguo, y todo lo que deja de ofrecer es de otra empresa (E7) o está inactivo (P5).
+
+Lo planificado:
+
 
 - Endpoints de solo lectura: empresas, unidades de negocio por empresa, centros de costo por
   empresa y unidad, y búsqueda de colaboradores activos por RUT o nombre.
@@ -343,7 +369,7 @@ desactivado no entra en la nueva ni puede iniciar sesión en el antiguo.
 - Marcha blanca: ambos aplicativos sobre los mismos datos, con Procesos y Soporte trabajando en la
   nueva.
 - Corte: `lineastelefonicas.flesanmvi.com` pasa a apuntar a la nueva y el antiguo se apaga. Si
-  Perú sigue en el antiguo (P1), este queda vivo solo para eso y con M0 aplicado.
+  Perú sigue en el antiguo (P1), este queda vivo solo para eso, sin cambios (M0 no aplica).
 
 **Listo cuando:** el antiguo está apagado, o limitado a Perú, y nadie lo necesita para Chile.
 
@@ -355,10 +381,10 @@ Tamaño relativo: S chico, M mediano, L grande.
 
 | Orden | Módulo | Tamaño | Depende de | Estado |
 |---|---|---|---|---|
-| En paralelo | M0 Contención en el antiguo | S | — | Pendiente |
+| — | M0 Contención en el antiguo | S | — | No aplica (P3) |
 | 1 | M1 Base técnica | M | — | **Hecho** (2026-10-26) |
 | 2 | M2 Acceso y roles | S | M1 | **Hecho** (2026-10-26) |
-| 3 | M3 Datos maestros de Chile | S | M1 | Pendiente |
+| 3 | M3 Datos maestros de Chile | S | M1 | **Hecho** (2026-10-26) |
 | 4 | M4 Líneas de Chile | L | M2, M3 | Pendiente |
 | 5 | M5 Líneas de Perú (consulta) | S | M4 | Pendiente |
 | 6 | M6 Dispositivos | M | M4 | Pendiente |
@@ -378,14 +404,13 @@ Hitos:
 
 ## 6. Decisiones pendientes
 
-P0, P1, P2 y P8 quedaron resueltas el 2026-10-26 (§1).
+P0, P1, P2 y P8 quedaron resueltas el 2026-10-26 (§1). P3 también: M0 no aplica, el antiguo no se
+modifica. P5 (solo centros activos, conservando el valor actual de cada registro) y P6 (colaboradores
+desde el origen `flesan_rrhh`) se confirmaron el 2026-10-26 y se aplicaron en M3.
 
 | # | Pregunta | Recomendación | Afecta |
 |---|---|---|---|
-| P3 | ¿Se aplica M0 en el antiguo? | Sí: con P1 = A, el antiguo sigue vivo para Perú | M0 |
 | P4 | Número de línea e IMEI repetidos: ¿aviso, como hoy, o bloqueo? | Bloquear entre los vigentes al crear o al cambiar el número; los 4 números y 8 IMEI ya repetidos se pueden seguir editando sin cambiarlos | M4, M6 |
-| P5 | Centros de costo: ¿solo activos, o todos como hoy? | Solo activos, conservando el valor actual de cada registro | M3 |
-| P6 | Estado del colaborador: ¿maestro de origen (`flesan_rrhh`) o la copia de `s_lineas`, idéntico al antiguo? | Origen | M3, M4 |
 | P7 | Usuario de base de datos propio para la nueva, con permisos solo sobre lo que usa (coordinar con quien administra `srvpd_bd` y `flesan`) | Sí | M1, M10 |
 | P9 | Dominio: ¿se reutiliza `lineastelefonicas.flesanmvi.com`? | Sí, en el corte | M10 |
 

@@ -73,7 +73,7 @@ cp .env.example .env.local   # completa AUTH_GOOGLE_ID/SECRET, AUTH_SECRET, etc.
 npm run dev
 ```
 
-Abre `http://localhost:3000` (o el puerto que hayas puesto en `PORT=` dentro de `.env.local` — `npm run
+Abre `http://localhost:3003` (o el puerto que hayas puesto en `PORT=` dentro de `.env.local` — `npm run
 dev`/`npm run start` lo leen solos, no hace falta pasar `-p`). Sin `.env.local` completo el login con
 Google no funcionará, pero el resto
 de la UI (ui-kit, componentes) se puede revisar igual navegando directo a esas rutas antes de que

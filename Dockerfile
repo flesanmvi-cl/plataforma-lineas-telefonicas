@@ -26,7 +26,7 @@ ENV NEXT_TELEMETRY_DISABLED=1
 # Default si el .env/compose no trae PORT — el server standalone (server.js) lee
 # process.env.PORT en runtime, así que docker-compose.yml puede sobreescribirlo
 # sin rebuild.
-ENV PORT=3000
+ENV PORT=3003
 ENV HOSTNAME=0.0.0.0
 
 # Usuario no-root por seguridad

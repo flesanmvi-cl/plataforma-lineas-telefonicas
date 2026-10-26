@@ -140,7 +140,7 @@ export const ESTRUCTURA_TRANSACCIONAL: TablaRequerida[] = [
   {
     esquema: "flesan_rrhh",
     tabla: "sap_maestro_colaborador",
-    columnas: ["national_id", "first_name", "last_name", "empl_status", "correo_flesan"],
+    columnas: ["national_id", "user_id", "first_name", "last_name", "empl_status", "correo_flesan", "empresa"],
   },
 ];
 
